@@ -1,7 +1,7 @@
 use logos::Logos;
 
 #[derive(Debug, PartialEq, Logos)]
-#[logos(skip r"[ \t\n]+")]
+#[logos(skip r"[ \t]+")]
 enum Token {
 	#[token("+")]
 	Plus,
@@ -107,6 +107,9 @@ enum Token {
 
 	#[token("export")]
 	Export,
+
+	#[regex("\n+")]
+	NewLine,
 
 	#[regex("[a-zA-Z]+")]
 	Identifier,
