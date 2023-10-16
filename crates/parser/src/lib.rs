@@ -72,6 +72,9 @@ enum Token {
 	#[token("->")]
 	Arrow,
 
+	#[token("nil")]
+	Nil,
+
 	#[token("let")]
 	Let,
 
@@ -89,6 +92,15 @@ enum Token {
 
 	#[token("of")]
 	Of,
+
+	#[token("return")]
+	Return,
+
+	#[token("break")]
+	Break,
+
+	#[token("continue")]
+	Continue,
 
 	#[token("import")]
 	Import,
