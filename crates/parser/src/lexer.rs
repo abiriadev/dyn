@@ -515,5 +515,135 @@ mod tests {
 				[(Ok(Token::False), 0..5)]
 			);
 		}
+
+		#[test]
+		fn lex_panic() {
+			assert_eq!(
+				Token::lexer("panic")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Panic), 0..5)]
+			);
+		}
+
+		#[test]
+		fn lex_assert() {
+			assert_eq!(
+				Token::lexer("assert")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Assert), 0..6)]
+			);
+		}
+
+		#[test]
+		fn lex_let() {
+			assert_eq!(
+				Token::lexer("let")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Let), 0..3)]
+			);
+		}
+
+		#[test]
+		fn lex_let_mut() {
+			assert_eq!(
+				Token::lexer("let!")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LetMut), 0..4)]
+			);
+		}
+
+		#[test]
+		fn lex_if() {
+			assert_eq!(
+				Token::lexer("if")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::If), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_else() {
+			assert_eq!(
+				Token::lexer("else")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Else), 0..4)]
+			);
+		}
+
+		#[test]
+		fn lex_iter() {
+			assert_eq!(
+				Token::lexer("iter")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Iter), 0..4)]
+			);
+		}
+
+		#[test]
+		fn lex_of() {
+			assert_eq!(
+				Token::lexer("of")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Of), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_return() {
+			assert_eq!(
+				Token::lexer("return")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Return), 0..6)]
+			);
+		}
+
+		#[test]
+		fn lex_break() {
+			assert_eq!(
+				Token::lexer("break")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Break), 0..5)]
+			);
+		}
+
+		#[test]
+		fn lex_continue() {
+			assert_eq!(
+				Token::lexer("continue")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Continue), 0..8)]
+			);
+		}
+
+		#[test]
+		fn lex_import() {
+			assert_eq!(
+				Token::lexer("import")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Import), 0..6)]
+			);
+		}
+
+		#[test]
+		fn lex_export() {
+			assert_eq!(
+				Token::lexer("export")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Export), 0..6)]
+			);
+		}
 	}
 }
