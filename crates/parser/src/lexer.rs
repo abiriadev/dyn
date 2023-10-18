@@ -161,7 +161,7 @@ pub enum Token {
 	#[regex(r"//[^\n]*")]
 	LineComment,
 
-	#[regex(r"/\*([^*]|\*[^/])+\*/")]
+	#[regex(r"/\*([^*]|\*[^/])*\*/")]
 	BlockCommnet,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| lex.slice().parse().ok())]
