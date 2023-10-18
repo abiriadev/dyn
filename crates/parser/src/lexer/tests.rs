@@ -478,51 +478,57 @@ fn lex_newline() {
 	);
 }
 
-#[test]
-fn lex_line_comment() {
-	assert_eq!(
-		Token::lexer("//")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::LineComment), 0..2)]
-	);
-}
+mod lex_comments {
+	use logos::Logos;
 
-#[test]
-fn lex_block_comment() {
-	assert_eq!(
-		Token::lexer("/**/")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::BlockCommnet), 0..4)]
-	);
+	use super::{assert_eq, Token};
 
-	assert_eq!(
-		Token::lexer("/* */")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::BlockCommnet), 0..5)]
-	);
-}
+	#[test]
+	fn lex_line_comment() {
+		assert_eq!(
+			Token::lexer("//")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::LineComment), 0..2)]
+		);
+	}
 
-#[test]
-fn block_comment_should_be_able_to_contain_newline() {
-	assert_eq!(
-		Token::lexer("/*\n\n\n*/")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::BlockCommnet), 0..7)]
-	);
-}
+	#[test]
+	fn lex_block_comment() {
+		assert_eq!(
+			Token::lexer("/**/")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::BlockCommnet), 0..4)]
+		);
 
-#[test]
-fn nested_block_comment_should_be_allowed() {
-	assert_eq!(
-		Token::lexer("/*/**/*/")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::BlockCommnet), 0..8),]
-	);
+		assert_eq!(
+			Token::lexer("/* */")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::BlockCommnet), 0..5)]
+		);
+	}
+
+	#[test]
+	fn block_comment_should_be_able_to_contain_newline() {
+		assert_eq!(
+			Token::lexer("/*\n\n\n*/")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::BlockCommnet), 0..7)]
+		);
+	}
+
+	#[test]
+	fn nested_block_comment_should_be_allowed() {
+		assert_eq!(
+			Token::lexer("/*/**/*/")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::BlockCommnet), 0..8),]
+		);
+	}
 }
 
 #[test]
