@@ -1,0 +1,67 @@
+use crate::lexer::token::Token::{self, *};
+use crate::lexer::LexError;
+use crate::ast::Nil;
+
+grammar;
+
+pub Expr: Nil = "nil";
+
+extern {
+	type Location = usize;
+	type Error = LexError;
+
+	enum Token {
+		"+" => Plus,
+		"-" => Minus,
+		"*" => Asterisk,
+		"/" => Slash,
+		"%" => Percent,
+		"=" => Assign,
+		"+=" => PlusAssign,
+		"-=" => MinusAssign,
+		"*=" => AsteriskAssign,
+		"/=" => SlashAssign,
+		"%=" => PercentAssign,
+		"==" => Equal,
+		"!=" => NotEqual,
+		"<" => LeftAngledBracket,
+		">" => RightAngledBracket,
+		"<=" => LessThanEqual,
+		">=" => GreaterThanEqual,
+		"&&" => DoubleAnd,
+		"||" => DoublePipe,
+		"(" => LeftParenthesis,
+		")" => RightParenthesis,
+		"{" => LeftBrace,
+		"}" => RightBrace,
+		"[" => LeftBracket,
+		"]" => RightBracket,
+		"!" => Bang,
+		"." => Dot,
+		"," => Comma,
+		"@" => At,
+		"->" => Arrow,
+		"nil" => Nil,
+		"true" => True,
+		"false" => False,
+		"panic" => Panic,
+		"assert" => Assert,
+		"let" => Let,
+		"let!" => LetMut,
+		"if" => If,
+		"else" => Else,
+		"iter" => Iter,
+		"of" => Of,
+		"return" => Return,
+		"break" => Break,
+		"continue" => Continue,
+		"import" => Import,
+		"export" => Export,
+		"newline" => NewLine,
+		"lcomment" => LineComment,
+		"bcomment" => BlockCommnet,
+		"int" => Integer(<i32>),
+		"string" => String(<String>),
+		"ident" => Identifier(<String>),
+	}
+}
