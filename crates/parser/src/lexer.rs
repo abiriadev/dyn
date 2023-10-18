@@ -646,4 +646,67 @@ mod tests {
 			);
 		}
 	}
+
+	#[test]
+	fn lex_newline() {
+		assert_eq!(
+			Token::lexer("\n")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::NewLine), 0..1)]
+		);
+	}
+
+	#[test]
+	fn lex_line_comment() {
+		assert_eq!(
+			Token::lexer("//")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::LineComment), 0..2)]
+		);
+	}
+
+	#[test]
+	fn lex_block_comment() {
+		assert_eq!(
+			Token::lexer("/**/")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::BlockCommnet), 0..4)]
+		);
+	}
+
+	#[test]
+	fn lex_integer() {
+		assert_eq!(
+			Token::lexer("0")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::NewLine), 0..1)]
+		);
+	}
+
+	#[test]
+	fn lex_string() {
+		assert_eq!(
+			Token::lexer(r#""""#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::String("".to_owned())), 0..2)]
+		);
+	}
+
+	#[test]
+	fn lex_ident() {
+		assert_eq!(
+			Token::lexer("_")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("_".to_owned())),
+				0..1
+			)]
+		);
+	}
 }
