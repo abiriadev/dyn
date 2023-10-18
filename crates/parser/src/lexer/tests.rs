@@ -576,73 +576,79 @@ fn minus_zero_should_be_valid_integer() {
 	);
 }
 
-#[test]
-fn lex_string() {
-	assert_eq!(
-		Token::lexer(r#""""#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::String("".to_owned())), 0..2)]
-	);
+mod lex_string {
+	use logos::Logos;
 
-	assert_eq!(
-		Token::lexer(r#"''"#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Ok(Token::String("".to_owned())), 0..2)]
-	);
-}
+	use super::{assert_eq, LexError, Token};
 
-#[test]
-fn strings_should_have_same_content_regardless_of_quotes_used() {
-	assert_eq!(
-		Token::lexer(r#""abc""#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		Token::lexer(r#"'abc'"#)
-			.spanned()
-			.collect::<Vec<_>>(),
-	);
-}
+	#[test]
+	fn lex_string() {
+		assert_eq!(
+			Token::lexer(r#""""#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::String("".to_owned())), 0..2)]
+		);
 
-#[test]
-fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
-	assert_eq!(
-		Token::lexer(r#""\"'""#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::String(r#"\"'"#.to_owned())),
-			0..5,
-		)]
-	);
+		assert_eq!(
+			Token::lexer(r#"''"#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::String("".to_owned())), 0..2)]
+		);
+	}
 
-	assert_eq!(
-		Token::lexer(r#"'\'"'"#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::String(r#"\'""#.to_owned())),
-			0..5,
-		)]
-	);
-}
+	#[test]
+	fn strings_should_have_same_content_regardless_of_quotes_used() {
+		assert_eq!(
+			Token::lexer(r#""abc""#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			Token::lexer(r#"'abc'"#)
+				.spanned()
+				.collect::<Vec<_>>(),
+		);
+	}
 
-#[test]
-fn string_should_be_closed_with_the_same_quote_used_to_open() {
-	assert_eq!(
-		Token::lexer(r#""'"#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Err(LexError::InvalidToken), 0..2)]
-	);
+	#[test]
+	fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
+		assert_eq!(
+			Token::lexer(r#""\"'""#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::String(r#"\"'"#.to_owned())),
+				0..5,
+			)]
+		);
 
-	assert_eq!(
-		Token::lexer(r#"'""#)
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Err(LexError::InvalidToken), 0..2)]
-	);
+		assert_eq!(
+			Token::lexer(r#"'\'"'"#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::String(r#"\'""#.to_owned())),
+				0..5,
+			)]
+		);
+	}
+
+	#[test]
+	fn string_should_be_closed_with_the_same_quote_used_to_open() {
+		assert_eq!(
+			Token::lexer(r#""'"#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Err(LexError::InvalidToken), 0..2)]
+		);
+
+		assert_eq!(
+			Token::lexer(r#"'""#)
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Err(LexError::InvalidToken), 0..2)]
+		);
+	}
 }
 
 #[test]
