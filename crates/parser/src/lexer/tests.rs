@@ -496,6 +496,33 @@ fn lex_block_comment() {
 			.collect::<Vec<_>>(),
 		[(Ok(Token::BlockCommnet), 0..4)]
 	);
+
+	assert_eq!(
+		Token::lexer("/* */")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Ok(Token::BlockCommnet), 0..5)]
+	);
+}
+
+#[test]
+fn block_comment_should_be_able_to_contain_newline() {
+	assert_eq!(
+		Token::lexer("/*\n\n\n*/")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Ok(Token::BlockCommnet), 0..7)]
+	);
+}
+
+#[test]
+fn nested_block_comment_should_be_allowed() {
+	assert_eq!(
+		Token::lexer("/*/**/*/")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Ok(Token::BlockCommnet), 0..8),]
+	);
 }
 
 #[test]
@@ -505,6 +532,16 @@ fn lex_integer() {
 			.spanned()
 			.collect::<Vec<_>>(),
 		[(Ok(Token::Integer(0)), 0..1)]
+	);
+}
+
+#[test]
+fn minus_zero_should_be_valid_integer() {
+	assert_eq!(
+		Token::lexer("-0")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Ok(Token::Integer(0)), 0..2)]
 	);
 }
 
