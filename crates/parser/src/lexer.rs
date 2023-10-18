@@ -177,14 +177,183 @@ pub enum Token {
 
 #[cfg(test)]
 mod tests {
+	use pretty_assertions::assert_eq;
+
 	use super::*;
 
-	#[test]
-	fn lex_tag_tokens() {
-		let spanned = Token::lexer("+")
-			.spanned()
-			.collect::<Vec<_>>();
+	mod lex_tag_tokens {
+		use logos::Logos;
 
-		assert_eq!(spanned, [(Ok(Token::Plus), 0..1)]);
+		use super::{assert_eq, Token};
+
+		#[test]
+		fn lex_plus() {
+			assert_eq!(
+				Token::lexer("+")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Plus), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_minus() {
+			assert_eq!(
+				Token::lexer("-")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Minus), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_asterisk() {
+			assert_eq!(
+				Token::lexer("*")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Asterisk), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_slash() {
+			assert_eq!(
+				Token::lexer("/")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Slash), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_percent() {
+			assert_eq!(
+				Token::lexer("%")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Percent), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_assign() {
+			assert_eq!(
+				Token::lexer("=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Assign), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_plus_assign() {
+			assert_eq!(
+				Token::lexer("+=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::PlusAssign), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_minus_assign() {
+			assert_eq!(
+				Token::lexer("-=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::MinusAssign), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_asterisk_assign() {
+			assert_eq!(
+				Token::lexer("*=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::AsteriskAssign), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_slash_assign() {
+			assert_eq!(
+				Token::lexer("/=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::SlashAssign), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_percent_assign() {
+			assert_eq!(
+				Token::lexer("%=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::PercentAssign), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_equal() {
+			assert_eq!(
+				Token::lexer("==")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Equal), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_not_equal() {
+			assert_eq!(
+				Token::lexer("!=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::NotEqual), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_left_angled_bracket() {
+			assert_eq!(
+				Token::lexer("<")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LeftAngledBracket), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_right_angled_bracket() {
+			assert_eq!(
+				Token::lexer(">")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::RightAngledBracket), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_less_than_equal() {
+			assert_eq!(
+				Token::lexer("<=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LessThanEqual), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_greater_than_equal() {
+			assert_eq!(
+				Token::lexer(">=")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::GreaterThanEqual), 0..2)]
+			);
+		}
 	}
 }

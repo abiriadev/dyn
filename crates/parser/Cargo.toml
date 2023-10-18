@@ -9,6 +9,7 @@ edition = "2021"
 anyhow = "1.0.75"
 lalrpop-util = "0.20.0"
 logos = "0.13.0"
+pretty_assertions = "1.4.0"
 
 [build-dependencies]
 lalrpop = "0.20.0"
