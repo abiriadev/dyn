@@ -651,100 +651,106 @@ mod lex_string {
 	}
 }
 
-#[test]
-fn lex_identifier() {
-	assert_eq!(
-		Token::lexer("a")
+mod lex_identifier {
+	use logos::Logos;
+
+	use super::{assert_eq, assert_ne, LexError, Token};
+
+	#[test]
+	fn lex_identifier() {
+		assert_eq!(
+			Token::lexer("a")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("a".to_owned())),
+				0..1
+			)]
+		);
+	}
+
+	#[test]
+	fn underscores_should_be_valid_identifiers() {
+		assert_eq!(
+			Token::lexer("_")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("_".to_owned())),
+				0..1
+			)]
+		);
+
+		assert_eq!(
+			Token::lexer("__")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("__".to_owned())),
+				0..2
+			)]
+		);
+
+		assert_eq!(
+			Token::lexer("_a")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("_a".to_owned())),
+				0..2
+			)]
+		);
+
+		assert_eq!(
+			Token::lexer("a_")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("a_".to_owned())),
+				0..2
+			)]
+		);
+	}
+
+	#[test]
+	fn identifiers_should_be_case_sensitive() {
+		let (i1, i1_span) = Token::lexer("asdf")
 			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("a".to_owned())),
-			0..1
-		)]
-	);
-}
+			.next()
+			.unwrap();
 
-#[test]
-fn underscores_should_be_valid_identifiers() {
-	assert_eq!(
-		Token::lexer("_")
+		let (i2, i2_span) = Token::lexer("ASDF")
 			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("_".to_owned())),
-			0..1
-		)]
-	);
+			.next()
+			.unwrap();
 
-	assert_eq!(
-		Token::lexer("__")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("__".to_owned())),
-			0..2
-		)]
-	);
+		// they must have the same length
+		assert_eq!(i1_span, i2_span);
 
-	assert_eq!(
-		Token::lexer("_a")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("_a".to_owned())),
-			0..2
-		)]
-	);
+		// but they should have different values
+		assert_ne!(i1, i2);
+	}
 
-	assert_eq!(
-		Token::lexer("a_")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("a_".to_owned())),
-			0..2
-		)]
-	);
-}
+	#[test]
+	fn identifier_must_not_start_with_number() {
+		assert_eq!(
+			Token::lexer("123a")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Err(LexError::InvalidIndentifier), 0..4)]
+		);
+	}
 
-#[test]
-fn identifiers_should_be_case_sensitive() {
-	let (i1, i1_span) = Token::lexer("asdf")
-		.spanned()
-		.next()
-		.unwrap();
-
-	let (i2, i2_span) = Token::lexer("ASDF")
-		.spanned()
-		.next()
-		.unwrap();
-
-	// they must have the same length
-	assert_eq!(i1_span, i2_span);
-
-	// but they should have different values
-	assert_ne!(i1, i2);
-}
-
-#[test]
-fn identifier_must_not_start_with_number() {
-	assert_eq!(
-		Token::lexer("123a")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(Err(LexError::InvalidIndentifier), 0..4)]
-	);
-}
-
-#[test]
-fn ifif() {
-	assert_eq!(
-		Token::lexer("ifif")
-			.spanned()
-			.collect::<Vec<_>>(),
-		[(
-			Ok(Token::Identifier("ifif".to_owned())),
-			0..4
-		)]
-	);
+	#[test]
+	fn ifif() {
+		assert_eq!(
+			Token::lexer("ifif")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("ifif".to_owned())),
+				0..4
+			)]
+		);
+	}
 }
