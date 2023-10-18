@@ -584,6 +584,48 @@ fn lex_string() {
 			.collect::<Vec<_>>(),
 		[(Ok(Token::String("".to_owned())), 0..2)]
 	);
+
+	assert_eq!(
+		Token::lexer(r#"''"#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Ok(Token::String("".to_owned())), 0..2)]
+	);
+}
+
+#[test]
+fn strings_should_have_same_content_regardless_of_quotes_used() {
+	assert_eq!(
+		Token::lexer(r#""abc""#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		Token::lexer(r#"'abc'"#)
+			.spanned()
+			.collect::<Vec<_>>(),
+	);
+}
+
+#[test]
+fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
+	assert_eq!(
+		Token::lexer(r#""\"'""#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::String(r#"\"'"#.to_owned())),
+			1..4
+		)]
+	);
+
+	assert_eq!(
+		Token::lexer(r#"'\'"'"#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::String(r#"\'""#.to_owned())),
+			1..4
+		)]
+	);
 }
 
 #[test]
