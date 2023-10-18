@@ -1,8 +1,19 @@
 use std::string::String;
-use crate::lexer::{Token::{self, *}, LexError};
-use crate::ast::{Expr, BinExpr, Ident};
+use crate::lexer::{Token, LexError};
+use crate::ast::*;
 
 grammar;
+
+pub Nil: Nil = "nil" => Nil;
+
+pub Boolean: Boolean = {
+	"true" => Boolean(true),
+	"false" => Boolean(false),
+};
+
+pub Integer: Integer = "int" => Integer(<>);
+
+pub StringT: StringT = "string" => StringT(<>);
 
 pub Ident: Ident = "ident" => Ident(<>);
 
@@ -19,57 +30,57 @@ extern {
 	type Error = LexError;
 
 	enum Token {
-		"+" => Plus,
-		"-" => Minus,
-		"*" => Asterisk,
-		"/" => Slash,
-		"%" => Percent,
-		"=" => Assign,
-		"+=" => PlusAssign,
-		"-=" => MinusAssign,
-		"*=" => AsteriskAssign,
-		"/=" => SlashAssign,
-		"%=" => PercentAssign,
-		"==" => Equal,
-		"!=" => NotEqual,
-		"<" => LeftAngledBracket,
-		">" => RightAngledBracket,
-		"<=" => LessThanEqual,
-		">=" => GreaterThanEqual,
-		"&&" => DoubleAnd,
-		"||" => DoublePipe,
-		"(" => LeftParenthesis,
-		")" => RightParenthesis,
-		"{" => LeftBrace,
-		"}" => RightBrace,
-		"[" => LeftBracket,
-		"]" => RightBracket,
-		"!" => Bang,
-		"." => Dot,
-		"," => Comma,
-		"@" => At,
-		"->" => Arrow,
-		"nil" => Nil,
-		"true" => True,
-		"false" => False,
-		"panic" => Panic,
-		"assert" => Assert,
-		"let" => Let,
-		"let!" => LetMut,
-		"if" => If,
-		"else" => Else,
-		"iter" => Iter,
-		"of" => Of,
-		"return" => Return,
-		"break" => Break,
-		"continue" => Continue,
-		"import" => Import,
-		"export" => Export,
-		"newline" => NewLine,
-		"lcomment" => LineComment,
-		"bcomment" => BlockCommnet,
-		"int" => Integer(<i32>),
-		"string" => String(<String>),
-		"ident" => Identifier(<String>),
+		"+" => Token::Plus,
+		"-" => Token::Minus,
+		"*" => Token::Asterisk,
+		"/" => Token::Slash,
+		"%" => Token::Percent,
+		"=" => Token::Assign,
+		"+=" => Token::PlusAssign,
+		"-=" => Token::MinusAssign,
+		"*=" => Token::AsteriskAssign,
+		"/=" => Token::SlashAssign,
+		"%=" => Token::PercentAssign,
+		"==" => Token::Equal,
+		"!=" => Token::NotEqual,
+		"<" => Token::LeftAngledBracket,
+		">" => Token::RightAngledBracket,
+		"<=" => Token::LessThanEqual,
+		">=" => Token::GreaterThanEqual,
+		"&&" => Token::DoubleAnd,
+		"||" => Token::DoublePipe,
+		"(" => Token::LeftParenthesis,
+		")" => Token::RightParenthesis,
+		"{" => Token::LeftBrace,
+		"}" => Token::RightBrace,
+		"[" => Token::LeftBracket,
+		"]" => Token::RightBracket,
+		"!" => Token::Bang,
+		"." => Token::Dot,
+		"," => Token::Comma,
+		"@" => Token::At,
+		"->" => Token::Arrow,
+		"nil" => Token::Nil,
+		"true" => Token::True,
+		"false" => Token::False,
+		"panic" => Token::Panic,
+		"assert" => Token::Assert,
+		"let" => Token::Let,
+		"let!" => Token::LetMut,
+		"if" => Token::If,
+		"else" => Token::Else,
+		"iter" => Token::Iter,
+		"of" => Token::Of,
+		"return" => Token::Return,
+		"break" => Token::Break,
+		"continue" => Token::Continue,
+		"import" => Token::Import,
+		"export" => Token::Export,
+		"newline" => Token::NewLine,
+		"lcomment" => Token::LineComment,
+		"bcomment" => Token::BlockCommnet,
+		"int" => Token::Integer(<i32>),
+		"string" => Token::String(<String>),
+		"ident" => Token::Identifier(<String>),
 	}
 }

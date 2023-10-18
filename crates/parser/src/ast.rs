@@ -1,10 +1,10 @@
 pub struct Nil;
 
-pub struct Boolean(bool);
+pub struct Boolean(pub bool);
 
-pub struct Integer(i32);
+pub struct Integer(pub i32);
 
-pub struct StringT(String);
+pub struct StringT(pub String);
 
 pub enum Literal {
 	Nil(Nil),
@@ -15,7 +15,7 @@ pub enum Literal {
 
 pub struct Ident(pub String);
 
-pub struct Array(Code);
+pub struct Array(pub Code);
 
 pub struct Function {
 	name: Ident,
