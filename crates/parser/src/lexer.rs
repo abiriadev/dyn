@@ -105,9 +105,22 @@ pub enum Token {
 	#[token("->")]
 	Arrow,
 
-	// keywords
+	// token literals
 	#[token("nil")]
 	Nil,
+
+	#[token("true")]
+	True,
+
+	#[token("false")]
+	False,
+
+	// keywords
+	#[token("panic")]
+	Panic,
+
+	#[token("assert")]
+	Assert,
 
 	#[token("let")]
 	Let,
