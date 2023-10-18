@@ -435,5 +435,85 @@ mod tests {
 				[(Ok(Token::RightBracket), 0..1)]
 			);
 		}
+
+		#[test]
+		fn lex_bang() {
+			assert_eq!(
+				Token::lexer("!")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Bang), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_dot() {
+			assert_eq!(
+				Token::lexer(".")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Dot), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_comma() {
+			assert_eq!(
+				Token::lexer(",")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Comma), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_at() {
+			assert_eq!(
+				Token::lexer("@")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::At), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_arrow() {
+			assert_eq!(
+				Token::lexer("->")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Arrow), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_nil() {
+			assert_eq!(
+				Token::lexer("nil")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::Nil), 0..3)]
+			);
+		}
+
+		#[test]
+		fn lex_true() {
+			assert_eq!(
+				Token::lexer("true")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::True), 0..4)]
+			);
+		}
+
+		#[test]
+		fn lex_false() {
+			assert_eq!(
+				Token::lexer("false")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::False), 0..5)]
+			);
+		}
 	}
 }
