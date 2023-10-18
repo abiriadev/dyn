@@ -1,10 +1,16 @@
 use crate::lexer::token::Token::{self, *};
 use crate::lexer::LexError;
-use crate::ast::Nil;
+use crate::ast::{Expr, BinExpr};
 
 grammar;
 
-pub Expr: Nil = "nil";
+pub Expr: Expr = {
+	<BinExpr> => Expr::BinExpr(<>),
+};
+
+BinExpr: BinExpr = {
+	"let" <i:"ident"> "=" <e:Expr> => BinExpr::Declare(Box::new(i), Box::new(e)),
+};
 
 extern {
 	type Location = usize;
