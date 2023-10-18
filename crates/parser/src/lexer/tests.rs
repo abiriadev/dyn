@@ -1,4 +1,4 @@
-use pretty_assertions::assert_eq;
+use pretty_assertions::{assert_eq, assert_ne};
 
 use super::*;
 
@@ -705,6 +705,25 @@ fn underscores_should_be_valid_identifiers() {
 			0..2
 		)]
 	);
+}
+
+#[test]
+fn identifiers_should_be_case_sensitive() {
+	let (i1, i1_span) = Token::lexer("asdf")
+		.spanned()
+		.next()
+		.unwrap();
+
+	let (i2, i2_span) = Token::lexer("ASDF")
+		.spanned()
+		.next()
+		.unwrap();
+
+	// they must have the same length
+	assert_eq!(i1_span, i2_span);
+
+	// but they should have different values
+	assert_ne!(i1, i2);
 }
 
 #[test]
