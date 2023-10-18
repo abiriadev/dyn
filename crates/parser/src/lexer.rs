@@ -355,5 +355,85 @@ mod tests {
 				[(Ok(Token::GreaterThanEqual), 0..2)]
 			);
 		}
+
+		#[test]
+		fn lex_double_and() {
+			assert_eq!(
+				Token::lexer("&&")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::DoubleAnd), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_double_pipe() {
+			assert_eq!(
+				Token::lexer("||")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::DoublePipe), 0..2)]
+			);
+		}
+
+		#[test]
+		fn lex_left_paranthesis() {
+			assert_eq!(
+				Token::lexer("(")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LeftParenthesis), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_right_paranthesis() {
+			assert_eq!(
+				Token::lexer(")")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::RightParenthesis), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_left_brace() {
+			assert_eq!(
+				Token::lexer("{")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LeftBrace), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_right_brace() {
+			assert_eq!(
+				Token::lexer("}")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::RightBrace), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_left_bracket() {
+			assert_eq!(
+				Token::lexer("[")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::LeftBracket), 0..1)]
+			);
+		}
+
+		#[test]
+		fn lex_right_bracket() {
+			assert_eq!(
+				Token::lexer("]")
+					.spanned()
+					.collect::<Vec<_>>(),
+				[(Ok(Token::RightBracket), 0..1)]
+			);
+		}
 	}
 }
