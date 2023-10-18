@@ -3,6 +3,7 @@ use logos::Logos;
 #[derive(Debug, PartialEq, Logos)]
 #[logos(skip r"[ \t]+")]
 pub enum Token {
+	// Elementary arithmetics
 	#[token("+")]
 	Plus,
 
@@ -15,24 +16,55 @@ pub enum Token {
 	#[token("/")]
 	Slash,
 
+	#[token("%")]
+	Percent,
+
+	// Assignment operators
 	#[token("=")]
+	Assign,
+
+	#[token("+=")]
+	PlusAssign,
+
+	#[token("-=")]
+	MinusAssign,
+
+	#[token("*=")]
+	AsteriskAssign,
+
+	#[token("/=")]
+	SlashAssign,
+
+	#[token("%=")]
+	PercentAssign,
+
+	// Comparison operators
+	#[token("==")]
 	Equal,
 
-	#[token("!")]
-	Bang,
+	#[token("!=")]
+	NotEqual,
 
-	#[token(",")]
-	Comma,
+	#[token("<")]
+	LeftAngledBracket,
 
-	#[token("@")]
-	At,
+	#[token(">")]
+	RightAngledBracket,
 
-	#[token("'")]
-	SingleQuote,
+	#[token("<=")]
+	LessThanEqual,
 
-	#[token("\"")]
-	DoubleQuote,
+	#[token(">=")]
+	GreaterThanEqual,
 
+	// Boolean operators
+	#[token("&&")]
+	DoubleAnd,
+
+	#[token("||")]
+	DoublePipe,
+
+	// Parantheses
 	#[token("(")]
 	LeftParenthesis,
 
@@ -51,27 +83,29 @@ pub enum Token {
 	#[token("]")]
 	RightBracket,
 
-	#[token("+=")]
-	PlusEqual,
+	// etc
+	#[token("!")]
+	Bang,
 
-	#[token("-=")]
-	MinusEqual,
+	#[token(".")]
+	Dot,
 
-	#[token("*=")]
-	AsteriskEqual,
+	#[token(",")]
+	Comma,
 
-	#[token("/=")]
-	SlashEqual,
+	#[token("@")]
+	At,
 
-	#[token("&&")]
-	DoubleAnd,
+	#[token("'")]
+	SingleQuote,
 
-	#[token("||")]
-	DoublePipe,
+	#[token("\"")]
+	DoubleQuote,
 
 	#[token("->")]
 	Arrow,
 
+	// keywords
 	#[token("nil")]
 	Nil,
 
@@ -108,6 +142,7 @@ pub enum Token {
 	#[token("export")]
 	Export,
 
+	// regexes
 	#[regex("\n+")]
 	NewLine,
 
