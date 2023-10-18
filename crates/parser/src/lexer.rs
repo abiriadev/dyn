@@ -1,3 +1,7 @@
+use logos::{Logos, SpannedIter};
+
+use self::token::Token;
+
 mod token;
 
 #[cfg(test)] mod tests;
@@ -8,4 +12,10 @@ pub enum LexError {
 
 	#[default]
 	InvalidToken,
+}
+
+pub struct SpannedLexer<'a>(SpannedIter<'a, Token>);
+
+impl<'a> SpannedLexer<'a> {
+	pub fn new(code: &'a str) -> Self { Self(Token::lexer(code).spanned()) }
 }
