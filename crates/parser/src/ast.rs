@@ -29,12 +29,6 @@ pub enum BinExpr {
 	Mul(Box<Expr>, Box<Expr>),
 	Div(Box<Expr>, Box<Expr>),
 	Mod(Box<Expr>, Box<Expr>),
-	Assign(Box<Expr>, Box<Expr>),
-	AddAssign(Box<Expr>, Box<Expr>),
-	SubAssign(Box<Expr>, Box<Expr>),
-	MulAssign(Box<Expr>, Box<Expr>),
-	DivAssign(Box<Expr>, Box<Expr>),
-	ModAssign(Box<Expr>, Box<Expr>),
 	Equal(Box<Expr>, Box<Expr>),
 	NotEqual(Box<Expr>, Box<Expr>),
 	LessThan(Box<Expr>, Box<Expr>),
@@ -47,8 +41,6 @@ pub enum BinExpr {
 	Call(Box<Expr>, Box<Expr>),
 	Prop(Box<Expr>, Box<Expr>),
 	Index(Box<Expr>, Box<Expr>),
-	Declare(Box<Expr>, Box<Expr>),
-	DeclareMut(Box<Expr>, Box<Expr>),
 }
 
 pub enum Expr {
@@ -57,6 +49,14 @@ pub enum Expr {
 	Array(Array),
 	Function(Function),
 	BinExpr(BinExpr),
+	Assign(Ident, Box<Expr>),
+	AddAssign(Ident, Box<Expr>),
+	SubAssign(Ident, Box<Expr>),
+	MulAssign(Ident, Box<Expr>),
+	DivAssign(Ident, Box<Expr>),
+	ModAssign(Ident, Box<Expr>),
+	Declare(Ident, Box<Expr>),
+	DeclareMut(Ident, Box<Expr>),
 	If {
 		condition: Box<Expr>,
 		yes: Code,
