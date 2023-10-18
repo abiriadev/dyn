@@ -654,12 +654,55 @@ mod lex_string {
 #[test]
 fn lex_identifier() {
 	assert_eq!(
+		Token::lexer("a")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::Identifier("a".to_owned())),
+			0..1
+		)]
+	);
+}
+
+#[test]
+fn underscores_should_be_valid_identifiers() {
+	assert_eq!(
 		Token::lexer("_")
 			.spanned()
 			.collect::<Vec<_>>(),
 		[(
 			Ok(Token::Identifier("_".to_owned())),
 			0..1
+		)]
+	);
+
+	assert_eq!(
+		Token::lexer("__")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::Identifier("__".to_owned())),
+			0..2
+		)]
+	);
+
+	assert_eq!(
+		Token::lexer("_a")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::Identifier("_a".to_owned())),
+			0..2
+		)]
+	);
+
+	assert_eq!(
+		Token::lexer("a_")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(
+			Ok(Token::Identifier("a_".to_owned())),
+			0..2
 		)]
 	);
 }
