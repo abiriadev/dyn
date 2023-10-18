@@ -1,12 +1,20 @@
 use logos::{Lexer, Logos};
 
+#[derive(Default, Debug, Clone, PartialEq)]
+pub enum LexError {
+	InvalidIndentifier,
+
+	#[default]
+	InvalidToken,
+}
+
 fn lex_string(lex: &mut Lexer<Token>) -> String {
 	let sl = lex.slice();
 	sl[1..sl.len() - 1].to_owned()
 }
 
 #[derive(Debug, PartialEq, Logos)]
-#[logos(skip r"[ \t]+")]
+#[logos(skip r"[ \t]+", error = LexError)]
 pub enum Token {
 	// Elementary arithmetics
 	#[token("+")]
@@ -172,6 +180,7 @@ pub enum Token {
 	String(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| lex.slice().to_owned())]
+	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIndentifier))]
 	Identifier(String),
 }
 
@@ -706,6 +715,29 @@ mod tests {
 			[(
 				Ok(Token::Identifier("_".to_owned())),
 				0..1
+			)]
+		);
+	}
+
+	#[test]
+	fn identifier_must_not_start_with_number() {
+		assert_eq!(
+			Token::lexer("123a")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Err(LexError::InvalidIndentifier), 0..4)]
+		);
+	}
+
+	#[test]
+	fn ifif() {
+		assert_eq!(
+			Token::lexer("ifif")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(
+				Ok(Token::Identifier("ifif".to_owned())),
+				0..4
 			)]
 		);
 	}
