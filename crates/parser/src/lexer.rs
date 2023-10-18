@@ -698,7 +698,7 @@ mod tests {
 	}
 
 	#[test]
-	fn lex_ident() {
+	fn lex_identifier() {
 		assert_eq!(
 			Token::lexer("_")
 				.spanned()
