@@ -1,8 +1,8 @@
 use logos::{Logos, SpannedIter};
 
-use self::token::Token;
-
 mod token;
+
+pub use token::Token;
 
 #[cfg(test)] mod tests;
 

@@ -13,7 +13,7 @@ pub enum Literal {
 	String(StringT),
 }
 
-pub struct Ident(String);
+pub struct Ident(pub String);
 
 pub struct Array(Code);
 

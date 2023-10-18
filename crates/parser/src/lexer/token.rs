@@ -7,7 +7,7 @@ fn lex_string(lex: &mut Lexer<Token>) -> String {
 	sl[1..sl.len() - 1].to_owned()
 }
 
-#[derive(Debug, PartialEq, Logos)]
+#[derive(Debug, PartialEq, Logos, Clone)]
 #[logos(skip r"[ \t]+", error = LexError)]
 pub enum Token {
 	// Elementary arithmetics

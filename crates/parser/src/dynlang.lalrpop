@@ -1,15 +1,17 @@
-use crate::lexer::token::Token::{self, *};
-use crate::lexer::LexError;
-use crate::ast::{Expr, BinExpr};
+use std::string::String;
+use crate::lexer::{Token::{self, *}, LexError};
+use crate::ast::{Expr, BinExpr, Ident};
 
 grammar;
 
+pub Ident: Ident = "ident" => Ident(<>);
+
 pub Expr: Expr = {
 	<BinExpr> => Expr::BinExpr(<>),
+	"let" <i:Ident> "=" <e:Expr> => Expr::Declare(i, Box::new(e)),
 };
 
 BinExpr: BinExpr = {
-	"let" <i:"ident"> "=" <e:Expr> => BinExpr::Declare(Box::new(i), Box::new(e)),
 };
 
 extern {
