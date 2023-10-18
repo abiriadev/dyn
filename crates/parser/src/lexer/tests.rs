@@ -629,6 +629,23 @@ fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
 }
 
 #[test]
+fn string_should_be_closed_with_the_same_quote_used_to_open() {
+	assert_eq!(
+		Token::lexer(r#""'"#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Err(LexError::InvalidToken), 0..2)]
+	);
+
+	assert_eq!(
+		Token::lexer(r#"'""#)
+			.spanned()
+			.collect::<Vec<_>>(),
+		[(Err(LexError::InvalidToken), 0..2)]
+	);
+}
+
+#[test]
 fn lex_identifier() {
 	assert_eq!(
 		Token::lexer("_")
