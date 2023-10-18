@@ -143,11 +143,26 @@ pub enum Token {
 	Export,
 
 	// regexes
-	#[regex("\n+")]
+	#[regex(r"\n[ \t\n]*")]
 	NewLine,
 
-	#[regex("[a-zA-Z]+")]
-	Identifier,
+	#[regex(r"//[^\n]*")]
+	LineComment,
+
+	#[regex(r"/\*([^*]|\*[^/])+\*/")]
+	BlockCommnet,
+
+	#[regex("-?(0|[1-9][0-9]*)", |lex| lex.slice().parse().ok())]
+	Integer(i32),
+
+	#[regex(r#""(?:[^"]|\\")*""#, |lex| {
+		let sl = lex.slice();
+		sl[1..sl.len() - 1].to_owned()
+	})]
+	String(String),
+
+	#[regex("[a-zA-Z]+", |lex| lex.slice().to_owned())]
+	Identifier(String),
 }
 
 #[cfg(test)]
