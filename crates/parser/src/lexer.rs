@@ -114,3 +114,17 @@ pub enum Token {
 	#[regex("[a-zA-Z]+")]
 	Identifier,
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	#[test]
+	fn lex_tag_tokens() {
+		let spanned = Token::lexer("+")
+			.spanned()
+			.collect::<Vec<_>>();
+
+		assert_eq!(spanned, [(Ok(Token::Plus), 0..1)]);
+	}
+}
