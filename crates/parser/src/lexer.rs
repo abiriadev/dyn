@@ -683,7 +683,7 @@ mod tests {
 			Token::lexer("0")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::NewLine), 0..1)]
+			[(Ok(Token::Integer(0)), 0..1)]
 		);
 	}
 
