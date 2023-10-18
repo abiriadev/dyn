@@ -613,7 +613,7 @@ fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
 			.collect::<Vec<_>>(),
 		[(
 			Ok(Token::String(r#"\"'"#.to_owned())),
-			1..4
+			0..5,
 		)]
 	);
 
@@ -623,7 +623,7 @@ fn strings_should_use_quote_escape_depending_on_the_quotes_used() {
 			.collect::<Vec<_>>(),
 		[(
 			Ok(Token::String(r#"\'""#.to_owned())),
-			1..4
+			0..5,
 		)]
 	);
 }

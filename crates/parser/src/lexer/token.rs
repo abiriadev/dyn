@@ -169,8 +169,8 @@ pub enum Token {
 	#[regex("-?(0|[1-9][0-9]*)", |lex| lex.slice().parse().ok())]
 	Integer(i32),
 
-	#[regex(r#"'(?:[^']|\\'\\n\\t)*'"#, lex_string)]
-	#[regex(r#""(?:[^"]|\\"\\n\\t)*""#, lex_string)]
+	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string)]
+	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string)]
 	String(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| lex.slice().to_owned())]
