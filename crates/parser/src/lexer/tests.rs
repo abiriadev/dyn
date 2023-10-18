@@ -494,6 +494,31 @@ mod lex_comments {
 	}
 
 	#[test]
+	fn multiple_line_comments_should_be_allowed() {
+		assert_eq!(
+			Token::lexer("// abc // def")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::LineComment), 0..13)]
+		);
+	}
+
+	#[test]
+	fn each_line_comment_should_be_parsed_as_separate_tokens() {
+		assert_eq!(
+			Token::lexer("// abc\n// def")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[
+				// not a single token of two lines long.
+				(Ok(Token::LineComment), 0..6),
+				(Ok(Token::NewLine), 6..7),
+				(Ok(Token::LineComment), 7..13)
+			]
+		);
+	}
+
+	#[test]
 	fn lex_block_comment() {
 		assert_eq!(
 			Token::lexer("/**/")
