@@ -1,11 +1,16 @@
+#[derive(Debug, PartialEq, Eq)]
 pub struct Nil;
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Boolean(pub bool);
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Integer(pub i32);
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct StringT(pub String);
 
+#[derive(Debug, PartialEq)]
 pub enum Literal {
 	Nil(Nil),
 	Boolean(Boolean),
@@ -13,16 +18,20 @@ pub enum Literal {
 	String(StringT),
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Ident(pub String);
 
+#[derive(Debug, PartialEq)]
 pub struct Array(pub Code);
 
+#[derive(Debug, PartialEq)]
 pub struct Function {
 	name: Ident,
 	args: Vec<Ident>,
 	body: Code,
 }
 
+#[derive(Debug, PartialEq)]
 pub enum BinExpr {
 	Add(Box<Expr>, Box<Expr>),
 	Sub(Box<Expr>, Box<Expr>),
@@ -43,6 +52,7 @@ pub enum BinExpr {
 	Index(Box<Expr>, Box<Expr>),
 }
 
+#[derive(Debug, PartialEq)]
 pub enum Expr {
 	Literal(Literal),
 	Ident(Ident),
@@ -77,4 +87,5 @@ pub enum Expr {
 	Continue(Box<Expr>),
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Code(Vec<Expr>);
