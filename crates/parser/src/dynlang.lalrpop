@@ -4,26 +4,49 @@ use crate::ast::*;
 
 grammar;
 
-pub Nil: Nil = "nil" => Nil;
+Nil: Nil = "nil" => Nil;
 
-pub Boolean: Boolean = {
+Boolean: Boolean = {
 	"true" => Boolean(true),
 	"false" => Boolean(false),
 };
 
-pub Integer: Integer = "int" => Integer(<>);
+Integer: Integer = "int" => Integer(<>);
 
-pub StringT: StringT = "string" => StringT(<>);
+StringT: StringT = "string" => StringT(<>);
 
-pub Ident: Ident = "ident" => Ident(<>);
+Literal: Literal = {
+	Nil => Literal::Nil(<>),
+	Boolean => Literal::Boolean(<>),
+	Integer => Literal::Integer(<>),
+	StringT => Literal::String(<>),
+};
+
+Ident: Ident = "ident" => Ident(<>);
+
+L0: Expr = {
+	Literal => Expr::Literal(<>),
+	"(" <Expr> ")" => <>,
+};
+
+L1: Expr = {
+	<l1:L1> "*" <l0:L0> => Expr::BinExpr(BinExpr::Mul(Box::new(l1), Box::new(l0))),
+	L0 => <>,
+}
+
+L2: Expr = {
+	<l2:L2> "+" <l1:L1> => Expr::BinExpr(BinExpr::Add(Box::new(l2), Box::new(l1))),
+	L1 => <>,
+};
+
+L3: Expr = {
+	"let" <i:Ident> "=" <l2:L2> => Expr::Declare(i, Box::new(l2)),
+	L2 => <>,
+};
 
 pub Expr: Expr = {
-	<BinExpr> => Expr::BinExpr(<>),
-	"let" <i:Ident> "=" <e:Expr> => Expr::Declare(i, Box::new(e)),
-};
-
-BinExpr: BinExpr = {
-};
+	L3 => <>,
+}
 
 extern {
 	type Location = usize;
