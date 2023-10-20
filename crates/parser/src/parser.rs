@@ -16,7 +16,7 @@ mod tests {
 	use pretty_assertions::assert_eq;
 
 	use super::*;
-	use crate::ast::{BinExpr, Integer, Literal};
+	use crate::{ast::BinExpr, n};
 
 	#[test]
 	fn parse_math_expr() {
@@ -26,16 +26,10 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::BinExpr(BinExpr::Add(
-				Box::new(Expr::Literal(Literal::Integer(
-					Integer(1)
-				))),
+				n!(1),
 				Box::new(Expr::BinExpr(BinExpr::Mul(
-					Box::new(Expr::Literal(Literal::Integer(
-						Integer(2)
-					))),
-					Box::new(Expr::Literal(Literal::Integer(
-						Integer(3)
-					)))
+					n!(2),
+					n!(3),
 				))),
 			)))
 		)
