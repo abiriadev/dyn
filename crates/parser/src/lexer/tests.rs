@@ -754,3 +754,26 @@ mod lex_identifier {
 		);
 	}
 }
+
+#[test]
+fn lex_math_expr() {
+	assert_eq!(
+		//            01234567890123456789
+		Token::lexer("1 + 2 * 3 % (4 - 5)")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[
+			(Ok(Token::Integer(1)), 0..1),
+			(Ok(Token::Plus), 2..3),
+			(Ok(Token::Integer(2)), 4..5),
+			(Ok(Token::Asterisk), 6..7),
+			(Ok(Token::Integer(3)), 8..9),
+			(Ok(Token::Percent), 10..11),
+			(Ok(Token::LeftParenthesis), 12..13),
+			(Ok(Token::Integer(4)), 13..14),
+			(Ok(Token::Minus), 15..16),
+			(Ok(Token::Integer(5)), 17..18),
+			(Ok(Token::RightParenthesis), 18..19),
+		]
+	)
+}
