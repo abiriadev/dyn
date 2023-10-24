@@ -472,4 +472,17 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_assign() {
+		let res = parse(r#"a = 123"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::assign_box(
+				Ident("a".to_owned()),
+				*n!(123)
+			))
+		)
+	}
 }
