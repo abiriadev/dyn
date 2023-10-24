@@ -434,4 +434,16 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_greater_than_equal() {
+		let res = parse(r#"1 >= 2"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(
+				BinExpr::GreaterThanEqual(n!(1), n!(2))
+			))
+		)
+	}
 }
