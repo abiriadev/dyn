@@ -50,6 +50,7 @@ L1: Expr = {
 	
 L2: Expr = {
 	"-" <L2> => Expr::unary_minus_box(<>),
+	"!" <L2> => Expr::unary_not_box(<>),
 	L1 => <>,
 }
 
