@@ -16,13 +16,15 @@ mod tests {
 	use pretty_assertions::assert_eq;
 
 	use super::*;
-	use crate::{ast::BinExpr, n};
+	use crate::{
+		ast::{BinExpr, Ident},
+		n,
+	};
 
 	#[test]
 	fn parse_math_expr() {
 		let res = parse("1 + 2 * 3");
 
-		println!("{res:#?}");
 		assert_eq!(
 			res,
 			Ok(Expr::BinExpr(BinExpr::Add(
@@ -32,6 +34,22 @@ mod tests {
 					n!(3),
 				))),
 			)))
+		)
+	}
+
+	#[test]
+	fn parse_declare_expr() {
+		let res = parse("let xy = 1 + 2");
+
+		assert_eq!(
+			res,
+			Ok(Expr::Declare(
+				Ident("xy".to_owned()),
+				Box::new(Expr::BinExpr(BinExpr::Add(
+					n!(1),
+					n!(2)
+				)))
+			))
 		)
 	}
 }
