@@ -17,7 +17,7 @@ mod tests {
 
 	use super::*;
 	use crate::{
-		ast::{BinExpr, Ident},
+		ast::{Array, BinExpr, Code, Ident, Literal, StringT},
 		ident, n,
 	};
 
@@ -90,6 +90,22 @@ mod tests {
 				ident!(a) + ident!(b),
 				n!(123)
 			)))
+		)
+	}
+
+	#[test]
+	fn parse_array() {
+		let res = parse(r#"[1, a, "str"]"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::Array(Array(Code(vec![
+				*n!(1),
+				*ident!(a),
+				Expr::Literal(Literal::String(StringT(
+					"aa".to_owned()
+				)))
+			]))))
 		)
 	}
 }
