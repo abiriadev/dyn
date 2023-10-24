@@ -39,6 +39,7 @@ L0: Expr = {
 	Literal => Expr::Literal(<>),
 	Ident => Expr::Ident(<>),
 	"(" <Expr> ")" => <>,
+	"[" <Separated<Expr, ",">> "]" => Expr::Array(Array(Code(<>))),
 };
 
 L1: Expr = {
@@ -61,13 +62,8 @@ L4: Expr = {
 	L3 => <>,
 };
 
-L5: Expr = {
-	"[" <Separated<L5, ",">> "]" => Expr::Array(Array(Code(<>))),
-	L4 => <>,
-};
-
 pub Expr: Expr = {
-	L5 => <>,
+	L4 => <>,
 }
 
 extern {

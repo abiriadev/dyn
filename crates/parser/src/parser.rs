@@ -137,4 +137,17 @@ mod tests {
 			]])
 		)
 	}
+
+	#[test]
+	fn parse_array_with_indexing() {
+		let res = parse(r#"[[]][[]]"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Index(
+				arr![*arr![]],
+				arr![]
+			)))
+		)
+	}
 }
