@@ -16,7 +16,10 @@ mod tests {
 	use pretty_assertions::assert_eq;
 
 	use super::*;
-	use crate::{ast::Ident, ident, n};
+	use crate::{
+		ast::{BinExpr, Ident},
+		ident, n,
+	};
 
 	#[test]
 	fn parse_math_expr() {
@@ -45,6 +48,19 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(*(n!(2) * ident!(pi) * ident!(r)))
+		)
+	}
+
+	#[test]
+	fn parse_indexing() {
+		let res = parse("arr[123]");
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Index(
+				ident!(arr),
+				n!(123)
+			)))
 		)
 	}
 }
