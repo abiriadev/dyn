@@ -91,7 +91,7 @@ pub enum Expr {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct Code(Vec<Expr>);
+pub struct Code(pub Vec<Expr>);
 
 #[cfg(test)] use std::ops::{Add, Div, Mul, Sub};
 

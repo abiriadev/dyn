@@ -60,8 +60,13 @@ L4: Expr = {
 	L3 => <>,
 };
 
-pub Expr: Expr = {
+L5: Expr = {
+	"[" <L5> "]" => Expr::Array(Array(Code(vec![<>]))),
 	L4 => <>,
+};
+
+pub Expr: Expr = {
+	L5 => <>,
 }
 
 extern {
