@@ -382,4 +382,17 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_not_equal() {
+		let res = parse(r#"1 != 3"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::NotEqual(
+				n!(1),
+				n!(3)
+			)))
+		)
+	}
 }
