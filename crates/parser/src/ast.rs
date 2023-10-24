@@ -92,3 +92,26 @@ pub enum Expr {
 
 #[derive(Debug, PartialEq)]
 pub struct Code(Vec<Expr>);
+
+#[cfg(test)] use std::ops::Add;
+
+#[cfg(test)]
+impl Add for Box<Expr> {
+	type Output = Self;
+
+	fn add(self, rhs: Self) -> Self::Output {
+		Box::new(Expr::BinExpr(BinExpr::Add(self, rhs)))
+	}
+}
+
+#[cfg(test)]
+impl Add for Expr {
+	type Output = Self;
+
+	fn add(self, rhs: Self) -> Self::Output {
+		Expr::BinExpr(BinExpr::Add(
+			Box::new(self),
+			Box::new(rhs),
+		))
+	}
+}
