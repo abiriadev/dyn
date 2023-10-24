@@ -47,7 +47,6 @@ pub enum BinExpr {
 	GreaterThan(Box<Expr>, Box<Expr>),
 	LessThanEqual(Box<Expr>, Box<Expr>),
 	GreaterThanEqual(Box<Expr>, Box<Expr>),
-	Not(Box<Expr>, Box<Expr>),
 	And(Box<Expr>, Box<Expr>),
 	Or(Box<Expr>, Box<Expr>),
 	Call(Box<Expr>, Code),
