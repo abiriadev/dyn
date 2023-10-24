@@ -41,17 +41,17 @@ L0: Expr = {
 };
 
 L1: Expr = {
-	<l1:L1> "[" <e:Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
+	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
 	L0 => <>,
 }
 
 L2: Expr = {
-	<l2:L2> "*" <l1:L1> => Expr::BinExpr(BinExpr::mul_box(<>)),
+	<L2> "*" <L1> => Expr::BinExpr(BinExpr::mul_box(<>)),
 	L1 => <>,
 }
 
 L3: Expr = {
-	<l3:L3> "+" <l1:L1> => Expr::BinExpr(BinExpr::add_box(<>)),
+	<L3> "+" <L1> => Expr::BinExpr(BinExpr::add_box(<>)),
 	L2 => <>,
 };
 
