@@ -2,19 +2,27 @@ use either::Either::{self, Left, Right};
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::{
-	parse2, Data, DeriveInput, Field, Fields, GenericArgument, PathArguments,
-	PathSegment, Type,
+	parse2, AngleBracketedGenericArguments, Data, DeriveInput, Field, Fields,
+	GenericArgument, Path, PathArguments, PathSegment, Type, TypePath,
 };
 
 fn unwrap_box(ty: &Type) -> Either<&Type, &Type> {
-	let Type::Path(path) = ty else {
+	let Type::Path(TypePath {
+		path: Path { segments, .. },
+		..
+	}) = ty
+	else {
 		return Left(ty);
 	};
 
 	let Some(PathSegment {
 		ident,
-		arguments: PathArguments::AngleBracketed(ang),
-	}) = path.path.segments.first()
+		arguments:
+			PathArguments::AngleBracketed(AngleBracketedGenericArguments {
+				args,
+				..
+			}),
+	}) = segments.first()
 	else {
 		return Left(ty);
 	};
@@ -23,7 +31,7 @@ fn unwrap_box(ty: &Type) -> Either<&Type, &Type> {
 		return Left(ty);
 	};
 
-	let Some(GenericArgument::Type(ty)) = ang.args.first() else {
+	let Some(GenericArgument::Type(ty)) = args.first() else {
 		return Left(ty);
 	};
 

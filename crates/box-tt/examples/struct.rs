@@ -7,8 +7,5 @@ struct Person {
 }
 
 fn main() {
-	let person = Person {
-		age: 30,
-		extra: Box::new(123),
-	};
+	// let person = Person
 }
