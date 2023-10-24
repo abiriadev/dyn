@@ -356,4 +356,17 @@ mod tests {
 
 		assert_eq!(res, Ok(*ident!(a) / *n!(123)))
 	}
+
+	#[test]
+	fn parse_mod() {
+		let res = parse(r#"a % 123"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Mod(
+				ident!(a),
+				n!(123)
+			)))
+		)
+	}
 }
