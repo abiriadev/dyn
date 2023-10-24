@@ -1,3 +1,4 @@
+#![allow(unused)]
 use box_tt::BoxNew;
 
 #[derive(Debug, PartialEq, Eq)]
