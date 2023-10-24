@@ -261,4 +261,26 @@ mod tests {
 
 		assert_eq!(res, Ok(Expr::UnaryMinus(n!(123))));
 	}
+
+	#[test]
+	fn does_not_support_decrement_operator() {
+		let res = parse(r#"--a"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::unary_minus_box(Expr::UnaryMinus(
+				ident!(a)
+			)))
+		);
+	}
+
+	#[test]
+	fn unary_minus_followed_by_multiplication() {
+		let res = parse(r#"- a*b"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::UnaryMinus(ident!(a)) * *ident!(b))
+		);
+	}
 }
