@@ -18,8 +18,8 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Boolean, Code, Ident, Literal},
-		ident, n, str,
+		ast::{BinExpr, Code, Ident},
+		fal, ident, n, str, tru,
 	};
 
 	#[test]
@@ -288,12 +288,7 @@ mod tests {
 	fn parse_unary_not() {
 		let res = parse(r#"!true"#);
 
-		assert_eq!(
-			res,
-			Ok(Expr::unary_not_box(Expr::Literal(
-				Literal::Boolean(Boolean(true))
-			)))
-		);
+		assert_eq!(res, Ok(Expr::UnaryNot(tru!())));
 	}
 
 	#[test]
@@ -314,9 +309,9 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::BinExpr(BinExpr::and_box(
-				Expr::Literal(Literal::Boolean(Boolean(true))),
-				Expr::Literal(Literal::Boolean(Boolean(false)))
+			Ok(Expr::BinExpr(BinExpr::And(
+				tru!(),
+				fal!()
 			)))
 		);
 	}
@@ -327,9 +322,9 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::BinExpr(BinExpr::or_box(
-				Expr::Literal(Literal::Boolean(Boolean(true))),
-				Expr::Literal(Literal::Boolean(Boolean(false)))
+			Ok(Expr::BinExpr(BinExpr::Or(
+				tru!(),
+				fal!()
 			)))
 		);
 	}
@@ -341,11 +336,8 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::BinExpr(BinExpr::or_box(
-				Expr::Literal(Literal::Boolean(Boolean(true))),
-				Expr::BinExpr(BinExpr::and_box(
-					Expr::Literal(Literal::Boolean(Boolean(false))),
-					Expr::Literal(Literal::Boolean(Boolean(true)))
-				))
+				*tru!(),
+				Expr::BinExpr(BinExpr::And(fal!(), tru!()))
 			)))
 		);
 	}
@@ -538,9 +530,7 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::If {
-				condition: Box::new(Expr::Literal(Literal::Boolean(
-					Boolean(true)
-				))),
+				condition: tru!(),
 				yes: Code(vec![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
 					Code(vec![*str!("it's true!")])
@@ -577,13 +567,9 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::If {
-				condition: Box::new(Expr::Literal(Literal::Boolean(
-					Boolean(true)
-				))),
+				condition: tru!(),
 				yes: Code(vec![Expr::If {
-					condition: Box::new(Expr::Literal(Literal::Boolean(
-						Boolean(false)
-					))),
+					condition: fal!(),
 					yes: Code(vec![])
 				}])
 			})
