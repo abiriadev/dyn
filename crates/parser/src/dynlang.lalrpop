@@ -66,12 +66,17 @@ L4: Expr = {
 };
 
 L5: Expr = {
-	"let" <i:Ident> "=" <l4:L4> => Expr::Declare(i, Box::new(l4)),
+	<L5> "&&" <L4> => Expr::BinExpr(BinExpr::and_box(<>)),
 	L4 => <>,
 };
 
-pub Expr: Expr = {
+L6: Expr = {
+	"let" <i:Ident> "=" <l5:L5> => Expr::Declare(i, Box::new(l5)),
 	L5 => <>,
+};
+
+pub Expr: Expr = {
+	L6 => <>,
 }
 
 extern {

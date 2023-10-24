@@ -314,7 +314,7 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::BinExpr(BinExpr::add_box(
+			Ok(Expr::BinExpr(BinExpr::and_box(
 				Expr::Literal(Literal::Boolean(Boolean(true))),
 				Expr::Literal(Literal::Boolean(Boolean(false)))
 			)))
