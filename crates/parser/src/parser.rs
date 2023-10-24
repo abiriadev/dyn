@@ -163,4 +163,17 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_function_call_without_arguments() {
+		let res = parse(r#"func()"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(func),
+				Code(vec![])
+			)))
+		)
+	}
 }
