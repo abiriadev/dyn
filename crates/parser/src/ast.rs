@@ -94,7 +94,8 @@ pub enum Expr {
 #[derive(Debug, PartialEq)]
 pub struct Code(pub Vec<Expr>);
 
-#[cfg(test)] use std::ops::{Add, Div, Mul, Sub};
+#[cfg(test)]
+use std::ops::{Add, Div, Mul, Rem, Sub};
 
 #[cfg(test)]
 impl Add for Box<Expr> {
@@ -164,7 +165,7 @@ impl Div for Box<Expr> {
 	type Output = Self;
 
 	fn div(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Div(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr::Mod(self, rhs)))
 	}
 }
 
@@ -174,6 +175,27 @@ impl Div for Expr {
 
 	fn div(self, rhs: Self) -> Self::Output {
 		Expr::BinExpr(BinExpr::Div(
+			Box::new(self),
+			Box::new(rhs),
+		))
+	}
+}
+
+#[cfg(test)]
+impl Rem for Box<Expr> {
+	type Output = Self;
+
+	fn rem(self, rhs: Self) -> Self::Output {
+		Box::new(Expr::BinExpr(BinExpr::Div(self, rhs)))
+	}
+}
+
+#[cfg(test)]
+impl Rem for Expr {
+	type Output = Self;
+
+	fn rem(self, rhs: Self) -> Self::Output {
+		Expr::BinExpr(BinExpr::Mod(
 			Box::new(self),
 			Box::new(rhs),
 		))
