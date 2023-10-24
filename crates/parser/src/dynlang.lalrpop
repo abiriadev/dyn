@@ -5,7 +5,7 @@ use crate::ast::*;
 grammar;
 
 // macros
-Separated<T> = (T ",")*;
+Separated<T, U> = (<T> U)*;
 
 // nil
 Nil: Nil = "nil" => Nil;
@@ -61,7 +61,7 @@ L4: Expr = {
 };
 
 L5: Expr = {
-	"[" <L5> "]" => Expr::Array(Array(Code(vec![<>]))),
+	"[" <Separated<L5, ",">> "]" => Expr::Array(Array(Code(<>))),
 	L4 => <>,
 };
 
