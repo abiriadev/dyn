@@ -569,4 +569,24 @@ mod tests {
 			})
 		)
 	}
+
+	#[test]
+	fn parse_nested_if() {
+		let res = parse(r#"if true { if false {} }"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::If {
+				condition: Box::new(Expr::Literal(Literal::Boolean(
+					Boolean(true)
+				))),
+				yes: Code(vec![Expr::If {
+					condition: Box::new(Expr::Literal(Literal::Boolean(
+						Boolean(false)
+					))),
+					yes: Code(vec![])
+				}])
+			})
+		)
+	}
 }
