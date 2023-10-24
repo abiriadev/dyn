@@ -4,17 +4,22 @@ use crate::ast::*;
 
 grammar;
 
+// nil
 Nil: Nil = "nil" => Nil;
 
+// bool
 Boolean: Boolean = {
 	"true" => Boolean(true),
 	"false" => Boolean(false),
 };
 
+// int
 Integer: Integer = "int" => Integer(<>);
 
+// string
 StringT: StringT = "string" => StringT(<>);
 
+// literal
 Literal: Literal = {
 	Nil => Literal::Nil(<>),
 	Boolean => Literal::Boolean(<>),
@@ -22,8 +27,10 @@ Literal: Literal = {
 	StringT => Literal::String(<>),
 };
 
+// identifier
 Ident: Ident = "ident" => Ident(<>);
 
+// atom
 L0: Expr = {
 	Literal => Expr::Literal(<>),
 	"(" <Expr> ")" => <>,
