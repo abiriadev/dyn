@@ -37,3 +37,21 @@ macro_rules! arr {
 		)
 	};
 }
+
+#[macro_export]
+macro_rules! tru {
+	() => {
+		Box::new(crate::ast::Expr::Literal(
+			crate::ast::Literal::Boolean(crate::ast::Boolean(true)),
+		))
+	};
+}
+
+#[macro_export]
+macro_rules! fal {
+	() => {
+		Box::new(crate::ast::Expr::Literal(
+			crate::ast::Literal::Boolean(crate::ast::Boolean(false)),
+		))
+	};
+}
