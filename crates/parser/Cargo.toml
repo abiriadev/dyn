@@ -11,6 +11,7 @@ box-tt = { version = "0.1.0", path = "../box-tt" }
 lalrpop-util = "0.20.0"
 logos = "0.13.0"
 pretty_assertions = "1.4.0"
+tap = "1.0.1"
 
 [build-dependencies]
 lalrpop = "0.20.0"

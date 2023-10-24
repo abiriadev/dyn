@@ -1,14 +1,12 @@
 use std::string::String;
 use crate::lexer::{Token, LexError};
 use crate::ast::*;
+use tap::Tap;
 
 grammar;
 
 // macros
-Separated<T, U>: Vec<T> = ((<T> U)* T)? => <>.map(|(mut v, l)| {
-	v.push(l);
-	v
-}).unwrap_or(vec![]);
+Separated<T, U>: Vec<T> = ((<T> U)* T)? => <>.map(|(v, l)| v.tap_mut(|v| v.push(l))).unwrap_or(vec![]);
 
 // nil
 Nil: Nil = "nil" => Nil;
