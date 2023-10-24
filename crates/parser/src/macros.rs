@@ -15,3 +15,12 @@ macro_rules! ident {
 		))
 	};
 }
+
+#[macro_export]
+macro_rules! str {
+	($str:expr) => {
+		Box::new(crate::ast::Expr::Literal(
+			crate::ast::Literal::String(crate::ast::StringT($str.to_owned())),
+		))
+	};
+}

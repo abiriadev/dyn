@@ -17,8 +17,8 @@ mod tests {
 
 	use super::*;
 	use crate::{
-		ast::{Array, BinExpr, Code, Ident, Literal, StringT},
-		ident, n,
+		ast::{Array, BinExpr, Code, Ident},
+		ident, n, str,
 	};
 
 	#[test]
@@ -102,9 +102,7 @@ mod tests {
 			Ok(Expr::Array(Array(Code(vec![
 				*n!(1),
 				*ident!(a),
-				Expr::Literal(Literal::String(StringT(
-					"str".to_owned()
-				)))
+				*str!("str")
 			]))))
 		)
 	}
