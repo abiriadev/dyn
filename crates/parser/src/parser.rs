@@ -70,15 +70,12 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::BinExpr(BinExpr::Index(
-				Box::new(Expr::BinExpr(BinExpr::Index(
-					Box::new(Expr::BinExpr(BinExpr::Index(
-						ident!(arr),
-						n!(1)
-					),)),
-					n!(2)
-				))),
-				n!(3)
+			Ok(Expr::BinExpr(BinExpr::index_box(
+				Expr::BinExpr(BinExpr::index_box(
+					Expr::BinExpr(BinExpr::Index(ident!(arr), n!(1))),
+					*n!(2)
+				)),
+				*n!(3)
 			)))
 		)
 	}
