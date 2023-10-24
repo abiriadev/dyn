@@ -52,4 +52,20 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_math_expr_involving_variable() {
+		let res = parse("2 * pi * r");
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Add(
+				Box::new(Expr::BinExpr(BinExpr::Add(
+					n!(2),
+					Box::new(Expr::Ident(Ident("pi".to_owned())))
+				))),
+				Box::new(Expr::Ident(Ident("r".to_owned())))
+			)))
+		)
+	}
 }
