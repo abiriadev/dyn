@@ -295,4 +295,16 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn parse_nested_unary_not() {
+		let res = parse(r#"!!a"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::unary_not_box(Expr::UnaryNot(
+				ident!(a)
+			)))
+		);
+	}
 }
