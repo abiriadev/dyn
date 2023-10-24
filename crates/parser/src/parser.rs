@@ -408,4 +408,17 @@ mod tests {
 			)))
 		)
 	}
+	
+	#[test]
+	fn parse_less_than_equal() {
+		let res = parse(r#"1 <= 2"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::LessThanEqual(
+				n!(1),
+				n!(2)
+			)))
+		)
+	}
 }
