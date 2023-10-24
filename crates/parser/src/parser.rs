@@ -485,4 +485,33 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_nested_assign() {
+		let res = parse(r#"a = b = c"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::assign_box(
+				Ident("a".to_owned()),
+				Expr::assign_box(Ident("b".to_owned()), *ident!(c),)
+			))
+		)
+	}
+
+	#[test]
+	fn parse_nested_assign2() {
+		let res = parse(r#"a = !(b = c + 2)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::assign_box(
+				Ident("a".to_owned()),
+				Expr::unary_not_box(Expr::assign_box(
+					Ident("b".to_owned()),
+					*ident!(c) + *n!(2)
+				))
+			))
+		)
+	}
 }
