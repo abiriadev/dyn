@@ -117,4 +117,11 @@ mod tests {
 
 		assert_eq!(res, Ok(*arr![*n!(1)]))
 	}
+
+	#[test]
+	fn parse_nested_array() {
+		let res = parse(r#"[[[]]]"#);
+
+		assert_eq!(res, Ok(*arr![*arr![*arr![]]]))
+	}
 }
