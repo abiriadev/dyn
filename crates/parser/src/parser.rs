@@ -446,4 +446,17 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_nested_declare() {
+		let res = parse(r#"let a = let b = 123"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::declare_box(
+				Ident("a".to_owned()),
+				Expr::Declare(Ident("b".to_owned()), n!(123))
+			))
+		)
+	}
 }
