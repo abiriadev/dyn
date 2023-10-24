@@ -514,4 +514,20 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_mixed_assignments() {
+		let res = parse(r#"a = let b = 123 + (let! c = 1)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::assign_box(
+				Ident("a".to_owned()),
+				Expr::declare_box(
+					Ident("b".to_owned()),
+					*n!(123) + Expr::DeclareMut(Ident("c".to_owned()), n!(1))
+				)
+			))
+		)
+	}
 }
