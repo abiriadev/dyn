@@ -55,6 +55,7 @@ L2: Expr = {
 
 L3: Expr = {
 	<L3> "+" <L2> => Expr::BinExpr(BinExpr::add_box(<>)),
+	<L3> "-" <L2> => Expr::BinExpr(BinExpr::sub_box(<>)),
 	L2 => <>,
 };
 
