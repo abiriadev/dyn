@@ -176,4 +176,17 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_function_call_with_more_than_one_argument() {
+		let res = parse(r#"add(1, 2)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(add),
+				Code(vec![*n!(1), *n!(2)])
+			)))
+		)
+	}
 }
