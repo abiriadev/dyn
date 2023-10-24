@@ -237,4 +237,21 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_sub() {
+		let res = parse(r#"a - 123"#);
+
+		assert_eq!(res, Ok(*ident!(a) - *n!(123)))
+	}
+
+	#[test]
+	fn parse_sequencial_sub() {
+		let res = parse(r#"a - b - c - d"#);
+
+		assert_eq!(
+			res,
+			Ok(*(((ident!(a) - ident!(b)) - ident!(c)) - ident!(d)))
+		)
+	}
 }
