@@ -50,7 +50,7 @@ pub enum BinExpr {
 	Not(Box<Expr>, Box<Expr>),
 	And(Box<Expr>, Box<Expr>),
 	Or(Box<Expr>, Box<Expr>),
-	Call(Box<Expr>, Box<Expr>),
+	Call(Box<Expr>, Code),
 	Prop(Box<Expr>, Box<Expr>),
 	Index(Box<Expr>, Box<Expr>),
 }

@@ -159,7 +159,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::Call(
 				ident!(func),
-				ident!(x),
+				Code(vec![*ident!(x)])
 			)))
 		)
 	}
