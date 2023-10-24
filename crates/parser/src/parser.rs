@@ -459,4 +459,17 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_mutable_declare() {
+		let res = parse(r#"let! v = []"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::declare_mut_box(
+				Ident("v".to_owned()),
+				*arr![]
+			))
+		)
+	}
 }
