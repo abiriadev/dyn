@@ -88,7 +88,7 @@ L7: Expr = {
 };
 
 L8: Expr = {
-	"let" <i:Ident> "=" <e:L7> => Expr::Declare(i, Box::new(e)),
+	"let" <i:Ident> "=" <e:L8> => Expr::Declare(i, Box::new(e)),
 	L7 => <>,
 };
 
