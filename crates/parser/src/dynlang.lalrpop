@@ -91,12 +91,15 @@ L8: Expr = {
 	"let" <i:Ident> "=" <e:L8> => Expr::Declare(i, Box::new(e)),
 	"let!" <i:Ident> "=" <e:L8> => Expr::DeclareMut(i, Box::new(e)),
 	<i:Ident> "=" <e:L8> => Expr::Assign(i, Box::new(e)),
+	"if" <c:Expr> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
 	L7 => <>,
 };
 
 pub Expr: Expr = {
 	L8 => <>,
 }
+	
+Code: Code = Separated<Expr, ("newline" "newline"*)> => Code(<>);
 
 extern {
 	type Location = usize;
