@@ -68,22 +68,27 @@ L4: Expr = {
 };
 
 L5: Expr = {
-	<L5> "&&" <L4> => Expr::BinExpr(BinExpr::and_box(<>)),
+	<L5> "==" <L4> => Expr::BinExpr(BinExpr::equal_box(<>)),
 	L4 => <>,
 };
 
 L6: Expr = {
-	<L6> "||" <L5> => Expr::BinExpr(BinExpr::or_box(<>)),
+	<L6> "&&" <L5> => Expr::BinExpr(BinExpr::and_box(<>)),
 	L5 => <>,
 };
 
 L7: Expr = {
-	"let" <i:Ident> "=" <e:L6> => Expr::Declare(i, Box::new(e)),
+	<L7> "||" <L6> => Expr::BinExpr(BinExpr::or_box(<>)),
 	L6 => <>,
 };
 
-pub Expr: Expr = {
+L8: Expr = {
+	"let" <i:Ident> "=" <e:L7> => Expr::Declare(i, Box::new(e)),
 	L7 => <>,
+};
+
+pub Expr: Expr = {
+	L8 => <>,
 }
 
 extern {
