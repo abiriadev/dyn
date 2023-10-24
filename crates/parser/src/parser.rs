@@ -103,9 +103,29 @@ mod tests {
 				*n!(1),
 				*ident!(a),
 				Expr::Literal(Literal::String(StringT(
-					"aa".to_owned()
+					"str".to_owned()
 				)))
 			]))))
+		)
+	}
+
+	#[test]
+	fn parse_empty_array() {
+		let res = parse(r#"[]"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::Array(Array(Code(vec![]))))
+		)
+	}
+
+	#[test]
+	fn parse_arrary_with_one_element() {
+		let res = parse(r#"[1]"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::Array(Array(Code(vec![*n!(1)]))))
 		)
 	}
 }
