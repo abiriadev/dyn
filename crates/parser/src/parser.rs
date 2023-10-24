@@ -18,7 +18,7 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{Array, BinExpr, Code, Ident},
+		ast::{BinExpr, Boolean, Code, Ident, Literal},
 		ident, n, str,
 	};
 
@@ -281,6 +281,18 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::UnaryMinus(ident!(a)) * *ident!(b))
+		);
+	}
+
+	#[test]
+	fn parse_unary_not() {
+		let res = parse(r#"!true"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::unary_not_box(Expr::Literal(
+				Literal::Boolean(Boolean(true))
+			)))
 		);
 	}
 }
