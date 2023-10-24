@@ -189,4 +189,33 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn call_expression() {
+		let res = parse(r#"(c + d)(a, b)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(c) + ident!(d),
+				Code(vec![*ident!(a), *ident!(b)])
+			)))
+		)
+	}
+
+	#[test]
+	fn nested_call() {
+		let res = parse(r#"(a())(b())"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::call_box(
+				Expr::BinExpr(BinExpr::Call(ident!(a), Code(vec![]))),
+				Code(vec![Expr::BinExpr(BinExpr::Call(
+					ident!(b),
+					Code(vec![])
+				))])
+			)))
+		)
+	}
 }
