@@ -86,7 +86,7 @@ fn box_struct(ident: Ident, fields: Fields) -> TokenStream {
 
 	quote! {
 		impl #ident {
-			fn new_box(#(#args),*) -> Self {
+			pub fn new_box(#(#args),*) -> Self {
 				Self {
 					#(#body),*
 				}
@@ -130,7 +130,7 @@ fn box_enum(ident: Ident, variants: Punctuated<Variant, Comma>) -> TokenStream {
 					});
 
 					Some(quote! {
-						fn #method(#(#args),*) -> Self {
+						pub fn #method(#(#args),*) -> Self {
 							Self::#ident(#(#body),*)
 						}
 					})
