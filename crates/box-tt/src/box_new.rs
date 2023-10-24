@@ -1,3 +1,4 @@
+use convert_case::{Case, Casing};
 use either::Either::{self, Left, Right};
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::{format_ident, quote};
@@ -102,7 +103,10 @@ fn box_enum(ident: Ident, variants: Punctuated<Variant, Comma>) -> TokenStream {
 			.iter()
 			.filter_map(|Variant { ident, fields, .. }| {
 				if let Fields::Unnamed(FieldsUnnamed { unnamed, .. }) = fields {
-					let method = format_ident!("{ident}_box");
+					let method = format_ident!(
+						"{}_box",
+						ident.to_string().to_case(Case::Snake)
+					);
 
 					let fields = unnamed.iter().enumerate().map(
 						|(i, Field { ty, .. })| {
