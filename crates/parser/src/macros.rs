@@ -24,3 +24,16 @@ macro_rules! str {
 		))
 	};
 }
+
+#[macro_export]
+macro_rules! arr {
+	[$($ele:expr),* $(,)?] => {
+		Box::new(
+			crate::ast::Expr::Array(
+				crate::ast::Array(
+					crate::ast::Code(vec![$($ele),*])
+				)
+			)
+		)
+	};
+}

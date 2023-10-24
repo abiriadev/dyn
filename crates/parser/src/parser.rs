@@ -17,6 +17,7 @@ mod tests {
 
 	use super::*;
 	use crate::{
+		arr,
 		ast::{Array, BinExpr, Code, Ident},
 		ident, n, str,
 	};
@@ -99,11 +100,7 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::Array(Array(Code(vec![
-				*n!(1),
-				*ident!(a),
-				*str!("str")
-			]))))
+			Ok(*arr![*n!(1), *ident!(a), *str!("str")])
 		)
 	}
 
@@ -111,19 +108,13 @@ mod tests {
 	fn parse_empty_array() {
 		let res = parse(r#"[]"#);
 
-		assert_eq!(
-			res,
-			Ok(Expr::Array(Array(Code(vec![]))))
-		)
+		assert_eq!(res, Ok(*arr![]))
 	}
 
 	#[test]
 	fn parse_arrary_with_one_element() {
 		let res = parse(r#"[1]"#);
 
-		assert_eq!(
-			res,
-			Ok(Expr::Array(Array(Code(vec![*n!(1)]))))
-		)
+		assert_eq!(res, Ok(*arr![*n!(1)]))
 	}
 }
