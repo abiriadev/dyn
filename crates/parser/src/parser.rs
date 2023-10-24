@@ -530,4 +530,22 @@ mod tests {
 			))
 		)
 	}
+
+	#[test]
+	fn parse_if_expr() {
+		let res = parse(r#"if true { print("it's true!") }"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::If {
+				condition: Box::new(Expr::Literal(Literal::Boolean(
+					Boolean(true)
+				))),
+				yes: Code(vec![Expr::BinExpr(BinExpr::Call(
+					ident!(print),
+					Code(vec![*str!("it's true!")])
+				))])
+			})
+		)
+	}
 }
