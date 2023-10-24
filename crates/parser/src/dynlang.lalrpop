@@ -71,6 +71,7 @@ L5: Expr = {
 	<L5> "==" <L4> => Expr::BinExpr(BinExpr::equal_box(<>)),
 	<L5> "!=" <L4> => Expr::BinExpr(BinExpr::not_equal_box(<>)),
 	<L5> "<" <L4> => Expr::BinExpr(BinExpr::less_than_box(<>)),
+	<L5> "<=" <L4> => Expr::BinExpr(BinExpr::less_than_equal_box(<>)),
 	L4 => <>,
 };
 
