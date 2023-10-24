@@ -5,7 +5,10 @@ use crate::ast::*;
 grammar;
 
 // macros
-Separated<T, U> = (<T> U)*;
+Separated<T, U>: Vec<T> = ((<T> U)* T)? => <>.map(|(mut v, l)| {
+	v.push(l);
+	v
+}).unwrap_or(vec![]);
 
 // nil
 Nil: Nil = "nil" => Nil;
