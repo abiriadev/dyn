@@ -55,3 +55,10 @@ macro_rules! fal {
 		))
 	};
 }
+
+#[macro_export]
+macro_rules! code {
+	{ $($ele:expr),* $(,)? } => {
+		crate::ast::Code(vec![$($ele),*])
+	};
+}
