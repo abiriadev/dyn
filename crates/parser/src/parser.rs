@@ -320,4 +320,17 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn parse_or() {
+		let res = parse(r#"true || false"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::or_box(
+				Expr::Literal(Literal::Boolean(Boolean(true))),
+				Expr::Literal(Literal::Boolean(Boolean(false)))
+			)))
+		);
+	}
 }
