@@ -218,4 +218,23 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn nested_call2() {
+		let res = parse(r#"f(x)(y)(z)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::call_box(
+				Expr::BinExpr(BinExpr::call_box(
+					Expr::BinExpr(BinExpr::call_box(
+						*ident!(f),
+						Code(vec![*ident!(x)]),
+					)),
+					Code(vec![*ident!(y)]),
+				)),
+				Code(vec![*ident!(z)]),
+			)))
+		)
+	}
 }
