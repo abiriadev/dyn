@@ -4,6 +4,9 @@ use crate::ast::*;
 
 grammar;
 
+// macros
+Separated<T> = (T ",")*;
+
 // nil
 Nil: Nil = "nil" => Nil;
 
