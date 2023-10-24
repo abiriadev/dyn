@@ -254,4 +254,11 @@ mod tests {
 			Ok(*(((ident!(a) - ident!(b)) - ident!(c)) - ident!(d)))
 		)
 	}
+
+	#[test]
+	fn parse_unary_minus() {
+		let res = parse(r#"- 123"#);
+
+		assert_eq!(res, Ok(Expr::UnaryNot(n!(123))));
+	}
 }
