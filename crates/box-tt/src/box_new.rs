@@ -1,9 +1,10 @@
 use either::Either::{self, Left, Right};
-use proc_macro2::TokenStream;
+use proc_macro2::{Ident, TokenStream};
 use quote::quote;
 use syn::{
-	parse2, AngleBracketedGenericArguments, Data, DeriveInput, Field, Fields,
-	GenericArgument, Path, PathArguments, PathSegment, Type, TypePath,
+	parse2, token::Struct, AngleBracketedGenericArguments, Data, DataStruct,
+	DeriveInput, Field, Fields, GenericArgument, Path, PathArguments,
+	PathSegment, Type, TypePath,
 };
 
 fn unwrap_box(ty: &Type) -> Either<&Type, &Type> {
@@ -46,11 +47,15 @@ pub fn box_new(input: TokenStream) -> TokenStream {
 
 	let ident = input.ident;
 
-	let Data::Struct(s) = input.data else {
-		panic!()
-	};
+	match input.data {
+		Data::Struct(DataStruct { fields, .. }) => box_struct(ident, fields),
+		Data::Enum(_) => unimplemented!(),
+		Data::Union(_) => unimplemented!(),
+	}
+}
 
-	let Fields::Named(named) = s.fields else {
+fn box_struct(ident: Ident, fields: Fields) -> TokenStream {
+	let Fields::Named(named) = fields else {
 		panic!()
 	};
 
