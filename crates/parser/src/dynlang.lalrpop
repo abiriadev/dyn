@@ -47,25 +47,30 @@ L1: Expr = {
 	<i:L1> "(" <args:Separated<Expr, ",">> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
 	L0 => <>,
 }
-
+	
 L2: Expr = {
-	<L2> "*" <L1> => Expr::BinExpr(BinExpr::mul_box(<>)),
+	"-" <L2> => Expr::unary_minus_box(<>),
 	L1 => <>,
 }
 
 L3: Expr = {
-	<L3> "+" <L2> => Expr::BinExpr(BinExpr::add_box(<>)),
-	<L3> "-" <L2> => Expr::BinExpr(BinExpr::sub_box(<>)),
-	L2 => <>,
-};
+	<L3> "*" <L2> => Expr::BinExpr(BinExpr::mul_box(<>)),
+	L1 => <>,
+}
 
 L4: Expr = {
-	"let" <i:Ident> "=" <l3:L3> => Expr::Declare(i, Box::new(l3)),
+	<L4> "+" <L3> => Expr::BinExpr(BinExpr::add_box(<>)),
+	<L4> "-" <L3> => Expr::BinExpr(BinExpr::sub_box(<>)),
 	L3 => <>,
 };
 
-pub Expr: Expr = {
+L5: Expr = {
+	"let" <i:Ident> "=" <l4:L4> => Expr::Declare(i, Box::new(l4)),
 	L4 => <>,
+};
+
+pub Expr: Expr = {
+	L5 => <>,
 }
 
 extern {
