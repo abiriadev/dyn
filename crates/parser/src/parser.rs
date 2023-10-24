@@ -150,4 +150,17 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_function_call() {
+		let res = parse(r#"func(x)"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(func),
+				ident!(x),
+			)))
+		)
+	}
 }

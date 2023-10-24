@@ -44,6 +44,7 @@ L0: Expr = {
 
 L1: Expr = {
 	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
+	<L1> "(" <Expr> ")" => Expr::BinExpr(BinExpr::call_box(<>)),
 	L0 => <>,
 }
 
