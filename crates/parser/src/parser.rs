@@ -18,8 +18,8 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Code, Ident},
-		fal, ident, n, str, tru,
+		ast::{BinExpr, Ident},
+		code, fal, ident, n, str, tru,
 	};
 
 	#[test]
@@ -159,7 +159,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::Call(
 				ident!(func),
-				Code(vec![*ident!(x)])
+				code![*ident!(x)]
 			)))
 		)
 	}
@@ -172,7 +172,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::Call(
 				ident!(func),
-				Code(vec![])
+				code![]
 			)))
 		)
 	}
@@ -185,7 +185,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::Call(
 				ident!(add),
-				Code(vec![*n!(1), *n!(2)])
+				code![*n!(1), *n!(2)]
 			)))
 		)
 	}
@@ -198,7 +198,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::Call(
 				ident!(c) + ident!(d),
-				Code(vec![*ident!(a), *ident!(b)])
+				code![*ident!(a), *ident!(b)]
 			)))
 		)
 	}
@@ -210,11 +210,8 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::BinExpr(BinExpr::call_box(
-				Expr::BinExpr(BinExpr::Call(ident!(a), Code(vec![]))),
-				Code(vec![Expr::BinExpr(BinExpr::Call(
-					ident!(b),
-					Code(vec![])
-				))])
+				Expr::BinExpr(BinExpr::Call(ident!(a), code![])),
+				code![Expr::BinExpr(BinExpr::Call(ident!(b), code![]))]
 			)))
 		)
 	}
@@ -227,13 +224,12 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::call_box(
 				Expr::BinExpr(BinExpr::call_box(
-					Expr::BinExpr(BinExpr::call_box(
-						*ident!(f),
-						Code(vec![*ident!(x)]),
-					)),
-					Code(vec![*ident!(y)]),
+					Expr::BinExpr(BinExpr::call_box(*ident!(f), code![
+						*ident!(x)
+					],)),
+					code![*ident!(y)],
 				)),
-				Code(vec![*ident!(z)]),
+				code![*ident!(z)],
 			)))
 		)
 	}
@@ -531,10 +527,9 @@ mod tests {
 			res,
 			Ok(Expr::If {
 				condition: tru!(),
-				yes: Code(vec![Expr::BinExpr(BinExpr::Call(
-					ident!(print),
-					Code(vec![*str!("it's true!")])
-				))])
+				yes: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
+					*str!("it's true!")
+				]))]
 			})
 		)
 	}
@@ -552,10 +547,10 @@ mod tests {
 				condition: Box::new(Expr::BinExpr(
 					BinExpr::GreaterThanEqual(ident!(a) - n!(4), n!(0))
 				)),
-				yes: Code(vec![
-					Expr::BinExpr(BinExpr::Call(ident!(abc), Code(vec![]))),
-					Expr::BinExpr(BinExpr::Call(ident!(def), Code(vec![])))
-				])
+				yes: code![
+					Expr::BinExpr(BinExpr::Call(ident!(abc), code![])),
+					Expr::BinExpr(BinExpr::Call(ident!(def), code![]))
+				]
 			})
 		)
 	}
@@ -568,10 +563,10 @@ mod tests {
 			res,
 			Ok(Expr::If {
 				condition: tru!(),
-				yes: Code(vec![Expr::If {
+				yes: code![Expr::If {
 					condition: fal!(),
-					yes: Code(vec![])
-				}])
+					yes: code![]
+				}]
 			})
 		)
 	}
@@ -587,14 +582,14 @@ mod tests {
 					ident!(a),
 					ident!(b)
 				))),
-				yes: Code(vec![Expr::BinExpr(BinExpr::Call(
+				yes: code![Expr::BinExpr(BinExpr::Call(
 					ident!(fetch),
-					Code(vec![])
-				))]),
-				no: Code(vec![Expr::BinExpr(BinExpr::Call(
+					code![]
+				))],
+				no: code![Expr::BinExpr(BinExpr::Call(
 					ident!(cancel),
-					Code(vec![])
-				))])
+					code![]
+				))]
 			})
 		)
 	}
