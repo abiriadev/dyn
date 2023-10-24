@@ -57,6 +57,7 @@ L2: Expr = {
 L3: Expr = {
 	<L3> "*" <L2> => Expr::BinExpr(BinExpr::mul_box(<>)),
 	<L3> "/" <L2> => Expr::BinExpr(BinExpr::div_box(<>)),
+	<L3> "%" <L2> => Expr::BinExpr(BinExpr::mod_box(<>)),
 	L2 => <>,
 }
 
