@@ -333,4 +333,11 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn parse_div() {
+		let res = parse(r#"a / 123"#);
+
+		assert_eq!(res, Ok(*ident!(a) / *n!(123)))
+	}
 }
