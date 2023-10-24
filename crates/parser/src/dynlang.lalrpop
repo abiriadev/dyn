@@ -33,6 +33,7 @@ Ident: Ident = "ident" => Ident(<>);
 // atom
 L0: Expr = {
 	Literal => Expr::Literal(<>),
+	Ident => Expr::Ident(<>),
 	"(" <Expr> ")" => <>,
 };
 
@@ -114,3 +115,5 @@ extern {
 		"ident" => Token::Identifier(<String>),
 	}
 }
+
+

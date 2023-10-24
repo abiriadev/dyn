@@ -59,8 +59,8 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::BinExpr(BinExpr::Add(
-				Box::new(Expr::BinExpr(BinExpr::Add(
+			Ok(Expr::BinExpr(BinExpr::Mul(
+				Box::new(Expr::BinExpr(BinExpr::Mul(
 					n!(2),
 					Box::new(Expr::Ident(Ident("pi".to_owned())))
 				))),
