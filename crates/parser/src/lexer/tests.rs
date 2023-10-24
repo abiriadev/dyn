@@ -507,6 +507,20 @@ fn lex_comment_between_newlines() {
 	);
 }
 
+#[test]
+fn sequential_newlines_should_be_parsed_as_separate_tokens() {
+	assert_eq!(
+		Token::lexer("\n\n\n")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[
+			(Ok(Token::NewLine), 0..1),
+			(Ok(Token::NewLine), 1..2),
+			(Ok(Token::NewLine), 2..3)
+		]
+	);
+}
+
 mod lex_comments {
 	use logos::Logos;
 
