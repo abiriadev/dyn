@@ -51,12 +51,12 @@ L2: Expr = {
 }
 
 L3: Expr = {
-	<L3> "+" <L1> => Expr::BinExpr(BinExpr::add_box(<>)),
+	<L3> "+" <L2> => Expr::BinExpr(BinExpr::add_box(<>)),
 	L2 => <>,
 };
 
 L4: Expr = {
-	"let" <i:Ident> "=" <l2:L2> => Expr::Declare(i, Box::new(l2)),
+	"let" <i:Ident> "=" <l3:L3> => Expr::Declare(i, Box::new(l3)),
 	L3 => <>,
 };
 
