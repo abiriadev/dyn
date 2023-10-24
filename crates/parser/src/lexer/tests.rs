@@ -1,3 +1,4 @@
+use indoc::indoc;
 use pretty_assertions::{assert_eq, assert_ne};
 
 use super::*;
@@ -475,6 +476,34 @@ fn lex_newline() {
 			.spanned()
 			.collect::<Vec<_>>(),
 		[(Ok(Token::NewLine), 0..1)]
+	);
+}
+
+#[test]
+fn lex_comment_between_newlines() {
+	assert_eq!(
+		Token::lexer("\n/* comment */\n")
+			.spanned()
+			.collect::<Vec<_>>(),
+		[
+			(Ok(Token::NewLine), 0..1),
+			(Ok(Token::BlockCommnet), 1..14),
+			(Ok(Token::NewLine), 14..15)
+		]
+	);
+
+	assert_eq!(
+		Token::lexer(indoc! {"
+
+			// comment
+		"})
+		.spanned()
+		.collect::<Vec<_>>(),
+		[
+			(Ok(Token::NewLine), 0..1),
+			(Ok(Token::LineComment), 1..11),
+			(Ok(Token::NewLine), 11..12)
+		]
 	);
 }
 
