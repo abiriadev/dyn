@@ -307,4 +307,17 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn parse_and() {
+		let res = parse(r#"true && false"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::add_box(
+				Expr::Literal(Literal::Boolean(Boolean(true))),
+				Expr::Literal(Literal::Boolean(Boolean(false)))
+			)))
+		);
+	}
 }
