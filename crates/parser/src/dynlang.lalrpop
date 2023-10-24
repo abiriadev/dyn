@@ -76,7 +76,7 @@ L6: Expr = {
 };
 
 L7: Expr = {
-	"let" <i:Ident> "=" <l6:L6> => Expr::Declare(i, Box::new(l6)),
+	"let" <i:Ident> "=" <e:L6> => Expr::Declare(i, Box::new(e)),
 	L6 => <>,
 };
 
