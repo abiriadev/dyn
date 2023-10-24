@@ -589,4 +589,27 @@ mod tests {
 			})
 		)
 	}
+
+	#[test]
+	fn parse_else_expression() {
+		let res = parse(r#"if a > b { fetch() } else { cancel() }"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::IfElse {
+				condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
+					ident!(a),
+					ident!(b)
+				))),
+				yes: Code(vec![Expr::BinExpr(BinExpr::Call(
+					ident!(fetch),
+					Code(vec![])
+				))]),
+				no: Code(vec![Expr::BinExpr(BinExpr::Call(
+					ident!(cancel),
+					Code(vec![])
+				))])
+			})
+		)
+	}
 }
