@@ -38,33 +38,33 @@ Ident: Ident = "ident" => Ident(<>);
 L0: Expr = {
 	Literal => Expr::Literal(<>),
 	Ident => Expr::Ident(<>),
-	"(" <Expr> ")" => <>,
+	"(" <Expr> ")",
 	"[" <Separated<Expr, ",">> "]" => Expr::Array(Array(Code(<>))),
 };
 
 L1: Expr = {
 	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
 	<i:L1> "(" <args:Separated<Expr, ",">> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
-	L0 => <>,
+	L0,
 }
 	
 L2: Expr = {
 	"-" <L2> => Expr::unary_minus_box(<>),
 	"!" <L2> => Expr::unary_not_box(<>),
-	L1 => <>,
+	L1,
 }
 
 L3: Expr = {
 	<L3> "*" <L2> => Expr::BinExpr(BinExpr::mul_box(<>)),
 	<L3> "/" <L2> => Expr::BinExpr(BinExpr::div_box(<>)),
 	<L3> "%" <L2> => Expr::BinExpr(BinExpr::mod_box(<>)),
-	L2 => <>,
+	L2,
 }
 
 L4: Expr = {
 	<L4> "+" <L3> => Expr::BinExpr(BinExpr::add_box(<>)),
 	<L4> "-" <L3> => Expr::BinExpr(BinExpr::sub_box(<>)),
-	L3 => <>,
+	L3,
 };
 
 L5: Expr = {
@@ -74,17 +74,17 @@ L5: Expr = {
 	<L5> "<=" <L4> => Expr::BinExpr(BinExpr::less_than_equal_box(<>)),
 	<L5> ">" <L4> => Expr::BinExpr(BinExpr::greater_than_box(<>)),
 	<L5> ">=" <L4> => Expr::BinExpr(BinExpr::greater_than_equal_box(<>)),
-	L4 => <>,
+	L4,
 };
 
 L6: Expr = {
 	<L6> "&&" <L5> => Expr::BinExpr(BinExpr::and_box(<>)),
-	L5 => <>,
+	L5,
 };
 
 L7: Expr = {
 	<L7> "||" <L6> => Expr::BinExpr(BinExpr::or_box(<>)),
-	L6 => <>,
+	L6,
 };
 
 L8: Expr = {
@@ -92,11 +92,11 @@ L8: Expr = {
 	"let!" <i:Ident> "=" <e:L8> => Expr::DeclareMut(i, Box::new(e)),
 	<i:Ident> "=" <e:L8> => Expr::Assign(i, Box::new(e)),
 	"if" <c:Expr> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
-	L7 => <>,
+	L7,
 };
 
 pub Expr: Expr = {
-	L8 => <>,
+	L8,
 }
 	
 Code: Code = Separated<Expr, ("newline" "newline"*)> => Code(<>);
