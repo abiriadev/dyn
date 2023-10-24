@@ -548,4 +548,25 @@ mod tests {
 			})
 		)
 	}
+
+	#[test]
+	fn parse_if_expr2() {
+		let res = parse(
+			r#"if a - 4 >= 0 { abc()
+		def() }"#,
+		);
+
+		assert_eq!(
+			res,
+			Ok(Expr::If {
+				condition: Box::new(Expr::BinExpr(
+					BinExpr::GreaterThanEqual(ident!(a) - n!(4), n!(0))
+				)),
+				yes: Code(vec![
+					Expr::BinExpr(BinExpr::Call(ident!(abc), Code(vec![]))),
+					Expr::BinExpr(BinExpr::Call(ident!(def), Code(vec![])))
+				])
+			})
+		)
+	}
 }
