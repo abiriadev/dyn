@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::path::PathBuf;
 
 use box_tt::BoxNew;
