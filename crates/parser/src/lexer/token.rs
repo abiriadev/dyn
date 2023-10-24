@@ -156,10 +156,11 @@ pub enum Token {
 	#[token("export")]
 	Export,
 
-	// regexes
-	#[regex(r"\n[ \t\n]*")]
+	// extra
+	#[regex(r"\n")]
 	NewLine,
 
+	// regexes
 	#[regex(r"//[^\n]*")]
 	LineComment,
 
