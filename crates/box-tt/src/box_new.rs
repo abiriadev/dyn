@@ -1,37 +1,33 @@
+use either::Either::{self, Left, Right};
 use proc_macro2::TokenStream;
 use quote::quote;
 use syn::{
 	parse2, Data, DeriveInput, Field, Fields, GenericArgument, PathArguments,
-	Type,
+	PathSegment, Type,
 };
 
-enum BoxOrNot<T> {
-	Box(T),
-	Not(T),
-}
-
-fn unwrap_box(ty: &Type) -> BoxOrNot<&Type> {
+fn unwrap_box(ty: &Type) -> Either<&Type, &Type> {
 	let Type::Path(path) = ty else {
-		return BoxOrNot::Not(ty);
+		return Left(ty);
 	};
 
-	let Some(seg) = path.path.segments.first() else {
-		return BoxOrNot::Not(ty);
+	let Some(PathSegment {
+		ident,
+		arguments: PathArguments::AngleBracketed(ang),
+	}) = path.path.segments.first()
+	else {
+		return Left(ty);
 	};
 
-	if seg.ident.to_string() != "Box" {
-		return BoxOrNot::Not(ty);
-	};
-
-	let PathArguments::AngleBracketed(ang) = seg.arguments else {
-		return BoxOrNot::Not(ty);
+	if ident.to_string() != "Box" {
+		return Left(ty);
 	};
 
 	let Some(GenericArgument::Type(ty)) = ang.args.first() else {
-		return BoxOrNot::Not(ty);
+		return Left(ty);
 	};
 
-	BoxOrNot::Box(ty)
+	Right(ty)
 }
 
 pub fn box_new(input: TokenStream) -> TokenStream {
@@ -59,11 +55,19 @@ pub fn box_new(input: TokenStream) -> TokenStream {
 				None => None,
 			});
 
-	let args = fields.clone().map(|(ident, mut ty)| {
+	let args = fields.clone().map(|(ident, ty)| {
+		let ty = ty.into_inner();
+
 		quote! { #ident: #ty }
 	});
 
-	let body = fields.map(|(ident, _)| quote! { #ident: #ident});
+	let body = fields.map(|(ident, ty)| {
+		ty.map_either(
+			|_| quote! {#ident},
+			|_| quote! {#ident: Box::new(#ident)},
+		)
+		.into_inner()
+	});
 
 	quote! {
 		impl #ident {
