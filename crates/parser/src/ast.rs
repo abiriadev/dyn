@@ -93,7 +93,7 @@ pub enum Expr {
 #[derive(Debug, PartialEq)]
 pub struct Code(Vec<Expr>);
 
-#[cfg(test)] use std::ops::Add;
+#[cfg(test)] use std::ops::{Add, Div, Mul, Sub};
 
 #[cfg(test)]
 impl Add for Box<Expr> {
@@ -110,6 +110,69 @@ impl Add for Expr {
 
 	fn add(self, rhs: Self) -> Self::Output {
 		Expr::BinExpr(BinExpr::Add(
+			Box::new(self),
+			Box::new(rhs),
+		))
+	}
+}
+
+#[cfg(test)]
+impl Sub for Box<Expr> {
+	type Output = Self;
+
+	fn sub(self, rhs: Self) -> Self::Output {
+		Box::new(Expr::BinExpr(BinExpr::Sub(self, rhs)))
+	}
+}
+
+#[cfg(test)]
+impl Sub for Expr {
+	type Output = Self;
+
+	fn sub(self, rhs: Self) -> Self::Output {
+		Expr::BinExpr(BinExpr::Sub(
+			Box::new(self),
+			Box::new(rhs),
+		))
+	}
+}
+
+#[cfg(test)]
+impl Mul for Box<Expr> {
+	type Output = Self;
+
+	fn mul(self, rhs: Self) -> Self::Output {
+		Box::new(Expr::BinExpr(BinExpr::Mul(self, rhs)))
+	}
+}
+
+#[cfg(test)]
+impl Mul for Expr {
+	type Output = Self;
+
+	fn mul(self, rhs: Self) -> Self::Output {
+		Expr::BinExpr(BinExpr::Mul(
+			Box::new(self),
+			Box::new(rhs),
+		))
+	}
+}
+
+#[cfg(test)]
+impl Div for Box<Expr> {
+	type Output = Self;
+
+	fn div(self, rhs: Self) -> Self::Output {
+		Box::new(Expr::BinExpr(BinExpr::Div(self, rhs)))
+	}
+}
+
+#[cfg(test)]
+impl Div for Expr {
+	type Output = Self;
+
+	fn div(self, rhs: Self) -> Self::Output {
+		Expr::BinExpr(BinExpr::Div(
 			Box::new(self),
 			Box::new(rhs),
 		))
