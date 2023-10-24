@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.75"
 box-tt = { version = "0.1.0", path = "../box-tt" }
+indoc = "2.0.4"
 lalrpop-util = "0.20.0"
 logos = "0.13.0"
 pretty_assertions = "1.4.0"

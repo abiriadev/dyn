@@ -13,6 +13,7 @@ fn parse(code: &str) -> Result<Expr, ParseError<usize, Token, LexError>> {
 
 #[cfg(test)]
 mod tests {
+	use indoc::indoc;
 	use pretty_assertions::assert_eq;
 
 	use super::*;
@@ -530,10 +531,8 @@ mod tests {
 
 	#[test]
 	fn parse_if_expr2() {
-		let res = parse(
-			r#"if a - 4 >= 0 { abc()
-		def() }"#,
-		);
+		let res = parse(indoc! {r#"if a - 4 >= 0 {abc()
+		def()}"#});
 
 		assert_eq!(
 			res,
