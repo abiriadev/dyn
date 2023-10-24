@@ -104,7 +104,7 @@ pub Expr: Expr = {
 	L8,
 }
 	
-Code: Code = Separated<Expr, ("newline" "newline"*)> => Code(<>);
+pub Code: Code = Separated<Expr, ("\n"+)> => Code(<>);
 
 extern {
 	type Location = usize;
@@ -157,7 +157,7 @@ extern {
 		"continue" => Token::Continue,
 		"import" => Token::Import,
 		"export" => Token::Export,
-		"newline" => Token::NewLine,
+		"\n" => Token::NewLine,
 		"lcomment" => Token::LineComment,
 		"bcomment" => Token::BlockCommnet,
 		"int" => Token::Integer(<i32>),
