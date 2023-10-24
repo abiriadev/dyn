@@ -79,4 +79,17 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_indexing_expr() {
+		let res = parse("(a + b)[123]");
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Index(
+				ident!(a) + ident!(b),
+				n!(123)
+			)))
+		)
+	}
 }
