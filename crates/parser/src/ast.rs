@@ -1,3 +1,5 @@
+use box_tt::BoxNew;
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct Nil;
 
@@ -31,7 +33,7 @@ pub struct Function {
 	body: Code,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, BoxNew)]
 pub enum BinExpr {
 	Add(Box<Expr>, Box<Expr>),
 	Sub(Box<Expr>, Box<Expr>),
@@ -52,7 +54,7 @@ pub enum BinExpr {
 	Index(Box<Expr>, Box<Expr>),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, BoxNew)]
 pub enum Expr {
 	Literal(Literal),
 	Ident(Ident),

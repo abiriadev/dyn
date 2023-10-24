@@ -358,6 +358,7 @@ name = "parser"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "box-tt",
  "lalrpop",
  "lalrpop-util",
  "logos",

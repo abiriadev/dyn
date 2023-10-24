@@ -30,12 +30,12 @@ L0: Expr = {
 };
 
 L1: Expr = {
-	<l1:L1> "*" <l0:L0> => Expr::BinExpr(BinExpr::Mul(Box::new(l1), Box::new(l0))),
+	<l1:L1> "*" <l0:L0> => Expr::BinExpr(BinExpr::mul_box(<>)),
 	L0 => <>,
 }
 
 L2: Expr = {
-	<l2:L2> "+" <l1:L1> => Expr::BinExpr(BinExpr::Add(Box::new(l2), Box::new(l1))),
+	<l2:L2> "+" <l1:L1> => Expr::BinExpr(BinExpr::add_box(<>)),
 	L1 => <>,
 };
 
