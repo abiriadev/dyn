@@ -96,8 +96,6 @@ fn box_struct(ident: Ident, fields: Fields) -> TokenStream {
 }
 
 fn box_enum(ident: Ident, variants: Punctuated<Variant, Comma>) -> TokenStream {
-	println!("{:#?}", variants);
-
 	let methods =
 		variants
 			.iter()
