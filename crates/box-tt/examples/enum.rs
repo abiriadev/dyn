@@ -1,14 +1,14 @@
+use std::path::PathBuf;
+
 use box_tt::BoxNew;
 
 #[derive(BoxNew)]
 enum Error {
 	UnknownError,
-	PathReadError(Box<String>),
+	TimeoutError(u16),
+	PathDoesNotExistError(Box<PathBuf>),
+	FileWriteError(String, Box<PathBuf>),
+	RgbError(Box<u8>, Box<u8>, Box<u8>),
 }
 
-fn main() {
-	let person = Person::new_box(30, 123);
-
-	assert_eq!(person.age, 30);
-	assert_eq!(person.extra, Box::new(123));
-}
+fn main() { todo!() }

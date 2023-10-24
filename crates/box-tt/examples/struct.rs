@@ -7,5 +7,8 @@ struct Person {
 }
 
 fn main() {
-	// let person = Person
+	let person = Person::new_box(30, 123);
+
+	assert_eq!(person.age, 30);
+	assert_eq!(person.extra, Box::new(123));
 }
