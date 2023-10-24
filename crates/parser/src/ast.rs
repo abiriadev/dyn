@@ -59,6 +59,8 @@ pub enum BinExpr {
 pub enum Expr {
 	Literal(Literal),
 	Ident(Ident),
+	UnaryMinus(Box<Expr>),
+	UnaryNot(Box<Expr>),
 	Array(Array),
 	Function(Function),
 	BinExpr(BinExpr),
