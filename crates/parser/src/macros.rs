@@ -6,3 +6,12 @@ macro_rules! n {
 		))
 	};
 }
+
+#[macro_export]
+macro_rules! ident {
+	($id:ident) => {
+		Box::new(crate::ast::Expr::Ident(
+			crate::ast::Ident(stringify!($id).to_owned()),
+		))
+	};
+}

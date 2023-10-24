@@ -18,7 +18,7 @@ mod tests {
 	use super::*;
 	use crate::{
 		ast::{BinExpr, Ident},
-		n,
+		ident, n,
 	};
 
 	#[test]
@@ -62,9 +62,9 @@ mod tests {
 			Ok(Expr::BinExpr(BinExpr::Mul(
 				Box::new(Expr::BinExpr(BinExpr::Mul(
 					n!(2),
-					Box::new(Expr::Ident(Ident("pi".to_owned())))
+					ident!(pi)
 				))),
-				Box::new(Expr::Ident(Ident("r".to_owned())))
+				ident!(r)
 			)))
 		)
 	}
