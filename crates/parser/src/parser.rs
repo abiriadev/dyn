@@ -335,6 +335,22 @@ mod tests {
 	}
 
 	#[test]
+	fn boolean_operator_precedence() {
+		let res = parse(r#"true || false && true"#);
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::or_box(
+				Expr::Literal(Literal::Boolean(Boolean(true))),
+				Expr::BinExpr(BinExpr::and_box(
+					Expr::Literal(Literal::Boolean(Boolean(false))),
+					Expr::Literal(Literal::Boolean(Boolean(true)))
+				))
+			)))
+		);
+	}
+
+	#[test]
 	fn parse_div() {
 		let res = parse(r#"a / 123"#);
 
