@@ -63,4 +63,23 @@ mod tests {
 			)))
 		)
 	}
+
+	#[test]
+	fn parse_nested_indexing() {
+		let res = parse("arr[1][2][3]");
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Index(
+				Box::new(Expr::BinExpr(BinExpr::Index(
+					Box::new(Expr::BinExpr(BinExpr::Index(
+						ident!(arr),
+						n!(1)
+					),)),
+					n!(2)
+				))),
+				n!(3)
+			)))
+		)
+	}
 }
