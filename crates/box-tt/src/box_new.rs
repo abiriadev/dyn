@@ -8,8 +8,6 @@ pub fn box_new(input: TokenStream) -> TokenStream {
 		Err(e) => return e.to_compile_error(),
 	};
 
-	println!("{input:#?}");
-
 	let ident = input.ident;
 
 	let Data::Struct(s) = input.data else {
@@ -35,11 +33,6 @@ pub fn box_new(input: TokenStream) -> TokenStream {
 	let args = fields
 		.clone()
 		.map(|(ident, ty)| quote! { #ident: #ty });
-
-	println!(
-		"{:#?}",
-		fields.clone().collect::<Vec<_>>()
-	);
 
 	let body = fields.map(|(ident, _)| quote! { #ident: #ident});
 
