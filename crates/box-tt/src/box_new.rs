@@ -30,7 +30,7 @@ fn unwrap_box(ty: &Type) -> Either<&Type, &Type> {
 		return Left(ty);
 	};
 
-	if ident.to_string() != "Box" {
+	if *ident != "Box" {
 		return Left(ty);
 	};
 
@@ -65,9 +65,10 @@ fn box_struct(ident: Ident, fields: Fields) -> TokenStream {
 		named
 			.named
 			.iter()
-			.filter_map(|Field { ident, ty, .. }| match ident {
-				Some(i) => Some((i, unwrap_box(ty))),
-				None => None,
+			.filter_map(|Field { ident, ty, .. }| {
+				ident
+					.as_ref()
+					.map(|i| (i, unwrap_box(ty)))
 			});
 
 	let args = fields.clone().map(|(ident, ty)| {
