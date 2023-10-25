@@ -7,7 +7,7 @@ use crate::{
 
 lalrpop_mod!(pub dynlang);
 
-fn parse(code: &str) -> Result<Expr, ParseError<usize, Token, LexError>> {
+pub fn parse(code: &str) -> Result<Expr, ParseError<usize, Token, LexError>> {
 	dynlang::ExprParser::new().parse(SpannedLexer::new(code))
 }
 
