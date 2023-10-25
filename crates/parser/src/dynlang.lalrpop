@@ -104,7 +104,7 @@ pub Expr: Expr = {
 	L8,
 }
 	
-pub Code: Code = Separated<Expr, ("\n"+)> => Code(<>);
+pub Code: Code = Separated<Expr, "\n"+> => Code(<>);
 
 extern {
 	type Location = usize;

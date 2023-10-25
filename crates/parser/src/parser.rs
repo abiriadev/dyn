@@ -586,4 +586,17 @@ mod tests {
 			})
 		)
 	}
+
+	#[test]
+	#[ignore]
+	fn parse_expr_across_multiple_lines() {
+		let res = parse(indoc! {r#"
+			1
+			+
+			2
+		"#});
+
+		// TODO: fix test
+		assert_eq!(res, Ok(*n!(1) + *n!(2)))
+	}
 }
