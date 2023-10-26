@@ -708,4 +708,23 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn parse_panic_expr() {
+		let res = parse("panic res");
+
+		assert_eq!(res, Ok(Expr::Panic(ident!(res))));
+	}
+
+	#[test]
+	fn parse_nested_panic_expr() {
+		let res = parse("panic panic res");
+
+		assert_eq!(
+			res,
+			Ok(Expr::panic_box(Expr::Panic(ident!(
+				res
+			))))
+		);
+	}
 }
