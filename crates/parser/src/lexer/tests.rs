@@ -289,6 +289,16 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
+	fn lex_pipe() {
+		assert_eq!(
+			Token::lexer("|")
+				.spanned()
+				.collect::<Vec<_>>(),
+			[(Ok(Token::Pipe), 0..1)]
+		);
+	}
+
+	#[test]
 	fn lex_at() {
 		assert_eq!(
 			Token::lexer("@")
