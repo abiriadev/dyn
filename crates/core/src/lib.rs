@@ -250,8 +250,12 @@ impl Interpreter {
 					};
 					Ok(Value::Integer(i % j))
 				},
-				BinExpr::Equal(i, j) => Ok(Value::Boolean(i == j)),
-				BinExpr::NotEqual(i, j) => Ok(Value::Boolean(i != j)),
+				BinExpr::Equal(i, j) => Ok(Value::Boolean(
+					self.eval(Tree::Expr(*i))? == self.eval(Tree::Expr(*j))?,
+				)),
+				BinExpr::NotEqual(i, j) => Ok(Value::Boolean(
+					self.eval(Tree::Expr(*i))? != self.eval(Tree::Expr(*j))?,
+				)),
 				BinExpr::LessThan(i, j) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
 						panic!()
