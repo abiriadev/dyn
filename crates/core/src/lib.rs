@@ -39,7 +39,7 @@ pub enum Value {
 }
 
 impl Value {
-	fn from_expr(ex: Literal) -> Self {
+	fn from_literal(ex: Literal) -> Self {
 		match ex {
 			Literal::Nil(Nil) => Self::Nil,
 			Literal::Boolean(Boolean(v)) => Self::Boolean(v),
@@ -175,7 +175,12 @@ impl Interpreter {
 				Literal::String(i) => self.eval(Tree::StringT(i)),
 			},
 			Tree::Ident(ident) => Ok(self.mem.read_value(ident)?),
-			Tree::Array(_) => todo!(),
+			Tree::Array(i) => Ok(Value::Array(
+				i.0 .0
+					.into_iter()
+					.map(|e| self.eval(Tree::Expr(e)))
+					.collect::<Result<Vec<_>, RuntimeError>>()?,
+			)),
 			Tree::Function(_) => todo!(),
 			Tree::BinExpr(i) => match i {
 				BinExpr::Add(i, j) => {
