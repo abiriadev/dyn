@@ -533,4 +533,92 @@ mod tests {
 
 		assert_eq!(res, Ok(Value::Boolean(true)));
 	}
+
+	#[test]
+	fn one_should_be_less_than_ten() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			0 < 10
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(true)));
+	}
+
+	#[test]
+	fn one_should_be_less_than_or_equal_to_ten() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			0 <= 10
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(true)));
+	}
+
+	#[test]
+	fn one_should_not_be_greater_than_ten() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			0 > 10
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(false)));
+	}
+
+	#[test]
+	fn one_should_not_be_greater_than_or_equal_to_ten() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			0 >= 10
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(false)));
+	}
+
+	#[test]
+	fn two_should_not_be_less_than_two() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			2 < 2
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(false)));
+	}
+
+	#[test]
+	fn two_should_be_less_than_or_equal_to_two() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			2 <= 2
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(true)));
+	}
+
+	#[test]
+	fn two_should_not_be_greater_than_two() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			2 > 2
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(false)));
+	}
+
+	#[test]
+	fn two_should_be_greater_than_or_equal_to_two() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			2 >= 2
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(true)));
+	}
 }
