@@ -621,4 +621,15 @@ mod tests {
 
 		assert_eq!(res, Ok(Value::Boolean(true)));
 	}
+
+	#[test]
+	fn negative_zero_should_not_be_less_than_positive_zero() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			-0 < 0
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(false)));
+	}
 }
