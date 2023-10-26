@@ -184,13 +184,20 @@ impl Interpreter {
 			Tree::Function(_) => todo!(),
 			Tree::BinExpr(i) => match i {
 				BinExpr::Add(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
-						panic!()
-					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
-						panic!()
-					};
-					Ok(Value::Integer(i + j))
+					let i = self.eval(Tree::Expr(*i))?;
+					let j = self.eval(Tree::Expr(*j))?;
+
+					Ok(match (i, j) {
+						(Value::Integer(i), Value::Integer(i2)) =>
+							Value::Integer(i + i2),
+						(Value::Integer(i), Value::String(s)) =>
+							Value::String(format!("{i}{s}")),
+						(Value::String(s), Value::Integer(i)) =>
+							Value::String(format!("{s}{i}")),
+						(Value::String(s), Value::String(s2)) =>
+							Value::String(format!("{s}{s2}")),
+						(_, _) => panic!(),
+					})
 				},
 				BinExpr::Sub(i, j) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
