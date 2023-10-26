@@ -210,7 +210,15 @@ impl Interpreter {
 					};
 					Ok(Value::Integer(i * j))
 				},
-				BinExpr::Div(_, _) => todo!(),
+				BinExpr::Div(i, j) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Integer(i / j))
+				},
 				BinExpr::Mod(_, _) => todo!(),
 				BinExpr::Equal(_, _) => todo!(),
 				BinExpr::NotEqual(_, _) => todo!(),
