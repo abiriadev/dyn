@@ -227,8 +227,8 @@ impl Interpreter {
 					Ok(Value::Integer(i / j))
 				},
 				BinExpr::Mod(_, _) => todo!(),
-				BinExpr::Equal(_, _) => todo!(),
-				BinExpr::NotEqual(_, _) => todo!(),
+				BinExpr::Equal(i, j) => Ok(Value::Boolean(i == j)),
+				BinExpr::NotEqual(i, j) => Ok(Value::Boolean(i != j)),
 				BinExpr::LessThan(i, j) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
 						panic!()
