@@ -49,32 +49,32 @@ L0: Expr = {
 	"[" <Elements> "]" => Expr::Array(Array(Code(<>))),
 };
 
-L1: Expr = {
+L1 = {
 	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
 	<i:L1> "(" <args:Elements> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
 	L0,
 }
 	
-L2: Expr = {
+L2 = {
 	"-" <L2> => Expr::unary_minus_box(<>),
 	"!" <L2> => Expr::unary_not_box(<>),
 	L1,
 }
 
-L3: Expr = {
+L3 = {
 	<L3> "*" <L2> => Expr::BinExpr(BinExpr::mul_box(<>)),
 	<L3> "/" <L2> => Expr::BinExpr(BinExpr::div_box(<>)),
 	<L3> "%" <L2> => Expr::BinExpr(BinExpr::mod_box(<>)),
 	L2,
 }
 
-L4: Expr = {
+L4 = {
 	<L4> "+" <L3> => Expr::BinExpr(BinExpr::add_box(<>)),
 	<L4> "-" <L3> => Expr::BinExpr(BinExpr::sub_box(<>)),
 	L3,
 };
 
-L5: Expr = {
+L5 = {
 	<L5> "==" <L4> => Expr::BinExpr(BinExpr::equal_box(<>)),
 	<L5> "!=" <L4> => Expr::BinExpr(BinExpr::not_equal_box(<>)),
 	<L5> "<" <L4> => Expr::BinExpr(BinExpr::less_than_box(<>)),
@@ -84,27 +84,27 @@ L5: Expr = {
 	L4,
 };
 
-L6: Expr = {
+L6 = {
 	<L6> "&&" <L5> => Expr::BinExpr(BinExpr::and_box(<>)),
 	L5,
 };
 
-L7: Expr = {
+L7 = {
 	<L7> "||" <L6> => Expr::BinExpr(BinExpr::or_box(<>)),
 	L6,
 };
 
-L8: Expr = {
+L8 = {
 	"let" <i:Ident> "=" <e:L8> => Expr::Declare(i, Box::new(e)),
 	"let!" <i:Ident> "=" <e:L8> => Expr::DeclareMut(i, Box::new(e)),
 	<i:Ident> "=" <e:L8> => Expr::Assign(i, Box::new(e)),
 	L7,
 };
 
-L9: Expr = {
-	"return" <L8> => Expr::return_box(<>),
-	"if" <c:Expr> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
-	"if" <c:Expr> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
+L9 = {
+	"return" <L9> => Expr::return_box(<>),
+	"if" <c:L9> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
+	"if" <c:L9> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
@@ -112,13 +112,13 @@ L9: Expr = {
 	L8,
 };
 
-pub Expr: Expr = {
+pub Expr = {
 	L9,
 }
 
 ElementSeparator = { ",", "\n" };
 
-Elements: Vec<Expr> = Punctuated<Expr, ElementSeparator>;
+Elements = Punctuated<Expr, ElementSeparator>;
 	
 pub Code: Code = Separated<Expr, "\n"+> => Code(<>);
 
