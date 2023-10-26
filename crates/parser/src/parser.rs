@@ -849,4 +849,28 @@ mod tests {
 			})
 		);
 	}
+
+	#[test]
+	fn parse_over_expression() {
+		let res = parse(indoc! {r#"
+			iter [
+				"some string"
+				12345
+			] of item {
+				print(item)
+			}"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::For {
+				collection: arr![*str!("some string"), *n!(12345)],
+				item: Ident("item".to_owned()),
+				body: code![Expr::BinExpr(BinExpr::Call(
+					ident!(print),
+					code![*ident!(item)]
+				))],
+			})
+		);
+	}
 }
