@@ -18,9 +18,8 @@ mod tests {
 
 	use super::*;
 	use crate::{
-		arr,
 		ast::{BinExpr, Function},
-		code, fal, ident, n, nil, str, tru, var,
+		macros::{arr, code, fal, ident, n, nil, str, tru, var},
 	};
 
 	#[test]

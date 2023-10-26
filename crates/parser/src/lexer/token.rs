@@ -2,7 +2,7 @@ use logos::{Filter, Lexer, Logos};
 use strum::EnumDiscriminants;
 
 use super::LexError;
-use crate::save_token;
+use crate::macros::save_token;
 
 fn lex_string(lex: &mut Lexer<Token>) -> String {
 	lex.extras = Some(TokenKind::String);

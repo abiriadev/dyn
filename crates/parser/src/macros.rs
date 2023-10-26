@@ -1,4 +1,5 @@
-#[macro_export]
+#![allow(unused)]
+
 macro_rules! n {
 	($n:expr) => {
 		Box::new($crate::ast::Expr::Literal(
@@ -7,7 +8,8 @@ macro_rules! n {
 	};
 }
 
-#[macro_export]
+pub(crate) use n;
+
 macro_rules! ident {
 	($id:ident) => {
 		Box::new($crate::ast::Expr::Ident(
@@ -16,14 +18,16 @@ macro_rules! ident {
 	};
 }
 
-#[macro_export]
+pub(crate) use ident;
+
 macro_rules! var {
 	($id:ident) => {
 		$crate::ast::Ident(stringify!($id).to_owned())
 	};
 }
 
-#[macro_export]
+pub(crate) use var;
+
 macro_rules! str {
 	($str:expr) => {
 		Box::new($crate::ast::Expr::Literal(
@@ -31,8 +35,8 @@ macro_rules! str {
 		))
 	};
 }
+pub(crate) use str;
 
-#[macro_export]
 macro_rules! arr {
 	[$($ele:expr),* $(,)?] => {
 		Box::new(
@@ -44,8 +48,8 @@ macro_rules! arr {
 		)
 	};
 }
+pub(crate) use arr;
 
-#[macro_export]
 macro_rules! nil {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
@@ -54,7 +58,8 @@ macro_rules! nil {
 	};
 }
 
-#[macro_export]
+pub(crate) use nil;
+
 macro_rules! tru {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
@@ -63,7 +68,8 @@ macro_rules! tru {
 	};
 }
 
-#[macro_export]
+pub(crate) use tru;
+
 macro_rules! fal {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
@@ -72,14 +78,16 @@ macro_rules! fal {
 	};
 }
 
-#[macro_export]
+pub(crate) use fal;
+
 macro_rules! code {
 	{ $($ele:expr),* $(,)? } => {
 		$crate::ast::Code(vec![$($ele),*])
 	};
 }
 
-#[macro_export]
+pub(crate) use code;
+
 macro_rules! save_token {
 	($token:expr) => {
 		|lex: &mut Lexer<'s>| {
@@ -87,3 +95,5 @@ macro_rules! save_token {
 		}
 	};
 }
+
+pub(crate) use save_token;
