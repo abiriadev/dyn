@@ -54,7 +54,7 @@ L1 = {
 	<i:L1> "(" <args:Elements> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
 	L0,
 }
-	
+
 L2 = {
 	"-" <L2> => Expr::unary_minus_box(<>),
 	"!" <L2> => Expr::unary_not_box(<>),
@@ -103,31 +103,27 @@ L8 = {
 	<i:Ident> "*=" <e:L8> => Expr::MulAssign(i, Box::new(e)),
 	<i:Ident> "/=" <e:L8> => Expr::DivAssign(i, Box::new(e)),
 	<i:Ident> "%=" <e:L8> => Expr::ModAssign(i, Box::new(e)),
-	L7,
-};
-
-L9 = {
-	"return" <L9> => Expr::return_box(<>),
-	"break" <L9> => Expr::break_box(<>),
-	"continue" <L9> => Expr::continue_box(<>),
-	"panic" <L9> => Expr::panic_box(<>),
-	"assert" <L9> => Expr::assert_box(<>),
-	"if" <c:L9> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
-	"if" <c:L9> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
+	"return" <L8> => Expr::return_box(<>),
+	"break" <L8> => Expr::break_box(<>),
+	"continue" <L8> => Expr::continue_box(<>),
+	"panic" <L8> => Expr::panic_box(<>),
+	"assert" <L8> => Expr::assert_box(<>),
+	"if" <c:L8> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
+	"if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
 	},
-	"iter" <a:L9> "of" <i:Ident> "{" <b:Code> "}" => Expr::For {
+	"iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" => Expr::For {
 		collection: Box::new(a),
 		item: i,
 		body: b
 	},
-	L8,
+	L7,
 };
 
 pub Expr = {
-	L9,
+	L8,
 }
 
 ElementSeparator = { ",", "\n" };
