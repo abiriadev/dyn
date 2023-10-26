@@ -518,4 +518,15 @@ mod tests {
 
 		assert_eq!(res, Ok(Value::Integer(60)));
 	}
+
+	#[test]
+	fn one_plus_one_should_be_two() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			1 + 1 == 2
+		"#});
+
+		assert_eq!(res, Ok(Value::Boolean(true)));
+	}
 }
