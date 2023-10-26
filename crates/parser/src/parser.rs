@@ -759,4 +759,17 @@ mod tests {
 			))
 		);
 	}
+
+	#[test]
+	fn parse_sub_assign() {
+		let res = parse("a -= 1");
+
+		assert_eq!(
+			res,
+			Ok(Expr::SubAssign(
+				Ident("a".to_owned()),
+				n!(1)
+			))
+		);
+	}
 }
