@@ -658,4 +658,16 @@ mod tests {
 
 		assert_eq!(res, Ok(Expr::Return(ident!(res))));
 	}
+
+	#[test]
+	fn parse_nested_return_expr() {
+		let res = parse("return return res");
+
+		assert_eq!(
+			res,
+			Ok(Expr::return_box(Expr::Return(ident!(
+				res
+			))))
+		);
+	}
 }
