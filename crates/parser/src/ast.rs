@@ -1,19 +1,19 @@
 #![allow(unused)]
 use box_tt::BoxNew;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Nil;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Boolean(pub bool);
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Integer(pub i32);
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StringT(pub String);
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Literal {
 	Nil(Nil),
 	Boolean(Boolean),
@@ -21,19 +21,19 @@ pub enum Literal {
 	String(StringT),
 }
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ident(pub String);
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Array(pub Code);
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Function {
 	pub args: Vec<Ident>,
 	pub body: Code,
 }
 
-#[derive(Debug, PartialEq, BoxNew)]
+#[derive(Debug, Clone, PartialEq, BoxNew)]
 pub enum BinExpr {
 	Add(Box<Expr>, Box<Expr>),
 	Sub(Box<Expr>, Box<Expr>),
@@ -53,7 +53,7 @@ pub enum BinExpr {
 	Index(Box<Expr>, Box<Expr>),
 }
 
-#[derive(Debug, PartialEq, BoxNew)]
+#[derive(Debug, Clone, PartialEq, BoxNew)]
 pub enum Expr {
 	Literal(Literal),
 	Ident(Ident),
@@ -91,7 +91,7 @@ pub enum Expr {
 	Continue(Box<Expr>),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Code(pub Vec<Expr>);
 
 #[cfg(test)]
