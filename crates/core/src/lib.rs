@@ -427,7 +427,18 @@ impl Interpreter {
 						.declare(ident, value.clone(), true)?;
 					Ok(value)
 				},
-				Expr::If { condition, yes } => todo!(),
+				Expr::If { condition, yes } => {
+					let Value::Boolean(condition) =
+						self.eval(Tree::Expr(*condition))?
+					else {
+						panic!()
+					};
+					Ok(if condition {
+						self.eval(Tree::Code(yes))?
+					} else {
+						Value::Nil
+					})
+				},
 				Expr::IfElse { condition, yes, no } => todo!(),
 				Expr::For {
 					collection,
