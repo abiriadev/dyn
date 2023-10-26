@@ -1,9 +1,6 @@
-use std::{
-	collections::{
-		hash_map::{Entry, OccupiedEntry, VacantEntry},
-		HashMap,
-	},
-	panic::PanicInfo,
+use std::collections::{
+	hash_map::{Entry, OccupiedEntry, VacantEntry},
+	HashMap,
 };
 
 use parser::{
