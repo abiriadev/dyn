@@ -19,7 +19,7 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Function, Ident},
+		ast::{BinExpr, Function, Ident, Literal, Nil},
 		code, fal, ident, n, str, tru,
 	};
 
@@ -1022,6 +1022,27 @@ mod tests {
 			Ok(Expr::Function(Function {
 				args: vec![],
 				body: code![*n!(123)]
+			}))
+		);
+	}
+
+	#[test]
+	fn parse_nested_lambda_expression() {
+		let res = parse(indoc! {r#"
+			|| -> || -> || -> nil"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::Function(Function {
+				args: vec![],
+				body: code![Expr::Function(Function {
+					args: vec![],
+					body: code![Expr::Function(Function {
+						args: vec![],
+						body: code![Expr::Literal(Literal::Nil(Nil))]
+					})]
+				})]
 			}))
 		);
 	}
