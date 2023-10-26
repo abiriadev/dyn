@@ -195,7 +195,7 @@ impl Interpreter {
 						(Value::String(s), Value::Integer(i)) =>
 							Value::String(format!("{s}{i}")),
 						(Value::String(s), Value::String(s2)) =>
-							Value::String(format!("{s}{s}")),
+							Value::String(format!("{s}{s2}")),
 						(_, _) => panic!(),
 					})
 				},
