@@ -105,6 +105,7 @@ L9 = {
 	"return" <L9> => Expr::return_box(<>),
 	"break" <L9> => Expr::break_box(<>),
 	"continue" <L9> => Expr::continue_box(<>),
+	"panic" <L9> => Expr::panic_box(<>),
 	"if" <c:L9> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
 	"if" <c:L9> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
