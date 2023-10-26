@@ -102,6 +102,7 @@ L8: Expr = {
 };
 
 L9: Expr = {
+	"return" <L8> => Expr::return_box(<>),
 	"if" <c:Expr> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
 	"if" <c:Expr> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
