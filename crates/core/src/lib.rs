@@ -1,6 +1,9 @@
-use std::collections::{
-	hash_map::{Entry, OccupiedEntry, VacantEntry},
-	HashMap,
+use std::{
+	collections::{
+		hash_map::{Entry, OccupiedEntry, VacantEntry},
+		HashMap,
+	},
+	fmt::{self, Display, Formatter},
 };
 
 use parser::{
@@ -46,6 +49,18 @@ impl Value {
 			Literal::Integer(Integer(v)) => Self::Integer(v),
 			Literal::String(StringT(v)) => Self::String(v),
 		}
+	}
+}
+
+impl Display for Value {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", match self {
+			Value::Nil => "nil".to_owned(),
+			Value::Boolean(i) => i.to_string(),
+			Value::Integer(i) => i.to_string(),
+			Value::String(i) => i.to_string(),
+			Value::Array(i) => format!("{i:?}"),
+		})
 	}
 }
 
@@ -299,7 +314,7 @@ impl Interpreter {
 					let Expr::Ident(Ident(i)) = *i else { panic!() };
 					match &i[..] {
 						"print" => {
-							println!("{:?}", arg);
+							println!("{arg}");
 							Ok(arg)
 						},
 						_ => unimplemented!(),
