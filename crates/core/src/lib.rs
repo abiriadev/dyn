@@ -272,7 +272,7 @@ impl Interpreter {
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
-					Ok(Value::Boolean(i <= j))
+					Ok(Value::Boolean(i > j))
 				},
 				BinExpr::LessThanEqual(i, j) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
@@ -281,7 +281,7 @@ impl Interpreter {
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
-					Ok(Value::Boolean(i > j))
+					Ok(Value::Boolean(i <= j))
 				},
 				BinExpr::GreaterThanEqual(i, j) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
