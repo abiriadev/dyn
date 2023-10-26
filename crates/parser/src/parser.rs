@@ -689,4 +689,23 @@ mod tests {
 			))))
 		);
 	}
+
+	#[test]
+	fn parse_continue_expr() {
+		let res = parse("break res");
+
+		assert_eq!(res, Ok(Expr::Continue(ident!(res))));
+	}
+
+	#[test]
+	fn parse_nested_continue_expr() {
+		let res = parse("break break res");
+
+		assert_eq!(
+			res,
+			Ok(Expr::continue_box(Expr::Continue(
+				ident!(res)
+			)))
+		);
+	}
 }
