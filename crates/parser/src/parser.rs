@@ -692,14 +692,14 @@ mod tests {
 
 	#[test]
 	fn parse_continue_expr() {
-		let res = parse("break res");
+		let res = parse("continue res");
 
 		assert_eq!(res, Ok(Expr::Continue(ident!(res))));
 	}
 
 	#[test]
 	fn parse_nested_continue_expr() {
-		let res = parse("break break res");
+		let res = parse("continue continue res");
 
 		assert_eq!(
 			res,
