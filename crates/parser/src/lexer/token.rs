@@ -129,6 +129,9 @@ pub enum Token {
 	#[token(",", save_token!(TokenKind::Comma))]
 	Comma,
 
+	#[token("|", save_token!(TokenKind::Pipe))]
+	Pipe,
+
 	#[token("@", save_token!(TokenKind::At))]
 	At,
 
