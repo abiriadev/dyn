@@ -131,6 +131,10 @@ L8 = {
 		args,
 		body: Code(vec![e]),
 	}),
+	"||" "->" <e:L8> => Expr::Function(Function {
+		args: vec![],
+		body: Code(vec![e]),
+	}),
 	L7,
 };
 

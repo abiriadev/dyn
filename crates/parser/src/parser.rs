@@ -1010,4 +1010,19 @@ mod tests {
 			}))
 		);
 	}
+
+	#[test]
+	fn parse_lambda_expression_with_zero_arguments() {
+		let res = parse(indoc! {r#"
+			|| -> 123"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::Function(Function {
+				args: vec![],
+				body: code![*n!(123)]
+			}))
+		);
+	}
 }
