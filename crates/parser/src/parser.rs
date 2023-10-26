@@ -851,7 +851,7 @@ mod tests {
 	}
 
 	#[test]
-	fn parse_over_expression() {
+	fn parse_for_loop_over_expression() {
 		let res = parse(indoc! {r#"
 			iter [
 				"some string"
@@ -865,6 +865,38 @@ mod tests {
 			res,
 			Ok(Expr::For {
 				collection: arr![*str!("some string"), *n!(12345)],
+				item: Ident("item".to_owned()),
+				body: code![Expr::BinExpr(BinExpr::Call(
+					ident!(print),
+					code![*ident!(item)]
+				))],
+			})
+		);
+	}
+
+	#[test]
+	fn parse_for_loop_over_if_else_expression() {
+		let res = parse(indoc! {r#"
+			iter if a > 10 {
+				"this"
+			} else {
+				["or", "this"]
+			} of item {
+				print(item)
+			}"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::For {
+				collection: Box::new(Expr::IfElse {
+					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
+						ident!(a),
+						n!(10)
+					))),
+					yes: code![*str!("this")],
+					no: code![*arr![*str!("or"), *str!("this")]]
+				}),
 				item: Ident("item".to_owned()),
 				body: code![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
