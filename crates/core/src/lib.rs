@@ -330,7 +330,19 @@ impl Interpreter {
 					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
-				Expr::ModAssign(denti, j) => todo!(),
+				Expr::ModAssign(ident, j) => {
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
+					else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					let v = Value::Integer(i % j);
+					self.mem.assign(ident, v.clone())?;
+					Ok(v)
+				},
 				Expr::Declare(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
