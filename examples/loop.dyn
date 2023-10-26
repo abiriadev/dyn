@@ -1,0 +1,8 @@
+iter [
+	"abiria"
+	"andjsrk"
+	"kangjun"
+	"ensuta"
+] of person {
+	print("Hello, " + person + "!")
+}
