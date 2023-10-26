@@ -972,4 +972,27 @@ mod tests {
 			}))
 		);
 	}
+
+	#[test]
+	fn parse_iife() {
+		let res = parse(indoc! {r#"
+			|x| -> {
+				print(x)
+			}(123)"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::call_box(
+				Expr::Function(Function {
+					args: vec![Ident("x".to_owned())],
+					body: code![Expr::BinExpr(BinExpr::Call(
+						ident!(print),
+						code![*ident!(x)]
+					))]
+				}),
+				code![*n!(123)]
+			)))
+		);
+	}
 }
