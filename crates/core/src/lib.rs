@@ -3,7 +3,12 @@ use std::collections::{
 	HashMap,
 };
 
-use parser::ast::Ident;
+use parser::{ast::Ident, parse, LexError, ParseError, Token, VisitMut};
+
+pub enum InterpreterError {
+	ParseError(ParseError<usize, Token, LexError>),
+	RuntimeError(RuntimeError),
+}
 
 pub enum ReferenceError {
 	UndefinedIdentifier,
@@ -30,6 +35,12 @@ pub struct Environment {
 }
 
 impl Environment {
+	fn new() -> Self {
+		Self {
+			store: HashMap::new(),
+		}
+	}
+
 	fn entry(
 		&mut self,
 		ident: Ident,
@@ -75,4 +86,29 @@ impl Environment {
 	}
 }
 
-pub struct Interpreter {}
+pub struct Interpreter {
+	mem: Environment,
+}
+
+impl Interpreter {
+	pub fn init() -> Self {
+		Self {
+			mem: Environment::new(),
+		}
+	}
+
+	pub fn run(&mut self, code: &str) -> Result<(), InterpreterError> {
+		let ast = match parse(code) {
+			Ok(v) => v,
+			Err(e) => return Err(InterpreterError::ParseError(e)),
+		};
+
+		let mut ast = ast;
+
+		self.visit_mut_expr(&mut ast);
+
+		Ok(())
+	}
+}
+
+impl VisitMut for Interpreter {}
