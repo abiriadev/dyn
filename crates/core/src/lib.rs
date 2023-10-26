@@ -195,7 +195,7 @@ impl Interpreter {
 						(Value::String(s), Value::Integer(i)) =>
 							Value::String(format!("{s}{i}")),
 						(Value::String(s), Value::String(s2)) =>
-							Value::String(format!("{s}{s2}")),
+							Value::String(format!("{s}{s}")),
 						(_, _) => panic!(),
 					})
 				},
@@ -257,7 +257,7 @@ impl Interpreter {
 				Expr::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
 				Expr::UnaryMinus(_) => todo!(),
 				Expr::UnaryNot(_) => todo!(),
-				Expr::Array(_) => todo!(),
+				Expr::Array(i) => self.eval(Tree::Array(i)),
 				Expr::Function(_) => todo!(),
 				Expr::BinExpr(i) => self.eval(Tree::BinExpr(i)),
 				Expr::Assign(ident, j) => {
