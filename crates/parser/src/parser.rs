@@ -946,4 +946,30 @@ mod tests {
 			}))
 		);
 	}
+
+	#[test]
+	fn parse_function_expr_with_block_body() {
+		let res = parse(indoc! {r#"
+			|x, y| -> {
+				let local = 2 * x
+				kok(local + y)
+			}"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::Function(Function {
+				args: vec![Ident("x".to_owned()), Ident("y".to_owned())],
+				body: code![
+					Expr::Declare(
+						Ident("local".to_owned()),
+						n!(2) * ident!(x)
+					),
+					Expr::BinExpr(BinExpr::Call(ident!(kok), code![
+						*ident!(local) + *ident!(y)
+					]))
+				]
+			}))
+		);
+	}
 }
