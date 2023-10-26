@@ -98,6 +98,7 @@ L8 = {
 	"let" <i:Ident> "=" <e:L8> => Expr::Declare(i, Box::new(e)),
 	"let!" <i:Ident> "=" <e:L8> => Expr::DeclareMut(i, Box::new(e)),
 	<i:Ident> "=" <e:L8> => Expr::Assign(i, Box::new(e)),
+	<i:Ident> "+=" <e:L8> => Expr::AddAssign(i, Box::new(e)),
 	L7,
 };
 
