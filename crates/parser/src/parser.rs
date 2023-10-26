@@ -727,4 +727,23 @@ mod tests {
 			))))
 		);
 	}
+
+	#[test]
+	fn parse_assert_expr() {
+		let res = parse("assert res");
+
+		assert_eq!(res, Ok(Expr::Assert(ident!(res))));
+	}
+
+	#[test]
+	fn parse_nested_assert_expr() {
+		let res = parse("assert assert res");
+
+		assert_eq!(
+			res,
+			Ok(Expr::assert_box(Expr::Assert(ident!(
+				res
+			))))
+		);
+	}
 }
