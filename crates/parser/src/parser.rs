@@ -19,8 +19,8 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Function, Ident, Literal, Nil},
-		code, fal, ident, n, str, tru,
+		ast::{BinExpr, Function, Ident},
+		code, fal, ident, n, nil, str, tru,
 	};
 
 	#[test]
@@ -1040,7 +1040,7 @@ mod tests {
 					args: vec![],
 					body: code![Expr::Function(Function {
 						args: vec![],
-						body: code![Expr::Literal(Literal::Nil(Nil))]
+						body: code![*nil!()]
 					})]
 				})]
 			}))

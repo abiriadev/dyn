@@ -39,6 +39,15 @@ macro_rules! arr {
 }
 
 #[macro_export]
+macro_rules! nil {
+	() => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Nil($crate::ast::Nil),
+		))
+	};
+}
+
+#[macro_export]
 macro_rules! tru {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
