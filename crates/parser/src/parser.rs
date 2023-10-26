@@ -651,4 +651,11 @@ mod tests {
 		// TODO: fix test
 		assert_eq!(res, Ok(*n!(1) + *n!(2)))
 	}
+
+	#[test]
+	fn parse_return_expr() {
+		let res = parse("return res");
+
+		assert_eq!(res, Ok(Expr::Return(ident!(res))));
+	}
 }
