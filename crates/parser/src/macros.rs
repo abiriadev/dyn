@@ -62,3 +62,12 @@ macro_rules! code {
 		$crate::ast::Code(vec![$($ele),*])
 	};
 }
+
+#[macro_export]
+macro_rules! save_token {
+	($token:expr) => {
+		|lex: &mut Lexer<'s>| {
+			lex.extras = Some($token);
+		}
+	};
+}

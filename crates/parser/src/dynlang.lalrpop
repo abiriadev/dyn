@@ -8,6 +8,13 @@ grammar;
 // macros
 Separated<T, U>: Vec<T> = ((<T> U)* T)? => <>.map(|(v, l)| v.tap_mut(|v| v.push(l))).unwrap_or(vec![]);
 
+Punctuated<T, U>: Vec<T> = {
+    <v:(<T> U)*> <l:T?> => match l {
+		Some(l) => v.tap_mut(|v| v.push(l)),
+        None => v,
+    }
+};
+
 // nil
 Nil: Nil = "nil" => Nil;
 
@@ -39,12 +46,12 @@ L0: Expr = {
 	Literal => Expr::Literal(<>),
 	Ident => Expr::Ident(<>),
 	"(" <Expr> ")",
-	"[" <Separated<Expr, ",">> "]" => Expr::Array(Array(Code(<>))),
+	"[" <Elements> "]" => Expr::Array(Array(Code(<>))),
 };
 
 L1: Expr = {
 	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
-	<i:L1> "(" <args:Separated<Expr, ",">> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
+	<i:L1> "(" <args:Elements> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
 	L0,
 }
 	
@@ -103,6 +110,10 @@ L8: Expr = {
 pub Expr: Expr = {
 	L8,
 }
+
+ElementSeparator = { ",", "\n" };
+
+Elements: Vec<Expr> = Punctuated<Expr, ElementSeparator>;
 	
 pub Code: Code = Separated<Expr, "\n"+> => Code(<>);
 

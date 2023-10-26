@@ -12,6 +12,7 @@ indoc = "2.0.4"
 lalrpop-util = "0.20.0"
 logos = "0.13.0"
 pretty_assertions = "1.4.0"
+strum = { version = "0.25.0", features = ["derive"] }
 tap = "1.0.1"
 
 [build-dependencies]

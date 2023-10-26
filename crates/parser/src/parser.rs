@@ -192,6 +192,58 @@ mod tests {
 	}
 
 	#[test]
+	fn parse_function_call_spanning_multiple_lines() {
+		let res = parse(indoc! {r#"
+			add(
+				1,
+				2,
+			)"#});
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(add),
+				code![*n!(1), *n!(2)]
+			)))
+		)
+	}
+
+	#[test]
+	fn parse_function_call_spanning_multiple_lines_without_trailing_comma() {
+		let res = parse(indoc! {r#"
+			add(
+				1,
+				2
+			)"#});
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(add),
+				code![*n!(1), *n!(2)]
+			)))
+		)
+	}
+
+	#[test]
+	fn parse_function_call_spanning_multiple_lines_separated_by_only_newlines()
+	{
+		let res = parse(indoc! {r#"
+			add(
+				1
+				2
+			)"#});
+
+		assert_eq!(
+			res,
+			Ok(Expr::BinExpr(BinExpr::Call(
+				ident!(add),
+				code![*n!(1), *n!(2)]
+			)))
+		)
+	}
+
+	#[test]
 	fn call_expression() {
 		let res = parse(r#"(c + d)(a, b)"#);
 

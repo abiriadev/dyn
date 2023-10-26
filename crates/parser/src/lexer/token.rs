@@ -1,180 +1,218 @@
-use logos::{Lexer, Logos};
+use logos::{Filter, Lexer, Logos};
+use strum::EnumDiscriminants;
 
 use super::LexError;
+use crate::save_token;
 
 fn lex_string(lex: &mut Lexer<Token>) -> String {
+	lex.extras = Some(TokenKind::String);
 	let sl = lex.slice();
 	sl[1..sl.len() - 1].to_owned()
 }
 
-#[derive(Debug, PartialEq, Logos, Clone)]
-#[logos(skip r"[ \t]+", error = LexError)]
+fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
+	let res = match lex.extras {
+		Some(
+			// an identifier
+			| TokenKind::Identifier
+
+			// literals
+			| TokenKind::Integer | TokenKind::String
+
+			// return-like keywords
+			| TokenKind::Return
+
+			// operators and delimiters
+			| TokenKind::RightAngledBracket
+			| TokenKind::RightParenthesis
+			| TokenKind::RightBrace
+			| TokenKind::RightBracket,
+		) => Filter::Emit(()),
+		_ => Filter::Skip,
+	};
+	lex.extras = Some(TokenKind::NewLine);
+	res
+}
+
+#[derive(Debug, Clone, PartialEq, Logos, EnumDiscriminants)]
+#[strum_discriminants(name(TokenKind))]
+#[logos(
+	skip r"[ \t]+",
+	error = LexError,
+	extras = Option<TokenKind>
+)]
 pub enum Token {
 	// Elementary arithmetics
-	#[token("+")]
+	#[token("+", save_token!(TokenKind::Plus))]
 	Plus,
 
-	#[token("-")]
+	#[token("-", save_token!(TokenKind::Minus))]
 	Minus,
 
-	#[token("*")]
+	#[token("*", save_token!(TokenKind::Asterisk))]
 	Asterisk,
 
-	#[token("/")]
+	#[token("/", save_token!(TokenKind::Slash))]
 	Slash,
 
-	#[token("%")]
+	#[token("%", save_token!(TokenKind::Percent))]
 	Percent,
 
 	// Assignment operators
-	#[token("=")]
+	#[token("=", save_token!(TokenKind::Assign))]
 	Assign,
 
-	#[token("+=")]
+	#[token("+=", save_token!(TokenKind::PlusAssign))]
 	PlusAssign,
 
-	#[token("-=")]
+	#[token("-=", save_token!(TokenKind::MinusAssign))]
 	MinusAssign,
 
-	#[token("*=")]
+	#[token("*=", save_token!(TokenKind::AsteriskAssign))]
 	AsteriskAssign,
 
-	#[token("/=")]
+	#[token("/=", save_token!(TokenKind::SlashAssign))]
 	SlashAssign,
 
-	#[token("%=")]
+	#[token("%=", save_token!(TokenKind::PercentAssign))]
 	PercentAssign,
 
 	// Comparison operators
-	#[token("==")]
+	#[token("==", save_token!(TokenKind::Equal))]
 	Equal,
 
-	#[token("!=")]
+	#[token("!=", save_token!(TokenKind::NotEqual))]
 	NotEqual,
 
-	#[token("<")]
+	#[token("<", save_token!(TokenKind::LeftAngledBracket))]
 	LeftAngledBracket,
 
-	#[token(">")]
+	#[token(">", save_token!(TokenKind::RightAngledBracket))]
 	RightAngledBracket,
 
-	#[token("<=")]
+	#[token("<=", save_token!(TokenKind::LessThanEqual))]
 	LessThanEqual,
 
-	#[token(">=")]
+	#[token(">=", save_token!(TokenKind::GreaterThanEqual))]
 	GreaterThanEqual,
 
 	// Boolean operators
-	#[token("&&")]
+	#[token("&&", save_token!(TokenKind::DoubleAnd))]
 	DoubleAnd,
 
-	#[token("||")]
+	#[token("||", save_token!(TokenKind::DoublePipe))]
 	DoublePipe,
 
 	// Parantheses
-	#[token("(")]
+	#[token("(", save_token!(TokenKind::LeftParenthesis))]
 	LeftParenthesis,
 
-	#[token(")")]
+	#[token(")", save_token!(TokenKind::RightParenthesis))]
 	RightParenthesis,
 
-	#[token("{")]
+	#[token("{", save_token!(TokenKind::LeftBrace))]
 	LeftBrace,
 
-	#[token("}")]
+	#[token("}", save_token!(TokenKind::RightBrace))]
 	RightBrace,
 
-	#[token("[")]
+	#[token("[", save_token!(TokenKind::LeftBracket))]
 	LeftBracket,
 
-	#[token("]")]
+	#[token("]", save_token!(TokenKind::RightBracket))]
 	RightBracket,
 
 	// etc
-	#[token("!")]
+	#[token("!", save_token!(TokenKind::Bang))]
 	Bang,
 
-	#[token(".")]
+	#[token(".", save_token!(TokenKind::Dot))]
 	Dot,
 
-	#[token(",")]
+	#[token(",", save_token!(TokenKind::Comma))]
 	Comma,
 
-	#[token("@")]
+	#[token("@", save_token!(TokenKind::At))]
 	At,
 
-	#[token("->")]
+	#[token("->", save_token!(TokenKind::Arrow))]
 	Arrow,
 
 	// token literals
-	#[token("nil")]
+	#[token("nil", save_token!(TokenKind::Nil))]
 	Nil,
 
-	#[token("true")]
+	#[token("true", save_token!(TokenKind::True))]
 	True,
 
-	#[token("false")]
+	#[token("false", save_token!(TokenKind::False))]
 	False,
 
 	// keywords
-	#[token("panic")]
+	#[token("panic", save_token!(TokenKind::Panic))]
 	Panic,
 
-	#[token("assert")]
+	#[token("assert", save_token!(TokenKind::Assert))]
 	Assert,
 
-	#[token("let")]
+	#[token("let", save_token!(TokenKind::Let))]
 	Let,
 
-	#[token("let!")]
+	#[token("let!", save_token!(TokenKind::LetMut))]
 	LetMut,
 
-	#[token("if")]
+	#[token("if", save_token!(TokenKind::If))]
 	If,
 
-	#[token("else")]
+	#[token("else", save_token!(TokenKind::Else))]
 	Else,
 
-	#[token("iter")]
+	#[token("iter", save_token!(TokenKind::Iter))]
 	Iter,
 
-	#[token("of")]
+	#[token("of", save_token!(TokenKind::Of))]
 	Of,
 
-	#[token("return")]
+	#[token("return", save_token!(TokenKind::Return))]
 	Return,
 
-	#[token("break")]
+	#[token("break", save_token!(TokenKind::Break))]
 	Break,
 
-	#[token("continue")]
+	#[token("continue", save_token!(TokenKind::Continue))]
 	Continue,
 
-	#[token("import")]
+	#[token("import", save_token!(TokenKind::Import))]
 	Import,
 
-	#[token("export")]
+	#[token("export", save_token!(TokenKind::Export))]
 	Export,
 
 	// extra
-	#[regex(r"\n")]
+	#[regex(r"\n", asi)]
 	NewLine,
 
 	// regexes
-	#[regex(r"//[^\n]*")]
+	#[regex(r"//[^\n]*", save_token!(TokenKind::LineComment))]
 	LineComment,
 
-	#[regex(r"/\*([^*]|\*[^/])*\*/")]
+	#[regex(r"/\*([^*]|\*[^/])*\*/", save_token!(TokenKind::BlockCommnet))]
 	BlockCommnet,
 
-	#[regex("-?(0|[1-9][0-9]*)", |lex| lex.slice().parse().ok())]
+	#[regex("-?(0|[1-9][0-9]*)", |lex| {
+		lex.extras = Some(TokenKind::Integer);
+		lex.slice().parse().ok()
+	})]
 	Integer(i32),
 
 	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string)]
 	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string)]
 	String(String),
 
-	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| lex.slice().to_owned())]
+	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
+		lex.extras = Some(TokenKind::Identifier);
+		lex.slice().to_owned()
+	})]
 	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIndentifier))]
 	Identifier(String),
 }
