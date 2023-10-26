@@ -309,7 +309,20 @@ impl Interpreter {
 					}
 				},
 				BinExpr::Prop(_, _) => todo!(),
-				BinExpr::Index(_, _) => todo!(),
+				BinExpr::Index(i, j) => {
+					let Value::Array(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					if j < 0 {
+						panic!("index is less than zero: {j}")
+					}
+					Ok(i.into_iter()
+						.nth(j as usize)
+						.unwrap_or(Value::Nil))
+				},
 			},
 			Tree::Expr(i) => match i {
 				Expr::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
