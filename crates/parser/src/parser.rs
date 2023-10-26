@@ -19,7 +19,7 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Ident},
+		ast::{BinExpr, Function, Ident},
 		code, fal, ident, n, str, tru,
 	};
 
@@ -929,6 +929,21 @@ mod tests {
 					yes: code![Expr::Break(ident!(x))]
 				}],
 			})
+		);
+	}
+
+	#[test]
+	fn parse_function_expr() {
+		let res = parse(indoc! {r#"
+			|x, y| -> x + y"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::Function(Function {
+				args: vec![Ident("x".to_owned()), Ident("y".to_owned())],
+				body: code![*ident!(x) + *ident!(y)]
+			}))
 		);
 	}
 }

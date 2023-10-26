@@ -123,6 +123,10 @@ L8 = {
 		item: i,
 		body: b
 	},
+	"|" <args:Punctuated<Ident, ElementSeparator>> "|" "->" <e:L8> => Expr::Function(Function {
+		args,
+		body: Code(vec![e]),
+	}),
 	L7,
 };
 
