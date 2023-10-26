@@ -255,7 +255,12 @@ impl Interpreter {
 			Tree::Expr(i) => match i {
 				Expr::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
 				Expr::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
-				Expr::UnaryMinus(_) => todo!(),
+				Expr::UnaryMinus(i) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!();
+					};
+					Ok(Value::Integer(-i))
+				},
 				Expr::UnaryNot(_) => todo!(),
 				Expr::Array(i) => self.eval(Tree::Array(i)),
 				Expr::Function(_) => todo!(),
