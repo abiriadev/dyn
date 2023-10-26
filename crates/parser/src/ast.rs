@@ -21,7 +21,7 @@ pub enum Literal {
 	String(StringT),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Ident(pub String);
 
 #[derive(Debug, PartialEq)]
