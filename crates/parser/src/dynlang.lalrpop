@@ -98,17 +98,21 @@ L8: Expr = {
 	"let" <i:Ident> "=" <e:L8> => Expr::Declare(i, Box::new(e)),
 	"let!" <i:Ident> "=" <e:L8> => Expr::DeclareMut(i, Box::new(e)),
 	<i:Ident> "=" <e:L8> => Expr::Assign(i, Box::new(e)),
+	L7,
+};
+
+L9: Expr = {
 	"if" <c:Expr> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
 	"if" <c:Expr> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
 	},
-	L7,
+	L8,
 };
 
 pub Expr: Expr = {
-	L8,
+	L9,
 }
 
 ElementSeparator = { ",", "\n" };
