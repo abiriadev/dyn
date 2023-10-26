@@ -798,4 +798,17 @@ mod tests {
 			))
 		);
 	}
+
+	#[test]
+	fn parse_mod_assign() {
+		let res = parse("a %= 1");
+
+		assert_eq!(
+			res,
+			Ok(Expr::ModAssign(
+				Ident("a".to_owned()),
+				n!(1)
+			))
+		);
+	}
 }
