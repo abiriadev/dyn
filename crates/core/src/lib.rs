@@ -439,7 +439,18 @@ impl Interpreter {
 						Value::Nil
 					})
 				},
-				Expr::IfElse { condition, yes, no } => todo!(),
+				Expr::IfElse { condition, yes, no } => {
+					let Value::Boolean(condition) =
+						self.eval(Tree::Expr(*condition))?
+					else {
+						panic!()
+					};
+					Ok(if condition {
+						self.eval(Tree::Code(yes))?
+					} else {
+						self.eval(Tree::Code(no))?
+					})
+				},
 				Expr::For {
 					collection,
 					item,
