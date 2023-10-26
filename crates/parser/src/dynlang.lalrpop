@@ -51,6 +51,10 @@ L0: Expr = {
 		args,
 		body,
 	}),
+	"||" "->" "{" <Code> "}" => Expr::Function(Function {
+		args: vec![],
+		body: <>,
+	}),
 };
 
 L1 = {
