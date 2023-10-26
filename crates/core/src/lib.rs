@@ -229,10 +229,42 @@ impl Interpreter {
 				BinExpr::Mod(_, _) => todo!(),
 				BinExpr::Equal(_, _) => todo!(),
 				BinExpr::NotEqual(_, _) => todo!(),
-				BinExpr::LessThan(_, _) => todo!(),
-				BinExpr::GreaterThan(_, _) => todo!(),
-				BinExpr::LessThanEqual(_, _) => todo!(),
-				BinExpr::GreaterThanEqual(_, _) => todo!(),
+				BinExpr::LessThan(i, j) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i < j))
+				},
+				BinExpr::GreaterThan(i, j) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i <= j))
+				},
+				BinExpr::LessThanEqual(i, j) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i > j))
+				},
+				BinExpr::GreaterThanEqual(i, j) => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i >= j))
+				},
 				BinExpr::And(_, _) => todo!(),
 				BinExpr::Or(_, _) => todo!(),
 				BinExpr::Call(i, j) => {
