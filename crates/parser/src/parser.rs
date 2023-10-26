@@ -813,8 +813,29 @@ mod tests {
 	}
 
 	#[test]
-	fn parse_for_expr() {
+	fn parse_for_loop_expr() {
 		let res = parse("iter arr of item { print(item) }");
+
+		assert_eq!(
+			res,
+			Ok(Expr::For {
+				collection: ident!(arr),
+				item: Ident("item".to_owned()),
+				body: code![Expr::BinExpr(BinExpr::Call(
+					ident!(print),
+					code![*ident!(item)]
+				))],
+			})
+		);
+	}
+
+	#[test]
+	fn parse_for_loop_expr_spanning_multiple_lines() {
+		let res = parse(indoc! {"
+			iter arr of item {
+				print(item)
+			}"
+		});
 
 		assert_eq!(
 			res,
