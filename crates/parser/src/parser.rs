@@ -905,4 +905,30 @@ mod tests {
 			})
 		);
 	}
+
+	#[test]
+	fn parse_for_loop_with_break_expression_in_it() {
+		let res = parse(indoc! {"
+			iter arr of x {
+				if x > 10 {
+					break x
+				}
+			}"
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::For {
+				collection: ident!(arr),
+				item: Ident("x".to_owned()),
+				body: code![Expr::If {
+					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
+						ident!(x),
+						n!(10)
+					))),
+					yes: code![Expr::Break(ident!(x))]
+				}],
+			})
+		);
+	}
 }
