@@ -83,6 +83,7 @@ pub enum Expr {
 	For {
 		collection: Box<Expr>,
 		item: Ident,
+		body: Code,
 	},
 	Panic(Box<Expr>),
 	Assert(Box<Expr>),
