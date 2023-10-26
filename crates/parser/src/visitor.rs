@@ -183,3 +183,184 @@ pub trait Visit {
 		}
 	}
 }
+
+pub trait VisitMut {
+	#[allow(unused)]
+	fn visit_mut_nil(&mut self, i: &mut Nil) {}
+
+	#[allow(unused)]
+	fn visit_mut_boolean(&mut self, i: &mut Boolean) {}
+
+	#[allow(unused)]
+	fn visit_mut_integer(&mut self, i: &mut Integer) {}
+
+	#[allow(unused)]
+	fn visit_mut_string(&mut self, i: &mut StringT) {}
+
+	fn visit_mut_literal(&mut self, i: &mut Literal) {
+		match i {
+			Literal::Nil(i) => self.visit_mut_nil(i),
+			Literal::Boolean(i) => self.visit_mut_boolean(i),
+			Literal::Integer(i) => self.visit_mut_integer(i),
+			Literal::String(i) => self.visit_mut_string(i),
+		}
+	}
+
+	#[allow(unused)]
+	fn visit_mut_ident(&mut self, i: &mut Ident) {}
+
+	fn visit_mut_array(&mut self, i: &mut Array) {
+		for i in &mut i.0 .0 {
+			self.visit_mut_expr(i);
+		}
+	}
+
+	fn visit_mut_function(&mut self, i: &mut Function) {
+		for i in &mut i.args {
+			self.visit_mut_ident(i);
+		}
+		self.visit_mut_code(&mut i.body);
+	}
+
+	fn visit_mut_binexpr(&mut self, i: &mut BinExpr) {
+		match i {
+			BinExpr::Add(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Sub(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Mul(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Div(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Mod(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Equal(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::NotEqual(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::LessThan(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::GreaterThan(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::LessThanEqual(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::GreaterThanEqual(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::And(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Or(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Call(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_code(j);
+			},
+			BinExpr::Prop(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			BinExpr::Index(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+		}
+	}
+
+	fn visit_mut_expr(&mut self, i: &mut Expr) {
+		match i {
+			Expr::Literal(i) => self.visit_mut_literal(i),
+			Expr::Ident(i) => self.visit_mut_ident(i),
+			Expr::UnaryMinus(i) => self.visit_mut_expr(i),
+			Expr::UnaryNot(i) => self.visit_mut_expr(i),
+			Expr::Array(i) => self.visit_mut_array(i),
+			Expr::Function(i) => self.visit_mut_function(i),
+			Expr::BinExpr(i) => self.visit_mut_binexpr(i),
+			Expr::Assign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::AddAssign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::SubAssign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::MulAssign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::DivAssign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::ModAssign(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::Declare(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::DeclareMut(i, j) => {
+				self.visit_mut_ident(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::If { condition, yes } => {
+				self.visit_mut_expr(condition);
+				self.visit_mut_code(yes);
+			},
+			Expr::IfElse { condition, yes, no } => {
+				self.visit_mut_expr(condition);
+				self.visit_mut_code(yes);
+				self.visit_mut_code(no);
+			},
+			Expr::For {
+				collection,
+				item,
+				body,
+			} => {
+				self.visit_mut_expr(collection);
+				self.visit_mut_ident(item);
+				self.visit_mut_code(body);
+			},
+			Expr::Panic(i) => self.visit_mut_expr(i),
+			Expr::Assert(i) => self.visit_mut_expr(i),
+			Expr::Return(i) => self.visit_mut_expr(i),
+			Expr::Break(i) => self.visit_mut_expr(i),
+			Expr::Continue(i) => self.visit_mut_expr(i),
+		}
+	}
+
+	fn visit_mut_code(&mut self, i: &mut Code) {
+		for i in &mut i.0 {
+			self.visit_mut_expr(i);
+		}
+	}
+}
