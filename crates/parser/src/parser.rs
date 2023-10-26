@@ -19,8 +19,8 @@ mod tests {
 	use super::*;
 	use crate::{
 		arr,
-		ast::{BinExpr, Function, Ident},
-		code, fal, ident, n, nil, str, tru,
+		ast::{BinExpr, Function},
+		code, fal, ident, n, nil, str, tru, var,
 	};
 
 	#[test]
@@ -36,10 +36,7 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::Declare(
-				Ident("xy".to_owned()),
-				n!(1) + n!(2)
-			))
+			Ok(Expr::Declare(var!(xy), n!(1) + n!(2)))
 		)
 	}
 
@@ -489,8 +486,8 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::declare_box(
-				Ident("a".to_owned()),
-				Expr::Declare(Ident("b".to_owned()), n!(123))
+				var!(a),
+				Expr::Declare(var!(b), n!(123))
 			))
 		)
 	}
@@ -501,10 +498,7 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::declare_mut_box(
-				Ident("v".to_owned()),
-				*arr![]
-			))
+			Ok(Expr::declare_mut_box(var!(v), *arr![]))
 		)
 	}
 
@@ -514,10 +508,7 @@ mod tests {
 
 		assert_eq!(
 			res,
-			Ok(Expr::assign_box(
-				Ident("a".to_owned()),
-				*n!(123)
-			))
+			Ok(Expr::assign_box(var!(a), *n!(123)))
 		)
 	}
 
@@ -528,8 +519,8 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::assign_box(
-				Ident("a".to_owned()),
-				Expr::assign_box(Ident("b".to_owned()), *ident!(c),)
+				var!(a),
+				Expr::assign_box(var!(b), *ident!(c),)
 			))
 		)
 	}
@@ -541,9 +532,9 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::assign_box(
-				Ident("a".to_owned()),
+				var!(a),
 				Expr::unary_not_box(Expr::assign_box(
-					Ident("b".to_owned()),
+					var!(b),
 					*ident!(c) + *n!(2)
 				))
 			))
@@ -557,10 +548,10 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::assign_box(
-				Ident("a".to_owned()),
+				var!(a),
 				Expr::declare_box(
-					Ident("b".to_owned()),
-					*n!(123) + Expr::DeclareMut(Ident("c".to_owned()), n!(1))
+					var!(b),
+					*n!(123) + Expr::DeclareMut(var!(c), n!(1))
 				)
 			))
 		)
@@ -751,65 +742,35 @@ mod tests {
 	fn parse_add_assign() {
 		let res = parse("a += 1");
 
-		assert_eq!(
-			res,
-			Ok(Expr::AddAssign(
-				Ident("a".to_owned()),
-				n!(1)
-			))
-		);
+		assert_eq!(res, Ok(Expr::AddAssign(var!(a), n!(1))));
 	}
 
 	#[test]
 	fn parse_sub_assign() {
 		let res = parse("a -= 1");
 
-		assert_eq!(
-			res,
-			Ok(Expr::SubAssign(
-				Ident("a".to_owned()),
-				n!(1)
-			))
-		);
+		assert_eq!(res, Ok(Expr::SubAssign(var!(a), n!(1))));
 	}
 
 	#[test]
 	fn parse_mul_assign() {
 		let res = parse("a *= 1");
 
-		assert_eq!(
-			res,
-			Ok(Expr::MulAssign(
-				Ident("a".to_owned()),
-				n!(1)
-			))
-		);
+		assert_eq!(res, Ok(Expr::MulAssign(var!(a), n!(1))));
 	}
 
 	#[test]
 	fn parse_div_assign() {
 		let res = parse("a /= 1");
 
-		assert_eq!(
-			res,
-			Ok(Expr::DivAssign(
-				Ident("a".to_owned()),
-				n!(1)
-			))
-		);
+		assert_eq!(res, Ok(Expr::DivAssign(var!(a), n!(1))));
 	}
 
 	#[test]
 	fn parse_mod_assign() {
 		let res = parse("a %= 1");
 
-		assert_eq!(
-			res,
-			Ok(Expr::ModAssign(
-				Ident("a".to_owned()),
-				n!(1)
-			))
-		);
+		assert_eq!(res, Ok(Expr::ModAssign(var!(a), n!(1))));
 	}
 
 	#[test]
@@ -820,7 +781,7 @@ mod tests {
 			res,
 			Ok(Expr::For {
 				collection: ident!(arr),
-				item: Ident("item".to_owned()),
+				item: var!(item),
 				body: code![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
 					code![*ident!(item)]
@@ -841,7 +802,7 @@ mod tests {
 			res,
 			Ok(Expr::For {
 				collection: ident!(arr),
-				item: Ident("item".to_owned()),
+				item: var!(item),
 				body: code![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
 					code![*ident!(item)]
@@ -865,7 +826,7 @@ mod tests {
 			res,
 			Ok(Expr::For {
 				collection: arr![*str!("some string"), *n!(12345)],
-				item: Ident("item".to_owned()),
+				item: var!(item),
 				body: code![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
 					code![*ident!(item)]
@@ -897,7 +858,7 @@ mod tests {
 					yes: code![*str!("this")],
 					no: code![*arr![*str!("or"), *str!("this")]]
 				}),
-				item: Ident("item".to_owned()),
+				item: var!(item),
 				body: code![Expr::BinExpr(BinExpr::Call(
 					ident!(print),
 					code![*ident!(item)]
@@ -920,7 +881,7 @@ mod tests {
 			res,
 			Ok(Expr::For {
 				collection: ident!(arr),
-				item: Ident("x".to_owned()),
+				item: var!(x),
 				body: code![Expr::If {
 					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
 						ident!(x),
@@ -941,7 +902,7 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::Function(Function {
-				args: vec![Ident("x".to_owned()), Ident("y".to_owned())],
+				args: vec![var!(x), var!(y)],
 				body: code![*ident!(x) + *ident!(y)]
 			}))
 		);
@@ -959,12 +920,9 @@ mod tests {
 		assert_eq!(
 			res,
 			Ok(Expr::Function(Function {
-				args: vec![Ident("x".to_owned()), Ident("y".to_owned())],
+				args: vec![var!(x), var!(y)],
 				body: code![
-					Expr::Declare(
-						Ident("local".to_owned()),
-						n!(2) * ident!(x)
-					),
+					Expr::Declare(var!(local), n!(2) * ident!(x)),
 					Expr::BinExpr(BinExpr::Call(ident!(kok), code![
 						*ident!(local) + *ident!(y)
 					]))
@@ -985,7 +943,7 @@ mod tests {
 			res,
 			Ok(Expr::BinExpr(BinExpr::call_box(
 				Expr::Function(Function {
-					args: vec![Ident("x".to_owned())],
+					args: vec![var!(x)],
 					body: code![Expr::BinExpr(BinExpr::Call(
 						ident!(print),
 						code![*ident!(x)]

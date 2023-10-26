@@ -17,6 +17,13 @@ macro_rules! ident {
 }
 
 #[macro_export]
+macro_rules! var {
+	($id:ident) => {
+		$crate::ast::Ident(stringify!($id).to_owned())
+	};
+}
+
+#[macro_export]
 macro_rules! str {
 	($str:expr) => {
 		Box::new($crate::ast::Expr::Literal(
