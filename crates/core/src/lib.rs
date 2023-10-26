@@ -452,7 +452,21 @@ impl Interpreter {
 					collection,
 					item,
 					body,
-				} => todo!(),
+				} => {
+					let Value::Array(collection) =
+						self.eval(Tree::Expr(*collection))?
+					else {
+						panic!()
+					};
+					self.mem
+						.declare(item.clone(), Value::Nil, true)?;
+					for i in collection {
+						self.mem.assign(item.clone(), i)?;
+						self.eval(Tree::Code(body.clone()))?;
+					}
+					self.mem.free(item)?;
+					Ok(Value::Nil)
+				},
 				Expr::Panic(_) => todo!(),
 				Expr::Assert(_) => todo!(),
 				Expr::Return(_) => todo!(),
