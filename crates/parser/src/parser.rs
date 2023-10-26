@@ -670,4 +670,23 @@ mod tests {
 			))))
 		);
 	}
+
+	#[test]
+	fn parse_break_expr() {
+		let res = parse("break res");
+
+		assert_eq!(res, Ok(Expr::Break(ident!(res))));
+	}
+
+	#[test]
+	fn parse_nested_break_expr() {
+		let res = parse("break break res");
+
+		assert_eq!(
+			res,
+			Ok(Expr::break_box(Expr::Break(ident!(
+				res
+			))))
+		);
+	}
 }

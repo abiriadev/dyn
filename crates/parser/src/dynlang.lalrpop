@@ -103,6 +103,7 @@ L8 = {
 
 L9 = {
 	"return" <L9> => Expr::return_box(<>),
+	"break" <L9> => Expr::break_box(<>),
 	"if" <c:L9> "{" <b:Code> "}" => Expr::If { condition: Box::new(c), yes: b },
 	"if" <c:L9> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr::IfElse {
 		condition: Box::new(c),
