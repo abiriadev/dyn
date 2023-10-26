@@ -3,22 +3,26 @@ use std::collections::{
 	HashMap,
 };
 
-use parser::{ast::Ident, parse, LexError, ParseError, Token, VisitMut};
+use parser::{ast::Ident, parse_code, LexError, ParseError, Token, VisitMut};
 
+#[derive(Debug, PartialEq)]
 pub enum InterpreterError {
 	ParseError(ParseError<usize, Token, LexError>),
 	RuntimeError(RuntimeError),
 }
 
+#[derive(Debug, PartialEq)]
 pub enum ReferenceError {
 	UndefinedIdentifier,
 }
 
+#[derive(Debug, PartialEq)]
 pub enum RuntimeError {
 	ReferenceError(ReferenceError),
 	AssignmentToImmutableVariable,
 }
 
+#[derive(Debug)]
 pub enum Value {
 	Integer(i32),
 	String(String),
@@ -98,17 +102,46 @@ impl Interpreter {
 	}
 
 	pub fn run(&mut self, code: &str) -> Result<(), InterpreterError> {
-		let ast = match parse(code) {
+		let ast = match parse_code(code) {
 			Ok(v) => v,
 			Err(e) => return Err(InterpreterError::ParseError(e)),
 		};
 
 		let mut ast = ast;
 
-		self.visit_mut_expr(&mut ast);
+		self.visit_mut_code(&mut ast);
 
 		Ok(())
 	}
 }
 
-impl VisitMut for Interpreter {}
+impl VisitMut for Interpreter {
+	fn visit_mut_integer(&mut self, i: &mut parser::ast::Integer) {
+		println!("integer: {i:?}");
+	}
+
+	fn visit_mut_ident(&mut self, i: &mut Ident) {
+		println!("ident: {i:?}");
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use indoc::indoc;
+
+	use super::*;
+
+	#[test]
+	fn run_interpreter() {
+		let mut interpreter = Interpreter::init();
+
+		let res = interpreter.run(indoc! {r#"
+			let! x = 10
+			x += 20
+			let y = x * 3
+			print(y - x)
+		"#});
+
+		assert_eq!(res, Ok(()));
+	}
+}
