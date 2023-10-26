@@ -3,12 +3,19 @@ use crate::ast::{
 	Nil, StringT,
 };
 
-#[allow(unused)]
 pub trait Visit {
+	#[allow(unused)]
 	fn visit_nil(&mut self, i: &Nil) {}
+
+	#[allow(unused)]
 	fn visit_boolean(&mut self, i: &Boolean) {}
+
+	#[allow(unused)]
 	fn visit_integer(&mut self, i: &Integer) {}
+
+	#[allow(unused)]
 	fn visit_string(&mut self, i: &StringT) {}
+
 	fn visit_literal(&mut self, i: &Literal) {
 		match i {
 			Literal::Nil(i) => self.visit_nil(i),
@@ -17,18 +24,23 @@ pub trait Visit {
 			Literal::String(i) => self.visit_string(i),
 		}
 	}
+
+	#[allow(unused)]
 	fn visit_ident(&mut self, i: &Ident) {}
+
 	fn visit_array(&mut self, i: &Array) {
 		for i in &i.0 .0 {
 			self.visit_expr(i);
 		}
 	}
+
 	fn visit_function(&mut self, i: &Function) {
 		for i in &i.args {
 			self.visit_ident(i);
 		}
 		self.visit_code(&i.body);
 	}
+
 	fn visit_binexpr(&mut self, i: &BinExpr) {
 		match i {
 			BinExpr::Add(i, j) => {
@@ -97,6 +109,7 @@ pub trait Visit {
 			},
 		}
 	}
+
 	fn visit_expr(&mut self, i: &Expr) {
 		match i {
 			Expr::Literal(i) => self.visit_literal(i),
@@ -163,6 +176,7 @@ pub trait Visit {
 			Expr::Continue(i) => self.visit_expr(i),
 		}
 	}
+
 	fn visit_code(&mut self, i: &Code) {
 		for i in &i.0 {
 			self.visit_expr(i);
