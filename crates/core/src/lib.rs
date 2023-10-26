@@ -261,7 +261,12 @@ impl Interpreter {
 					};
 					Ok(Value::Integer(-i))
 				},
-				Expr::UnaryNot(_) => todo!(),
+				Expr::UnaryNot(i) => {
+					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
+						panic!();
+					};
+					Ok(Value::Boolean(!i))
+				},
 				Expr::Array(i) => self.eval(Tree::Array(i)),
 				Expr::Function(_) => todo!(),
 				Expr::BinExpr(i) => self.eval(Tree::BinExpr(i)),
