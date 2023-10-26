@@ -134,7 +134,7 @@ ElementSeparator = { ",", "\n" };
 
 Elements = Punctuated<Expr, ElementSeparator>;
 	
-pub Code: Code = Separated<Expr, "\n"+> => Code(<>);
+pub Code: Code = Punctuated<Expr, "\n"+> => Code(<>);
 
 extern {
 	type Location = usize;
