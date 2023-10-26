@@ -29,8 +29,8 @@ pub struct Array(pub Code);
 
 #[derive(Debug, PartialEq)]
 pub struct Function {
-	args: Vec<Ident>,
-	body: Code,
+	pub args: Vec<Ident>,
+	pub body: Code,
 }
 
 #[derive(Debug, PartialEq, BoxNew)]

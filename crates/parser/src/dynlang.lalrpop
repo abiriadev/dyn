@@ -47,6 +47,10 @@ L0: Expr = {
 	Ident => Expr::Ident(<>),
 	"(" <Expr> ")",
 	"[" <Elements> "]" => Expr::Array(Array(Code(<>))),
+	"|" <args:Punctuated<Ident, ElementSeparator>> "|" "->" "{" <body:Code> "}" => Expr::Function(Function {
+		args,
+		body,
+	}),
 };
 
 L1 = {
@@ -165,6 +169,7 @@ extern {
 		"!" => Token::Bang,
 		"." => Token::Dot,
 		"," => Token::Comma,
+		"|" => Token::Pipe,
 		"@" => Token::At,
 		"->" => Token::Arrow,
 		"nil" => Token::Nil,
