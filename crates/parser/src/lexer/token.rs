@@ -19,9 +19,6 @@ fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
 			// literals
 			| TokenKind::Integer | TokenKind::String
 
-			// return-like keywords
-			| TokenKind::Return
-
 			// operators and delimiters
 			| TokenKind::RightAngledBracket
 			| TokenKind::RightParenthesis
