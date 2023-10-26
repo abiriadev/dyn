@@ -1004,4 +1004,30 @@ mod tests {
 			}))
 		);
 	}
+
+	#[test]
+	fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
+		let res = parse(indoc! {r#"
+			|
+				x
+				y
+			| -> {
+				let local = 2 * x
+				kok(local + y)
+			}"#
+		});
+
+		assert_eq!(
+			res,
+			Ok(Expr::Function(Function {
+				args: vec![var!(x), var!(y)],
+				body: code![
+					Expr::Declare(var!(local), n!(2) * ident!(x)),
+					Expr::BinExpr(BinExpr::Call(ident!(kok), code![
+						*ident!(local) + *ident!(y)
+					]))
+				]
+			}))
+		);
+	}
 }
