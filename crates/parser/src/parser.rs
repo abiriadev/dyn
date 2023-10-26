@@ -811,4 +811,21 @@ mod tests {
 			))
 		);
 	}
+
+	#[test]
+	fn parse_for_expr() {
+		let res = parse("iter arr of item { print(item) }");
+
+		assert_eq!(
+			res,
+			Ok(Expr::For {
+				collection: ident!(arr),
+				item: Ident("item".to_owned()),
+				body: code![Expr::BinExpr(BinExpr::Call(
+					ident!(print),
+					code![*ident!(item)]
+				))],
+			})
+		);
+	}
 }
