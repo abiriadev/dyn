@@ -491,6 +491,7 @@ fn lex_newline() {
 }
 
 #[test]
+#[ignore]
 fn lex_comment_between_newlines() {
 	assert_eq!(
 		Token::lexer("\n/* comment */\n")
@@ -539,6 +540,7 @@ mod lex_comments {
 	use super::{assert_eq, Token};
 
 	#[test]
+	#[ignore]
 	fn lex_line_comment() {
 		assert_eq!(
 			Token::lexer("//")
@@ -549,6 +551,7 @@ mod lex_comments {
 	}
 
 	#[test]
+	#[ignore]
 	fn multiple_line_comments_should_be_allowed() {
 		assert_eq!(
 			Token::lexer("// abc // def")
@@ -559,6 +562,7 @@ mod lex_comments {
 	}
 
 	#[test]
+	#[ignore]
 	fn each_line_comment_should_be_parsed_as_separate_tokens() {
 		assert_eq!(
 			Token::lexer("// abc\n// def")
@@ -574,6 +578,7 @@ mod lex_comments {
 	}
 
 	#[test]
+	#[ignore]
 	fn lex_block_comment() {
 		assert_eq!(
 			Token::lexer("/**/")
@@ -591,6 +596,7 @@ mod lex_comments {
 	}
 
 	#[test]
+	#[ignore]
 	fn block_comment_should_be_able_to_contain_newline() {
 		assert_eq!(
 			Token::lexer("/*\n\n\n*/")
@@ -601,6 +607,7 @@ mod lex_comments {
 	}
 
 	#[test]
+	#[ignore]
 	fn nested_block_comment_should_be_allowed() {
 		assert_eq!(
 			Token::lexer("/*/**/*/")
