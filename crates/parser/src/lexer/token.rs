@@ -1,4 +1,4 @@
-use logos::{Filter, Lexer, Logos};
+use logos::{Filter, Lexer, Logos, Skip};
 use strum::EnumDiscriminants;
 
 use super::LexError;
@@ -193,10 +193,10 @@ pub enum Token {
 	NewLine,
 
 	// regexes
-	#[regex(r"//[^\n]*", save_token!(TokenKind::LineComment))]
+	#[regex(r"//[^\n]*", |_| Skip)]
 	LineComment,
 
-	#[regex(r"/\*([^*]|\*[^/])*\*/", save_token!(TokenKind::BlockCommnet))]
+	#[regex(r"/\*([^*]|\*[^/])*\*/", |_| Skip)]
 	BlockCommnet,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| {
