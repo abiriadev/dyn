@@ -1,6 +1,9 @@
-use std::collections::{
-	hash_map::{Entry, OccupiedEntry, VacantEntry},
-	HashMap,
+use std::{
+	collections::{
+		hash_map::{Entry, OccupiedEntry, VacantEntry},
+		HashMap,
+	},
+	panic::PanicInfo,
 };
 
 use parser::{
@@ -273,8 +276,24 @@ impl Interpreter {
 					};
 					Ok(Value::Boolean(i >= j))
 				},
-				BinExpr::And(_, _) => todo!(),
-				BinExpr::Or(_, _) => todo!(),
+				BinExpr::And(i, j) => {
+					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Boolean(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i && j))
+				},
+				BinExpr::Or(i, j) => {
+					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+					let Value::Boolean(j) = self.eval(Tree::Expr(*j))? else {
+						panic!()
+					};
+					Ok(Value::Boolean(i || j))
+				},
 				BinExpr::Call(i, j) => {
 					let Some(arg) = j.0.into_iter().nth(0) else {
 						panic!()
