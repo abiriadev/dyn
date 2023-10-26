@@ -101,6 +101,7 @@ L8 = {
 	<i:Ident> "+=" <e:L8> => Expr::AddAssign(i, Box::new(e)),
 	<i:Ident> "-=" <e:L8> => Expr::SubAssign(i, Box::new(e)),
 	<i:Ident> "*=" <e:L8> => Expr::MulAssign(i, Box::new(e)),
+	<i:Ident> "/=" <e:L8> => Expr::DivAssign(i, Box::new(e)),
 	L7,
 };
 
