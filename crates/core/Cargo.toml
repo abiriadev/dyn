@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dyn-clone = "1.0.14"
 indoc = "2.0.4"
 parser = { version = "0.1.0", path = "../parser" }
 strum = { version = "0.25.0", features = ["derive"] }

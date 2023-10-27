@@ -3,9 +3,10 @@ use std::{
 		hash_map::{Entry, OccupiedEntry, VacantEntry},
 		HashMap,
 	},
-	fmt::{self, Display, Formatter},
+	fmt::{self, Debug, Display, Formatter},
 };
 
+use dyn_clone::{clone_trait_object, DynClone};
 use parser::{
 	ast::{
 		Array, BinExpr, Boolean, Code, Expr, Function, Ident, Integer, Literal,
@@ -32,6 +33,48 @@ pub enum RuntimeError {
 	AlreadyDeclared,
 }
 
+trait BuiltinFunction: DynClone {
+	fn call(&mut self, args: Vec<Value>) -> Value;
+}
+
+clone_trait_object!(BuiltinFunction);
+
+pub enum FunctionValue {
+	Builtin(Box<dyn BuiltinFunction>),
+	Lambda(Function),
+}
+
+impl Debug for FunctionValue {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		match self {
+			Self::Builtin(arg0) => write!(f, "[BUILTIN FUNCTION]"),
+			Self::Lambda(arg0) => f
+				.debug_tuple("Lambda")
+				.field(arg0)
+				.finish(),
+		}
+	}
+}
+
+impl Clone for FunctionValue {
+	fn clone(&self) -> Self {
+		match self {
+			Self::Builtin(arg0) => Self::Builtin(arg0.clone()),
+			Self::Lambda(arg0) => Self::Lambda(arg0.clone()),
+		}
+	}
+}
+
+impl PartialEq for FunctionValue {
+	fn eq(&self, other: &Self) -> bool {
+		match (self, other) {
+			(Self::Builtin(l0), Self::Builtin(r0)) => unimplemented!(),
+			(Self::Lambda(l0), Self::Lambda(r0)) => l0 == r0,
+			_ => false,
+		}
+	}
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
 	Nil,
@@ -39,6 +82,7 @@ pub enum Value {
 	Integer(i32),
 	String(String),
 	Array(Vec<Value>),
+	Function(FunctionValue),
 }
 
 impl Value {
@@ -60,6 +104,7 @@ impl Display for Value {
 			Value::Integer(i) => i.to_string(),
 			Value::String(i) => i.to_string(),
 			Value::Array(i) => format!("{i:?}"),
+			Value::Function(i) => format!("FUNCTION"),
 		})
 	}
 }
