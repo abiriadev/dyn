@@ -211,6 +211,18 @@ impl Interpreter {
 		}
 	}
 
+	pub fn init_with_builtins(
+		builtin: HashMap<Ident, Value>,
+	) -> Result<Self, RuntimeError> {
+		let mut mem = Environment::new();
+
+		for (ident, value) in builtin {
+			mem.declare(ident, value, false)?;
+		}
+
+		Ok(Self { mem })
+	}
+
 	pub fn run(&mut self, code: &str) -> Result<Value, InterpreterError> {
 		let ast = match parse_code(code) {
 			Ok(v) => v,
@@ -574,16 +586,12 @@ mod tests {
 
 	#[test]
 	fn run_interpreter() {
-		let mut interpreter = Interpreter::init();
-
-		interpreter
-			.mem
-			.declare(
-				Ident("print".to_owned()),
-				Value::Function(FunctionValue::Builtin(Print::new())),
-				false,
-			)
-			.unwrap();
+		let mut h = HashMap::new();
+		h.insert(
+			Ident("print".to_owned()),
+			Value::Function(FunctionValue::Builtin(Print::new())),
+		);
+		let mut interpreter = Interpreter::init_with_builtins(h).unwrap();
 
 		let res = interpreter.run(indoc! {r#"
 			let! x = 10
