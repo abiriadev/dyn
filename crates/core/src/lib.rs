@@ -557,9 +557,33 @@ mod tests {
 
 	use super::*;
 
+	#[derive(Clone)]
+	struct Print(Vec<Value>);
+
+	impl Print {
+		fn new() -> Box<Self> { Box::new(Self(vec![])) }
+	}
+
+	impl BuiltinFunction for Print {
+		fn call(&mut self, args: ArgumentValues) -> Value {
+			let msg = args.0.into_iter().nth(0).unwrap();
+			self.0.push(msg.clone());
+			msg
+		}
+	}
+
 	#[test]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init();
+
+		interpreter
+			.mem
+			.declare(
+				Ident("print".to_owned()),
+				Value::Function(FunctionValue::Builtin(Print::new())),
+				false,
+			)
+			.unwrap();
 
 		let res = interpreter.run(indoc! {r#"
 			let! x = 10
