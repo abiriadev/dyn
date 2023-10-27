@@ -33,8 +33,10 @@ pub enum RuntimeError {
 	AlreadyDeclared,
 }
 
+struct ArgumentValues(pub Vec<Value>);
+
 trait BuiltinFunction: DynClone {
-	fn call(&mut self, args: Vec<Value>) -> Value;
+	fn call(&mut self, args: ArgumentValues) -> Value;
 }
 
 clone_trait_object!(BuiltinFunction);
@@ -355,20 +357,6 @@ impl Interpreter {
 					};
 					Ok(Value::Boolean(i || j))
 				},
-				BinExpr::Call(i, j) => {
-					let Some(arg) = j.0.into_iter().nth(0) else {
-						panic!()
-					};
-					let arg = self.eval(Tree::Expr(arg))?;
-					let Expr::Ident(Ident(i)) = *i else { panic!() };
-					match &i[..] {
-						"print" => {
-							println!("{arg}");
-							Ok(arg)
-						},
-						_ => unimplemented!(),
-					}
-				},
 				BinExpr::Prop(_, _) => todo!(),
 				BinExpr::Index(i, j) => {
 					let Value::Array(i) = self.eval(Tree::Expr(*i))? else {
@@ -402,6 +390,21 @@ impl Interpreter {
 				},
 				Expr::Array(i) => self.eval(Tree::Array(i)),
 				Expr::Function(_) => todo!(),
+				Expr::Call(i, j) => {
+					let j = ArgumentValues(
+						j.0.into_iter()
+							.map(|a| self.eval(Tree::Expr(a)))
+							.collect::<Result<Vec<_>, RuntimeError>>()?,
+					);
+					let Value::Function(i) = self.eval(Tree::Expr(*i))? else {
+						panic!();
+					};
+
+					match i {
+						FunctionValue::Builtin(mut i) => Ok(i.call(j)),
+						FunctionValue::Lambda(_) => unimplemented!(),
+					}
+				},
 				Expr::BinExpr(i) => self.eval(Tree::BinExpr(i)),
 				Expr::Assign(ident, j) => {
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {

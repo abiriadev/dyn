@@ -47,19 +47,19 @@ L0: Expr = {
 	Ident => Expr::Ident(<>),
 	"(" <Expr> ")",
 	"[" <Elements> "]" => Expr::Array(Array(Code(<>))),
-	"|" <args:Punctuated<Ident, ElementSeparator>> "|" "->" "{" <body:Code> "}" => Expr::Function(Function {
-		args,
+	"|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" => Expr::Function(Function {
+		parameters,
 		body,
 	}),
 	"||" "->" "{" <Code> "}" => Expr::Function(Function {
-		args: vec![],
+		parameters: Parameters(vec![]),
 		body: <>,
 	}),
 };
 
 L1 = {
 	<L1> "[" <Expr> "]" => Expr::BinExpr(BinExpr::index_box(<>)),
-	<i:L1> "(" <args:Elements> ")" => Expr::BinExpr(BinExpr::call_box(i, Code(args))),
+	<L1> "(" <Arguments> ")" => Expr::call_box(<>),
 	L0,
 }
 
@@ -127,12 +127,12 @@ L8 = {
 		item: i,
 		body: b
 	},
-	"|" <args:Punctuated<Ident, ElementSeparator>> "|" "->" <e:L8> => Expr::Function(Function {
-		args,
+	"|" <parameters:Parameters> "|" "->" <e:L8> => Expr::Function(Function {
+		parameters,
 		body: Code(vec![e]),
 	}),
 	"||" "->" <e:L8> => Expr::Function(Function {
-		args: vec![],
+		parameters: Parameters(vec![]),
 		body: Code(vec![e]),
 	}),
 	L7,
@@ -145,6 +145,10 @@ pub Expr = {
 ElementSeparator = { ",", "\n" };
 
 Elements = Punctuated<Expr, ElementSeparator>;
+
+Arguments: Arguments = <Elements> => Arguments(<>);
+
+Parameters: Parameters = Punctuated<Ident, ElementSeparator> => Parameters(<>);
 	
 pub Code: Code = Punctuated<Expr, "\n"+> => Code(<>);
 

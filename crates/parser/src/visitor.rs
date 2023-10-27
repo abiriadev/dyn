@@ -35,7 +35,7 @@ pub trait Visit {
 	}
 
 	fn visit_function(&mut self, i: &Function) {
-		for i in &i.args {
+		for i in &i.parameters.0 {
 			self.visit_ident(i);
 		}
 		self.visit_code(&i.body);
@@ -95,10 +95,6 @@ pub trait Visit {
 				self.visit_expr(i);
 				self.visit_expr(j);
 			},
-			BinExpr::Call(i, j) => {
-				self.visit_expr(i);
-				self.visit_code(j);
-			},
 			BinExpr::Prop(i, j) => {
 				self.visit_expr(i);
 				self.visit_expr(j);
@@ -118,6 +114,12 @@ pub trait Visit {
 			Expr::UnaryNot(i) => self.visit_expr(i),
 			Expr::Array(i) => self.visit_array(i),
 			Expr::Function(i) => self.visit_function(i),
+			Expr::Call(i, j) => {
+				for j in &j.0 {
+					self.visit_expr(j);
+				}
+				self.visit_expr(i);
+			},
 			Expr::BinExpr(i) => self.visit_binexpr(i),
 			Expr::Assign(i, j) => {
 				self.visit_ident(i);
@@ -216,7 +218,7 @@ pub trait VisitMut {
 	}
 
 	fn visit_mut_function(&mut self, i: &mut Function) {
-		for i in &mut i.args {
+		for i in &mut i.parameters.0 {
 			self.visit_mut_ident(i);
 		}
 		self.visit_mut_code(&mut i.body);
@@ -276,10 +278,6 @@ pub trait VisitMut {
 				self.visit_mut_expr(i);
 				self.visit_mut_expr(j);
 			},
-			BinExpr::Call(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_code(j);
-			},
 			BinExpr::Prop(i, j) => {
 				self.visit_mut_expr(i);
 				self.visit_mut_expr(j);
@@ -299,6 +297,12 @@ pub trait VisitMut {
 			Expr::UnaryNot(i) => self.visit_mut_expr(i),
 			Expr::Array(i) => self.visit_mut_array(i),
 			Expr::Function(i) => self.visit_mut_function(i),
+			Expr::Call(i, j) => {
+				for j in &mut j.0 {
+					self.visit_mut_expr(j);
+				}
+				self.visit_mut_expr(i);
+			},
 			Expr::BinExpr(i) => self.visit_mut_binexpr(i),
 			Expr::Assign(i, j) => {
 				self.visit_mut_ident(i);

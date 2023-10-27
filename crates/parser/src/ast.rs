@@ -28,8 +28,14 @@ pub struct Ident(pub String);
 pub struct Array(pub Code);
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct Parameters(pub Vec<Ident>);
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Arguments(pub Vec<Expr>);
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct Function {
-	pub args: Vec<Ident>,
+	pub parameters: Parameters,
 	pub body: Code,
 }
 
@@ -48,7 +54,6 @@ pub enum BinExpr {
 	GreaterThanEqual(Box<Expr>, Box<Expr>),
 	And(Box<Expr>, Box<Expr>),
 	Or(Box<Expr>, Box<Expr>),
-	Call(Box<Expr>, Code),
 	Prop(Box<Expr>, Box<Expr>),
 	Index(Box<Expr>, Box<Expr>),
 }
@@ -61,6 +66,7 @@ pub enum Expr {
 	UnaryNot(Box<Expr>),
 	Array(Array),
 	Function(Function),
+	Call(Box<Expr>, Arguments),
 	BinExpr(BinExpr),
 	Assign(Ident, Box<Expr>),
 	AddAssign(Ident, Box<Expr>),
