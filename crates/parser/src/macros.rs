@@ -112,3 +112,20 @@ macro_rules! call {
 }
 
 pub(crate) use call;
+
+macro_rules! call_ident {
+	($func:ident ( $($args:expr),* $(,)? )) => {
+		$crate::ast::Expr::Call(
+			Box::new($crate::ast::Expr::Ident(
+				$crate::ast::Ident(
+					stringify!($func).to_owned()
+				),
+			)),
+			$crate::ast::Arguments(vec![
+				$($args),*
+			])
+		)
+	};
+}
+
+pub(crate) use call_ident;
