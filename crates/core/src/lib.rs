@@ -33,9 +33,9 @@ pub enum RuntimeError {
 	AlreadyDeclared,
 }
 
-struct ArgumentValues(pub Vec<Value>);
+pub struct ArgumentValues(pub Vec<Value>);
 
-trait BuiltinFunction: DynClone {
+pub trait BuiltinFunction: DynClone {
 	fn call(&mut self, args: ArgumentValues) -> Value;
 }
 
@@ -49,7 +49,7 @@ pub enum FunctionValue {
 impl Debug for FunctionValue {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		match self {
-			Self::Builtin(arg0) => write!(f, "[BUILTIN FUNCTION]"),
+			Self::Builtin(_) => write!(f, "[BUILTIN FUNCTION]"),
 			Self::Lambda(arg0) => f
 				.debug_tuple("Lambda")
 				.field(arg0)
@@ -106,7 +106,7 @@ impl Display for Value {
 			Value::Integer(i) => i.to_string(),
 			Value::String(i) => i.to_string(),
 			Value::Array(i) => format!("{i:?}"),
-			Value::Function(i) => format!("FUNCTION"),
+			Value::Function(_) => "FUNCTION".to_owned(),
 		})
 	}
 }
