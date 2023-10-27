@@ -853,7 +853,7 @@ fn parse_function_expr_with_block_body() {
 			parameters: Parameters(vec![var!(x), var!(y)]),
 			body: code![
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
-				*call!(ident!(kokok); (
+				*call!(ident!(kok); (
 					*ident!(local) + *ident!(y)
 				))
 			]
@@ -953,7 +953,7 @@ fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
 			parameters: Parameters(vec![var!(x), var!(y)]),
 			body: code![
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
-				*call!(ident!(kokok); (
+				*call!(ident!(kok); (
 					*ident!(local) + *ident!(y)
 				))
 			]
