@@ -177,6 +177,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dyn-core",
+ "parser",
 ]
 
 [[package]]
