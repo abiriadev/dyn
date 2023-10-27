@@ -7,31 +7,16 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
+use error::{InterpreterError, ReferenceError, RuntimeError};
 use parser::{
 	ast::{
 		Array, BinExpr, Boolean, Code, Expr, Function, Ident, Integer, Literal,
 		Nil, StringT,
 	},
-	parse_code, LexError, ParseError, Token,
+	parse_code,
 };
 
-#[derive(Debug, PartialEq)]
-pub enum InterpreterError {
-	ParseError(ParseError<usize, Token, LexError>),
-	RuntimeError(RuntimeError),
-}
-
-#[derive(Debug, PartialEq)]
-pub enum ReferenceError {
-	UndefinedIdentifier,
-}
-
-#[derive(Debug, PartialEq)]
-pub enum RuntimeError {
-	ReferenceError(ReferenceError),
-	AssignmentToImmutableVariable,
-	AlreadyDeclared,
-}
+pub mod error;
 
 pub struct ArgumentValues(pub Vec<Value>);
 
