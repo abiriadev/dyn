@@ -6,9 +6,8 @@ pub enum InterpreterError {
 	RuntimeError(RuntimeError),
 }
 
-#[derive(Debug, PartialEq)]
-pub enum ReferenceError {
-	UndefinedIdentifier,
+impl From<RuntimeError> for InterpreterError {
+	fn from(value: RuntimeError) -> Self { Self::RuntimeError(value) }
 }
 
 #[derive(Debug, PartialEq)]
@@ -16,4 +15,9 @@ pub enum RuntimeError {
 	ReferenceError(ReferenceError),
 	AssignmentToImmutableVariable,
 	AlreadyDeclared,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum ReferenceError {
+	UndefinedIdentifier,
 }
