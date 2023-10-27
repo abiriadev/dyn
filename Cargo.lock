@@ -177,6 +177,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dyn-core",
+ "maplit",
  "parser",
 ]
 
@@ -240,6 +241,7 @@ version = "0.1.0"
 dependencies = [
  "dyn-clone",
  "indoc",
+ "maplit",
  "parser",
  "strum",
 ]
@@ -443,6 +445,12 @@ checksum = "dbfc0d229f1f42d790440136d941afd806bc9e949e2bcb8faa813b0f00d1267e"
 dependencies = [
  "logos-codegen",
 ]
+
+[[package]]
+name = "maplit"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e2e65a1a2e43cfcb47a895c4c8b10d1f4a61097f9f254f183aee60cad9c651d"
 
 [[package]]
 name = "memchr"

@@ -4,6 +4,7 @@ use clap::Parser;
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
+use maplit::hashmap;
 use parser::ast::Ident;
 
 #[derive(Debug, Parser)]
@@ -31,12 +32,12 @@ fn main() -> anyhow::Result<()> {
 
 	let source = read_to_string(args.source_path)?;
 
-	let mut h = HashMap::new();
-	h.insert(
-		Ident("print".to_owned()),
-		Value::Function(FunctionValue::Builtin(Printer::new())),
-	);
-	let mut intpr = Interpreter::init_with_builtins(h).unwrap();
+	let mut intpr = Interpreter::init_with_builtins(hashmap! {
+		Ident("print".to_owned()) => Value::Function(
+			FunctionValue::Builtin(Printer::new())
+		),
+	})
+	.unwrap();
 	let res = intpr.run(&source);
 
 	println!("final result: {:?}", res);

@@ -566,6 +566,7 @@ impl Interpreter {
 #[cfg(test)]
 mod tests {
 	use indoc::indoc;
+	use maplit::hashmap;
 
 	use super::*;
 
@@ -586,12 +587,12 @@ mod tests {
 
 	#[test]
 	fn run_interpreter() {
-		let mut h = HashMap::new();
-		h.insert(
-			Ident("print".to_owned()),
-			Value::Function(FunctionValue::Builtin(Print::new())),
-		);
-		let mut interpreter = Interpreter::init_with_builtins(h).unwrap();
+		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
+			Ident("print".to_owned()) => Value::Function(
+				FunctionValue::Builtin(Print::new())
+			)
+		})
+		.unwrap();
 
 		let res = interpreter.run(indoc! {r#"
 			let! x = 10

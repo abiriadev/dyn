@@ -9,4 +9,5 @@ edition = "2021"
 anyhow = "1.0.75"
 clap = { version = "4.4.7", features = ["derive"] }
 dyn-core = { version = "0.1.0", path = "../core" }
+maplit = "1.0.2"
 parser = { version = "0.1.0", path = "../parser" }
