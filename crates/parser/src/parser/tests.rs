@@ -3,8 +3,8 @@ use pretty_assertions::assert_eq;
 
 use super::*;
 use crate::{
-	ast::{BinExpr, Function},
-	macros::{arr, code, fal, ident, n, nil, str, tru, var},
+	ast::{BinExpr, Function, Parameters},
+	macros::{arr, call, code, fal, ident, n, nil, str, tru, var},
 };
 
 #[test]
@@ -139,10 +139,7 @@ fn parse_function_call() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(func),
-			code![*ident!(x)]
-		)))
+		Ok(*call!(ident!(func); (*ident!(x))))
 	)
 }
 
@@ -150,13 +147,7 @@ fn parse_function_call() {
 fn parse_function_call_without_arguments() {
 	let res = parse(r#"func()"#);
 
-	assert_eq!(
-		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(func),
-			code![]
-		)))
-	)
+	assert_eq!(res, Ok(*call!(ident!(func); ())))
 }
 
 #[test]
@@ -165,10 +156,7 @@ fn parse_function_call_with_more_than_one_argument() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(add),
-			code![*n!(1), *n!(2)]
-		)))
+		Ok(*call!(ident!(add); (*n!(1), *n!(2))))
 	)
 }
 
@@ -182,10 +170,7 @@ fn parse_function_call_spanning_multiple_lines() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(add),
-			code![*n!(1), *n!(2)]
-		)))
+		Ok(*call!(ident!(add); (*n!(1), *n!(2))))
 	)
 }
 
@@ -199,10 +184,7 @@ fn parse_function_call_spanning_multiple_lines_without_trailing_comma() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(add),
-			code![*n!(1), *n!(2)]
-		)))
+		Ok(*call!(ident!(add); (*n!(1), *n!(2))))
 	)
 }
 
@@ -216,10 +198,7 @@ fn parse_function_call_spanning_multiple_lines_separated_by_only_newlines() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(add),
-			code![*n!(1), *n!(2)]
-		)))
+		Ok(*call!(ident!(add); (*n!(1), *n!(2))))
 	)
 }
 
@@ -229,10 +208,7 @@ fn call_expression() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Call(
-			ident!(c) + ident!(d),
-			code![*ident!(a), *ident!(b)]
-		)))
+		Ok(*call!(ident!(c) + ident!(d); (*ident!(a), *ident!(b))))
 	)
 }
 
@@ -242,10 +218,7 @@ fn nested_call() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::call_box(
-			Expr::BinExpr(BinExpr::Call(ident!(a), code![])),
-			code![Expr::BinExpr(BinExpr::Call(ident!(b), code![]))]
-		)))
+		Ok(*call!(call!(ident!(a); ()); (*call!(ident!(b); ()))))
 	)
 }
 
@@ -255,15 +228,12 @@ fn nested_call2() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::call_box(
-			Expr::BinExpr(BinExpr::call_box(
-				Expr::BinExpr(BinExpr::call_box(*ident!(f), code![
-					*ident!(x)
-				],)),
-				code![*ident!(y)],
-			)),
-			code![*ident!(z)],
-		)))
+		Ok(*call!(
+			call!(
+				call!(ident!(f); (*ident!(x)));
+				(*ident!(y)));
+			(*ident!(z))
+		)),
 	)
 }
 
@@ -548,9 +518,7 @@ fn parse_if_expr() {
 		res,
 		Ok(Expr::If {
 			condition: tru!(),
-			yes: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
-				*str!("it's true!")
-			]))]
+			yes: code![*call!(ident!(print); (*str!("it's true!")))]
 		})
 	)
 }
@@ -566,10 +534,7 @@ fn parse_if_expr2() {
 			condition: Box::new(Expr::BinExpr(
 				BinExpr::GreaterThanEqual(ident!(a) - n!(4), n!(0))
 			)),
-			yes: code![
-				Expr::BinExpr(BinExpr::Call(ident!(abc), code![])),
-				Expr::BinExpr(BinExpr::Call(ident!(def), code![]))
-			]
+			yes: code![*call!(ident!(abc); ()), *call!(ident!(def); ()),]
 		})
 	)
 }
@@ -601,8 +566,8 @@ fn parse_else_expression() {
 				ident!(a),
 				ident!(b)
 			))),
-			yes: code![Expr::BinExpr(BinExpr::Call(ident!(fetch), code![]))],
-			no: code![Expr::BinExpr(BinExpr::Call(ident!(cancel), code![]))]
+			yes: code![*call!(ident!(fetch); ())],
+			no: code![*call!(ident!(cancel); ())]
 		})
 	)
 }
@@ -759,9 +724,7 @@ fn parse_for_loop_expr() {
 		Ok(Expr::For {
 			collection: ident!(arr),
 			item: var!(item),
-			body: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
-				*ident!(item)
-			]))],
+			body: code![*call!(ident!(print); (*ident!(item)))],
 		})
 	);
 }
@@ -779,9 +742,7 @@ fn parse_for_loop_expr_spanning_multiple_lines() {
 		Ok(Expr::For {
 			collection: ident!(arr),
 			item: var!(item),
-			body: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
-				*ident!(item)
-			]))],
+			body: code![*call!(ident!(print); (*ident!(item)))],
 		})
 	);
 }
@@ -802,9 +763,7 @@ fn parse_for_loop_over_expression() {
 		Ok(Expr::For {
 			collection: arr![*str!("some string"), *n!(12345)],
 			item: var!(item),
-			body: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
-				*ident!(item)
-			]))],
+			body: code![*call!(ident!(print); (*ident!(item)))],
 		})
 	);
 }
@@ -833,9 +792,7 @@ fn parse_for_loop_over_if_else_expression() {
 				no: code![*arr![*str!("or"), *str!("this")]]
 			}),
 			item: var!(item),
-			body: code![Expr::BinExpr(BinExpr::Call(ident!(print), code![
-				*ident!(item)
-			]))],
+			body: code![*call!(ident!(print); (*ident!(item)))],
 		})
 	);
 }
@@ -875,7 +832,7 @@ fn parse_function_expr() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![var!(x), var!(y)],
+			parameters: Parameters(vec![var!(x), var!(y)]),
 			body: code![*ident!(x) + *ident!(y)]
 		}))
 	);
@@ -893,12 +850,12 @@ fn parse_function_expr_with_block_body() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![var!(x), var!(y)],
+			parameters: Parameters(vec![var!(x), var!(y)]),
 			body: code![
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
-				Expr::BinExpr(BinExpr::Call(ident!(kok), code![
+				*call!(ident!(kokok); (
 					*ident!(local) + *ident!(y)
-				]))
+				))
 			]
 		}))
 	);
@@ -914,16 +871,16 @@ fn parse_iife() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::call_box(
-			Expr::Function(Function {
-				args: vec![var!(x)],
-				body: code![Expr::BinExpr(BinExpr::Call(
-					ident!(print),
-					code![*ident!(x)]
-				))]
-			}),
-			code![*n!(123)]
-		)))
+		Ok(*call!(
+			Box::new(Expr::Function(Function {
+				parameters: Parameters(vec![var!(x)]),
+				body: code![*call!(
+					ident!(print);
+					(*ident!(x))
+				)]
+			}));
+			(*n!(123))
+		))
 	);
 }
 
@@ -936,7 +893,7 @@ fn parse_function_expression_with_zero_arguments() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![],
+			parameters: Parameters(vec![]),
 			body: code![*n!(123)]
 		}))
 	);
@@ -951,7 +908,7 @@ fn parse_lambda_expression_with_zero_arguments() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![],
+			parameters: Parameters(vec![]),
 			body: code![*n!(123)]
 		}))
 	);
@@ -966,11 +923,11 @@ fn parse_nested_lambda_expression() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![],
+			parameters: Parameters(vec![]),
 			body: code![Expr::Function(Function {
-				args: vec![],
+				parameters: Parameters(vec![]),
 				body: code![Expr::Function(Function {
-					args: vec![],
+					parameters: Parameters(vec![]),
 					body: code![*nil!()]
 				})]
 			})]
@@ -993,12 +950,12 @@ fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
 	assert_eq!(
 		res,
 		Ok(Expr::Function(Function {
-			args: vec![var!(x), var!(y)],
+			parameters: Parameters(vec![var!(x), var!(y)]),
 			body: code![
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
-				Expr::BinExpr(BinExpr::Call(ident!(kok), code![
+				*call!(ident!(kokok); (
 					*ident!(local) + *ident!(y)
-				]))
+				))
 			]
 		}))
 	);

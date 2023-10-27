@@ -97,3 +97,18 @@ macro_rules! save_token {
 }
 
 pub(crate) use save_token;
+
+macro_rules! call {
+	($func:expr ; ( $($args:expr),* $(,)? )) => {
+		Box::new(
+			$crate::ast::Expr::Call(
+				$func,
+				$crate::ast::Arguments(vec![
+					$($args),*
+				])
+			)
+		)
+	};
+}
+
+pub(crate) use call;
