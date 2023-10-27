@@ -515,7 +515,9 @@ fn parse_if_expr() {
 		res,
 		Ok(Expr::If {
 			condition: tru!(),
-			yes: code![call_ident!(print(*str!("it's true!")))]
+			yes: code! {
+				call_ident!(print(*str!("it's true!")))
+			}
 		})
 	)
 }
@@ -531,7 +533,10 @@ fn parse_if_expr2() {
 			condition: Box::new(Expr::BinExpr(
 				BinExpr::GreaterThanEqual(ident!(a) - n!(4), n!(0))
 			)),
-			yes: code![call_ident!(abc()), call_ident!(def())]
+			yes: code! {
+				call_ident!(abc()),
+				call_ident!(def())
+			}
 		})
 	)
 }
@@ -544,10 +549,12 @@ fn parse_nested_if() {
 		res,
 		Ok(Expr::If {
 			condition: tru!(),
-			yes: code![Expr::If {
-				condition: fal!(),
-				yes: code![]
-			}]
+			yes: code! {
+				Expr::If {
+					condition: fal!(),
+					yes: code! {}
+				}
+			}
 		})
 	)
 }
@@ -563,8 +570,12 @@ fn parse_else_expression() {
 				ident!(a),
 				ident!(b)
 			))),
-			yes: code![call_ident!(fetch())],
-			no: code![call_ident!(cancel())]
+			yes: code! {
+				call_ident!(fetch())
+			},
+			no: code! {
+				call_ident!(cancel())
+			}
 		})
 	)
 }
@@ -721,7 +732,9 @@ fn parse_for_loop_expr() {
 		Ok(Expr::For {
 			collection: ident!(arr),
 			item: var!(item),
-			body: code![call_ident!(print(*ident!(item)))],
+			body: code! {
+				call_ident!(print(*ident!(item)))
+			},
 		})
 	);
 }
@@ -739,7 +752,9 @@ fn parse_for_loop_expr_spanning_multiple_lines() {
 		Ok(Expr::For {
 			collection: ident!(arr),
 			item: var!(item),
-			body: code![call_ident!(print(*ident!(item)))],
+			body: code! {
+				call_ident!(print(*ident!(item)))
+			},
 		})
 	);
 }
@@ -760,7 +775,9 @@ fn parse_for_loop_over_expression() {
 		Ok(Expr::For {
 			collection: arr![*str!("some string"), *n!(12345)],
 			item: var!(item),
-			body: code![call_ident!(print(*ident!(item)))],
+			body: code! {
+				call_ident!(print(*ident!(item)))
+			},
 		})
 	);
 }
@@ -785,11 +802,17 @@ fn parse_for_loop_over_if_else_expression() {
 					ident!(a),
 					n!(10)
 				))),
-				yes: code![*str!("this")],
-				no: code![*arr![*str!("or"), *str!("this")]]
+				yes: code! {
+					*str!("this")
+				},
+				no: code! {
+					*arr![*str!("or"), *str!("this")]
+				}
 			}),
 			item: var!(item),
-			body: code![call_ident!(print(*ident!(item)))],
+			body: code! {
+				call_ident!(print(*ident!(item)))
+			},
 		})
 	);
 }
@@ -809,13 +832,17 @@ fn parse_for_loop_with_break_expression_in_it() {
 		Ok(Expr::For {
 			collection: ident!(arr),
 			item: var!(x),
-			body: code![Expr::If {
-				condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
-					ident!(x),
-					n!(10)
-				))),
-				yes: code![Expr::Break(ident!(x))]
-			}],
+			body: code! {
+				Expr::If {
+					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
+						ident!(x),
+						n!(10)
+					))),
+					yes: code!{
+						Expr::Break(ident!(x))
+					}
+				}
+			},
 		})
 	);
 }
@@ -830,7 +857,9 @@ fn parse_function_expr() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![var!(x), var!(y)]),
-			body: code![*ident!(x) + *ident!(y)]
+			body: code! {
+				*ident!(x) + *ident!(y)
+			}
 		}))
 	);
 }
@@ -848,10 +877,10 @@ fn parse_function_expr_with_block_body() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![var!(x), var!(y)]),
-			body: code![
+			body: code! {
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
 				call_ident!(kok(*ident!(local) + *ident!(y)))
-			]
+			}
 		}))
 	);
 }
@@ -869,7 +898,9 @@ fn parse_iife() {
 		Ok(*call!(
 			Box::new(Expr::Function(Function {
 				parameters: Parameters(vec![var!(x)]),
-				body: code![call_ident!(print(*ident!(x)))]
+				body: code!{
+					call_ident!(print(*ident!(x)))
+				}
 			}));
 			(*n!(123))
 		))
@@ -886,7 +917,7 @@ fn parse_function_expression_with_zero_arguments() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![]),
-			body: code![*n!(123)]
+			body: code! { *n!(123) }
 		}))
 	);
 }
@@ -901,7 +932,7 @@ fn parse_lambda_expression_with_zero_arguments() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![]),
-			body: code![*n!(123)]
+			body: code! { *n!(123) }
 		}))
 	);
 }
@@ -916,13 +947,19 @@ fn parse_nested_lambda_expression() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![]),
-			body: code![Expr::Function(Function {
-				parameters: Parameters(vec![]),
-				body: code![Expr::Function(Function {
+			body: code! {
+				Expr::Function(Function {
 					parameters: Parameters(vec![]),
-					body: code![*nil!()]
-				})]
-			})]
+					body: code!{
+						Expr::Function(Function {
+							parameters: Parameters(vec![]),
+							body: code! {
+								*nil!()
+							}
+						})
+					}
+				})
+			}
 		}))
 	);
 }
@@ -943,10 +980,10 @@ fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![var!(x), var!(y)]),
-			body: code![
+			body: code! {
 				Expr::Declare(var!(local), n!(2) * ident!(x)),
 				call_ident!(kok(*ident!(local) + *ident!(y)))
-			]
+			}
 		}))
 	);
 }
