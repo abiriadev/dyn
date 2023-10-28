@@ -223,7 +223,7 @@ impl BinExpr {
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
-pub enum Expr {
+pub enum ExprKind {
 	Literal(Literal),
 	Ident(Ident),
 	UnaryMinus(Box<Expr>),
@@ -261,6 +261,12 @@ pub enum Expr {
 	Return(Box<Expr>),
 	Break(Box<Expr>),
 	Continue(Box<Expr>),
+}
+
+#[derive(Debug, Clone, PartialEq, BoxNew)]
+pub struct Expr {
+	span: Span,
+	pub kind: ExprKind,
 }
 
 #[derive(Debug, Clone, PartialEq)]
