@@ -297,11 +297,15 @@ impl Add for Box<Expr> {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr {
-			op: BinExprKind::Add,
-			lhs: self,
-			rhs,
-		}))
+		Box::new(Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Add,
+				lhs: self,
+				rhs,
+			}),
+		})
 	}
 }
 
@@ -310,11 +314,15 @@ impl Add for Expr {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr {
-			op: BinExprKind::Add,
-			lhs: Box::new(self),
-			rhs: Box::new(rhs),
-		})
+		Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Add,
+				lhs: Box::new(self),
+				rhs: Box::new(rhs),
+			}),
+		}
 	}
 }
 
@@ -323,11 +331,15 @@ impl Sub for Box<Expr> {
 	type Output = Self;
 
 	fn sub(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr {
-			op: BinExprKind::Sub,
-			lhs: self,
-			rhs,
-		}))
+		Box::new(Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Sub,
+				lhs: self,
+				rhs,
+			}),
+		})
 	}
 }
 
@@ -336,11 +348,15 @@ impl Sub for Expr {
 	type Output = Self;
 
 	fn sub(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr {
-			op: BinExprKind::Sub,
-			lhs: Box::new(self),
-			rhs: Box::new(rhs),
-		})
+		Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Sub,
+				lhs: Box::new(self),
+				rhs: Box::new(rhs),
+			}),
+		}
 	}
 }
 
@@ -349,11 +365,15 @@ impl Mul for Box<Expr> {
 	type Output = Self;
 
 	fn mul(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr {
-			op: BinExprKind::Mul,
-			lhs: self,
-			rhs,
-		}))
+		Box::new(Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Mul,
+				lhs: self,
+				rhs,
+			}),
+		})
 	}
 }
 
@@ -362,11 +382,15 @@ impl Mul for Expr {
 	type Output = Self;
 
 	fn mul(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr {
-			op: BinExprKind::Mul,
-			lhs: Box::new(self),
-			rhs: Box::new(rhs),
-		})
+		Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Mul,
+				lhs: Box::new(self),
+				rhs: Box::new(rhs),
+			}),
+		}
 	}
 }
 
@@ -375,11 +399,15 @@ impl Div for Box<Expr> {
 	type Output = Self;
 
 	fn div(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr {
-			op: BinExprKind::Div,
-			lhs: self,
-			rhs,
-		}))
+		Box::new(Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Div,
+				lhs: self,
+				rhs,
+			}),
+		})
 	}
 }
 
@@ -388,11 +416,15 @@ impl Div for Expr {
 	type Output = Self;
 
 	fn div(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr {
-			op: BinExprKind::Div,
-			lhs: Box::new(self),
-			rhs: Box::new(rhs),
-		})
+		Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Div,
+				lhs: Box::new(self),
+				rhs: Box::new(rhs),
+			}),
+		}
 	}
 }
 
@@ -401,11 +433,15 @@ impl Rem for Box<Expr> {
 	type Output = Self;
 
 	fn rem(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr {
-			op: BinExprKind::Div,
-			lhs: self,
-			rhs,
-		}))
+		Box::new(Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Mod,
+				lhs: self,
+				rhs,
+			}),
+		})
 	}
 }
 
@@ -414,10 +450,14 @@ impl Rem for Expr {
 	type Output = Self;
 
 	fn rem(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr {
-			op: BinExprKind::Mod,
-			lhs: Box::new(self),
-			rhs: Box::new(rhs),
-		})
+		Expr {
+			span: self.span + rhs.span,
+			kind: ExprKind::BinExpr(BinExpr {
+				span: self.span + rhs.span,
+				op: BinExprKind::Mod,
+				lhs: Box::new(self),
+				rhs: Box::new(rhs),
+			}),
+		}
 	}
 }
