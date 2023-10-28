@@ -10,8 +10,8 @@ use dyn_clone::{clone_trait_object, DynClone};
 use error::{InterpreterError, ReferenceError, RuntimeError};
 use parser::{
 	ast::{
-		Array, BinExpr, Boolean, Code, Expr, Function, Ident, Integer, Literal,
-		Nil, StringT,
+		Array, BinExpr, BinExprKind, Boolean, Code, Expr, Function, Ident,
+		Integer, Literal, Nil, StringT,
 	},
 	parse_code,
 };
@@ -258,10 +258,10 @@ impl Interpreter {
 					.collect::<Result<Vec<_>, RuntimeError>>()?,
 			)),
 			Tree::Function(_) => todo!(),
-			Tree::BinExpr(i) => match i {
-				BinExpr::Add(i, j) => {
-					let i = self.eval(Tree::Expr(*i))?;
-					let j = self.eval(Tree::Expr(*j))?;
+			Tree::BinExpr(BinExpr { op, lhs, rhs }) => match op {
+				BinExprKind::Add => {
+					let i = self.eval(Tree::Expr(*lhs))?;
+					let j = self.eval(Tree::Expr(*rhs))?;
 
 					Ok(match (i, j) {
 						(Value::Integer(i), Value::Integer(i2)) =>
@@ -275,98 +275,100 @@ impl Interpreter {
 						(_, _) => panic!(),
 					})
 				},
-				BinExpr::Sub(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::Sub => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Integer(i - j))
 				},
-				BinExpr::Mul(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::Mul => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Integer(i * j))
 				},
-				BinExpr::Div(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::Div => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Integer(i / j))
 				},
-				BinExpr::Mod(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::Mod => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Integer(i % j))
 				},
-				BinExpr::Equal(i, j) => Ok(Value::Boolean(
-					self.eval(Tree::Expr(*i))? == self.eval(Tree::Expr(*j))?,
+				BinExprKind::Equal => Ok(Value::Boolean(
+					self.eval(Tree::Expr(*lhs))?
+						== self.eval(Tree::Expr(*rhs))?,
 				)),
-				BinExpr::NotEqual(i, j) => Ok(Value::Boolean(
-					self.eval(Tree::Expr(*i))? != self.eval(Tree::Expr(*j))?,
+				BinExprKind::NotEqual => Ok(Value::Boolean(
+					self.eval(Tree::Expr(*lhs))?
+						!= self.eval(Tree::Expr(*rhs))?,
 				)),
-				BinExpr::LessThan(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::LessThan => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i < j))
 				},
-				BinExpr::GreaterThan(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::GreaterThan => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i > j))
 				},
-				BinExpr::LessThanEqual(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::LessThanEqual => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i <= j))
 				},
-				BinExpr::GreaterThanEqual(i, j) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::GreaterThanEqual => {
+					let Value::Integer(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Integer(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i >= j))
 				},
-				BinExpr::And(i, j) => {
-					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::And => {
+					let Value::Boolean(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Boolean(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Boolean(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i && j))
 				},
-				BinExpr::Or(i, j) => {
-					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
+				BinExprKind::Or => {
+					let Value::Boolean(i) = self.eval(Tree::Expr(*lhs))? else {
 						panic!()
 					};
-					let Value::Boolean(j) = self.eval(Tree::Expr(*j))? else {
+					let Value::Boolean(j) = self.eval(Tree::Expr(*rhs))? else {
 						panic!()
 					};
 					Ok(Value::Boolean(i || j))

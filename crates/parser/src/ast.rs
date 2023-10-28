@@ -204,9 +204,9 @@ pub enum BinExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct BinExpr {
-	op: BinExprKind,
-	lhs: Box<Expr>,
-	rhs: Box<Expr>,
+	pub op: BinExprKind,
+	pub lhs: Box<Expr>,
+	pub rhs: Box<Expr>,
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]

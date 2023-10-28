@@ -42,60 +42,8 @@ pub trait Visit {
 	}
 
 	fn visit_binexpr(&mut self, i: &BinExpr) {
-		match i {
-			BinExpr::Add(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Sub(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Mul(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Div(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Mod(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Equal(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::NotEqual(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::LessThan(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::GreaterThan(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::LessThanEqual(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::GreaterThanEqual(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::And(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Or(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-		}
+		self.visit_expr(&*i.lhs);
+		self.visit_expr(&*i.rhs);
 	}
 
 	fn visit_expr(&mut self, i: &Expr) {
@@ -225,60 +173,8 @@ pub trait VisitMut {
 	}
 
 	fn visit_mut_binexpr(&mut self, i: &mut BinExpr) {
-		match i {
-			BinExpr::Add(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Sub(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Mul(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Div(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Mod(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Equal(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::NotEqual(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::LessThan(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::GreaterThan(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::LessThanEqual(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::GreaterThanEqual(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::And(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Or(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-		}
+		self.visit_mut_expr(&mut *i.lhs);
+		self.visit_mut_expr(&mut *i.rhs);
 	}
 
 	fn visit_mut_expr(&mut self, i: &mut Expr) {
