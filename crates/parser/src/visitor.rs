@@ -1,6 +1,6 @@
 use crate::ast::{
-	Array, BinExpr, Boolean, Code, Expr, Function, Ident, Integer, Literal,
-	Nil, StringT,
+	Array, BinExpr, Boolean, Code, Expr, ExprKind, Function, Ident, Integer,
+	Literal, Nil, StringT,
 };
 
 pub trait Visit {
@@ -47,70 +47,70 @@ pub trait Visit {
 	}
 
 	fn visit_expr(&mut self, i: &Expr) {
-		match i {
-			Expr::Literal(i) => self.visit_literal(i),
-			Expr::Ident(i) => self.visit_ident(i),
-			Expr::UnaryMinus(i) => self.visit_expr(i),
-			Expr::UnaryNot(i) => self.visit_expr(i),
-			Expr::Array(i) => self.visit_array(i),
-			Expr::Function(i) => self.visit_function(i),
-			Expr::Call(i, j) => {
+		match &i.kind {
+			ExprKind::Literal(i) => self.visit_literal(i),
+			ExprKind::Ident(i) => self.visit_ident(i),
+			ExprKind::UnaryMinus(i) => self.visit_expr(i),
+			ExprKind::UnaryNot(i) => self.visit_expr(i),
+			ExprKind::Array(i) => self.visit_array(i),
+			ExprKind::Function(i) => self.visit_function(i),
+			ExprKind::Call(i, j) => {
 				for j in &j.0 {
 					self.visit_expr(j);
 				}
 				self.visit_expr(i);
 			},
-			Expr::Prop(i, j) => {
+			ExprKind::Prop(i, j) => {
 				self.visit_expr(i);
 				self.visit_ident(j);
 			},
-			Expr::Index(i, j) => {
+			ExprKind::Index(i, j) => {
 				self.visit_expr(i);
 				self.visit_expr(j);
 			},
-			Expr::BinExpr(i) => self.visit_binexpr(i),
-			Expr::Assign(i, j) => {
+			ExprKind::BinExpr(i) => self.visit_binexpr(i),
+			ExprKind::Assign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::AddAssign(i, j) => {
+			ExprKind::AddAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::SubAssign(i, j) => {
+			ExprKind::SubAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::MulAssign(i, j) => {
+			ExprKind::MulAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::DivAssign(i, j) => {
+			ExprKind::DivAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::ModAssign(i, j) => {
+			ExprKind::ModAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::Declare(i, j) => {
+			ExprKind::Declare(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::DeclareMut(i, j) => {
+			ExprKind::DeclareMut(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
 			},
-			Expr::If { condition, yes } => {
+			ExprKind::If { condition, yes } => {
 				self.visit_expr(condition);
 				self.visit_code(yes);
 			},
-			Expr::IfElse { condition, yes, no } => {
+			ExprKind::IfElse { condition, yes, no } => {
 				self.visit_expr(condition);
 				self.visit_code(yes);
 				self.visit_code(no);
 			},
-			Expr::For {
+			ExprKind::For {
 				collection,
 				item,
 				body,
@@ -119,11 +119,11 @@ pub trait Visit {
 				self.visit_ident(item);
 				self.visit_code(body);
 			},
-			Expr::Panic(i) => self.visit_expr(i),
-			Expr::Assert(i) => self.visit_expr(i),
-			Expr::Return(i) => self.visit_expr(i),
-			Expr::Break(i) => self.visit_expr(i),
-			Expr::Continue(i) => self.visit_expr(i),
+			ExprKind::Panic(i) => self.visit_expr(i),
+			ExprKind::Assert(i) => self.visit_expr(i),
+			ExprKind::Return(i) => self.visit_expr(i),
+			ExprKind::Break(i) => self.visit_expr(i),
+			ExprKind::Continue(i) => self.visit_expr(i),
 		}
 	}
 
@@ -178,70 +178,70 @@ pub trait VisitMut {
 	}
 
 	fn visit_mut_expr(&mut self, i: &mut Expr) {
-		match i {
-			Expr::Literal(i) => self.visit_mut_literal(i),
-			Expr::Ident(i) => self.visit_mut_ident(i),
-			Expr::UnaryMinus(i) => self.visit_mut_expr(i),
-			Expr::UnaryNot(i) => self.visit_mut_expr(i),
-			Expr::Array(i) => self.visit_mut_array(i),
-			Expr::Function(i) => self.visit_mut_function(i),
-			Expr::Call(i, j) => {
+		match &mut i.kind {
+			ExprKind::Literal(i) => self.visit_mut_literal(i),
+			ExprKind::Ident(i) => self.visit_mut_ident(i),
+			ExprKind::UnaryMinus(i) => self.visit_mut_expr(i),
+			ExprKind::UnaryNot(i) => self.visit_mut_expr(i),
+			ExprKind::Array(i) => self.visit_mut_array(i),
+			ExprKind::Function(i) => self.visit_mut_function(i),
+			ExprKind::Call(i, j) => {
 				for j in &mut j.0 {
 					self.visit_mut_expr(j);
 				}
 				self.visit_mut_expr(i);
 			},
-			Expr::Prop(i, j) => {
+			ExprKind::Prop(i, j) => {
 				self.visit_mut_expr(i);
 				self.visit_mut_ident(j);
 			},
-			Expr::Index(i, j) => {
+			ExprKind::Index(i, j) => {
 				self.visit_mut_expr(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::BinExpr(i) => self.visit_mut_binexpr(i),
-			Expr::Assign(i, j) => {
+			ExprKind::BinExpr(i) => self.visit_mut_binexpr(i),
+			ExprKind::Assign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::AddAssign(i, j) => {
+			ExprKind::AddAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::SubAssign(i, j) => {
+			ExprKind::SubAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::MulAssign(i, j) => {
+			ExprKind::MulAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::DivAssign(i, j) => {
+			ExprKind::DivAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::ModAssign(i, j) => {
+			ExprKind::ModAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::Declare(i, j) => {
+			ExprKind::Declare(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::DeclareMut(i, j) => {
+			ExprKind::DeclareMut(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
 			},
-			Expr::If { condition, yes } => {
+			ExprKind::If { condition, yes } => {
 				self.visit_mut_expr(condition);
 				self.visit_mut_code(yes);
 			},
-			Expr::IfElse { condition, yes, no } => {
+			ExprKind::IfElse { condition, yes, no } => {
 				self.visit_mut_expr(condition);
 				self.visit_mut_code(yes);
 				self.visit_mut_code(no);
 			},
-			Expr::For {
+			ExprKind::For {
 				collection,
 				item,
 				body,
@@ -250,11 +250,11 @@ pub trait VisitMut {
 				self.visit_mut_ident(item);
 				self.visit_mut_code(body);
 			},
-			Expr::Panic(i) => self.visit_mut_expr(i),
-			Expr::Assert(i) => self.visit_mut_expr(i),
-			Expr::Return(i) => self.visit_mut_expr(i),
-			Expr::Break(i) => self.visit_mut_expr(i),
-			Expr::Continue(i) => self.visit_mut_expr(i),
+			ExprKind::Panic(i) => self.visit_mut_expr(i),
+			ExprKind::Assert(i) => self.visit_mut_expr(i),
+			ExprKind::Return(i) => self.visit_mut_expr(i),
+			ExprKind::Break(i) => self.visit_mut_expr(i),
+			ExprKind::Continue(i) => self.visit_mut_expr(i),
 		}
 	}
 
