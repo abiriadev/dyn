@@ -639,7 +639,6 @@ fn parse_nested_assign2() {
 }
 
 #[test]
-#[ignore]
 fn parse_mixed_assignments() {
 	let res = parse(r#"a = let b = 123 + (let! c = 1)"#);
 
@@ -651,11 +650,16 @@ fn parse_mixed_assignments() {
 				Expr::new(
 					ExprKind::declare_box(
 						var!(b 8..9),
-						*n!(123 12)
-							+ Expr::new(
+						BinExpr::new(
+							BinExprKind::Add,
+							*n!(123 12),
+							Expr::new(
 								ExprKind::DeclareMut(var!(c 24..25), n!(1 28)),
 								19..29
-							)
+							),
+							12..30
+						)
+						.into()
 					),
 					4..30
 				)

@@ -288,6 +288,14 @@ impl Expr {
 			kind,
 		}
 	}
+
+	pub fn with_span<S>(self, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			..self
+		}
+	}
 }
 
 impl From<BinExpr> for Expr {
