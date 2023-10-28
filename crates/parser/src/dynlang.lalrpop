@@ -2,6 +2,7 @@ use std::string::String;
 use crate::lexer::{Token, LexError};
 use crate::ast::*;
 use tap::Tap;
+use span::Span;
 
 grammar;
 
@@ -39,7 +40,7 @@ Literal: Literal = {
 };
 
 // identifier
-Ident: Ident = "ident" => Ident(<>);
+Ident: Ident = <l:@L> <i:"ident"> <r:@R> => Ident::new_box(Span::new(l, r), i);
 
 // atom
 L0: Expr = {

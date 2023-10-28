@@ -1,5 +1,6 @@
 #![allow(unused)]
 use box_tt::BoxNew;
+use span::Span;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Nil;
@@ -21,8 +22,29 @@ pub enum Literal {
 	String(StringT),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Ident(pub String);
+#[derive(Debug, Clone, PartialEq, Eq, Hash, BoxNew)]
+pub struct Ident {
+	span: Span,
+	symbol: String,
+}
+
+impl Ident {
+	pub fn new<T>(symbol: T) -> Self
+	where T: Into<String> {
+		Self {
+			span: Span::DUMMY_SPAN,
+			symbol: symbol.into(),
+		}
+	}
+
+	pub fn new_dummy<T>(symbol: T) -> Self
+	where T: Into<String> {
+		Self {
+			span: Span::DUMMY_SPAN,
+			symbol: symbol.into(),
+		}
+	}
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Array(pub Code);

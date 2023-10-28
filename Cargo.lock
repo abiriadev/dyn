@@ -504,6 +504,7 @@ dependencies = [
  "lalrpop-util",
  "logos",
  "pretty_assertions",
+ "span",
  "strum",
  "tap",
 ]
