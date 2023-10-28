@@ -258,7 +258,7 @@ impl Interpreter {
 					.collect::<Result<Vec<_>, RuntimeError>>()?,
 			)),
 			Tree::Function(_) => todo!(),
-			Tree::BinExpr(BinExpr { op, lhs, rhs }) => match op {
+			Tree::BinExpr(BinExpr { op, lhs, rhs, .. }) => match op {
 				BinExprKind::Add => {
 					let i = self.eval(Tree::Expr(*lhs))?;
 					let j = self.eval(Tree::Expr(*rhs))?;

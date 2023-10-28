@@ -204,9 +204,22 @@ pub enum BinExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct BinExpr {
+	span: Span,
 	pub op: BinExprKind,
 	pub lhs: Box<Expr>,
 	pub rhs: Box<Expr>,
+}
+
+impl BinExpr {
+	pub fn new<S>(op: BinExprKind, lhs: Expr, rhs: Expr, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			op,
+			lhs: Box::new(lhs),
+			rhs: Box::new(rhs),
+		}
+	}
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
