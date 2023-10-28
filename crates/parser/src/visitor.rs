@@ -95,14 +95,6 @@ pub trait Visit {
 				self.visit_expr(i);
 				self.visit_expr(j);
 			},
-			BinExpr::Prop(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
-			BinExpr::Index(i, j) => {
-				self.visit_expr(i);
-				self.visit_expr(j);
-			},
 		}
 	}
 
@@ -119,6 +111,14 @@ pub trait Visit {
 					self.visit_expr(j);
 				}
 				self.visit_expr(i);
+			},
+			Expr::Prop(i, j) => {
+				self.visit_expr(i);
+				self.visit_expr(j);
+			},
+			Expr::Index(i, j) => {
+				self.visit_expr(i);
+				self.visit_expr(j);
 			},
 			Expr::BinExpr(i) => self.visit_binexpr(i),
 			Expr::Assign(i, j) => {
@@ -278,14 +278,6 @@ pub trait VisitMut {
 				self.visit_mut_expr(i);
 				self.visit_mut_expr(j);
 			},
-			BinExpr::Prop(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
-			BinExpr::Index(i, j) => {
-				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
-			},
 		}
 	}
 
@@ -302,6 +294,14 @@ pub trait VisitMut {
 					self.visit_mut_expr(j);
 				}
 				self.visit_mut_expr(i);
+			},
+			Expr::Prop(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
+			},
+			Expr::Index(i, j) => {
+				self.visit_mut_expr(i);
+				self.visit_mut_expr(j);
 			},
 			Expr::BinExpr(i) => self.visit_mut_binexpr(i),
 			Expr::Assign(i, j) => {

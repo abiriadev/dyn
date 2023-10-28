@@ -200,8 +200,6 @@ pub enum BinExpr {
 	GreaterThanEqual(Box<Expr>, Box<Expr>),
 	And(Box<Expr>, Box<Expr>),
 	Or(Box<Expr>, Box<Expr>),
-	Prop(Box<Expr>, Box<Expr>),
-	Index(Box<Expr>, Box<Expr>),
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
@@ -213,6 +211,8 @@ pub enum Expr {
 	Array(Array),
 	Function(Function),
 	Call(Box<Expr>, Arguments),
+	Prop(Box<Expr>, Box<Expr>),
+	Index(Box<Expr>, Box<Expr>),
 	BinExpr(BinExpr),
 	Assign(Ident, Box<Expr>),
 	AddAssign(Ident, Box<Expr>),
