@@ -3,7 +3,7 @@ use pretty_assertions::assert_eq;
 
 use super::*;
 use crate::{
-	ast::{BinExpr, Function, Parameters},
+	ast::{BinExpr, BinExprKind, Function, Parameters},
 	macros::{arr, call, call_ident, code, fal, ident, n, nil, str, tru, var},
 };
 
@@ -330,10 +330,11 @@ fn parse_and() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::And(
-			tru!(0),
-			fal!(8)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::And,
+			lhs: tru!(0),
+			rhs: fal!(8)
+		}))
 	);
 }
 
@@ -343,10 +344,11 @@ fn parse_or() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Or(
-			tru!(0),
-			fal!(8)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Or,
+			lhs: tru!(0),
+			rhs: fal!(8)
+		}))
 	);
 }
 
@@ -356,10 +358,15 @@ fn boolean_operator_precedence() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::or_box(
-			*tru!(0),
-			Expr::BinExpr(BinExpr::And(fal!(8), tru!(17)))
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Or,
+			lhs: tru!(0),
+			rhs: Box::new(Expr::BinExpr(BinExpr {
+				op: BinExprKind::And,
+				lhs: fal!(8),
+				rhs: tru!(17)
+			}))
+		}))
 	);
 }
 
@@ -383,10 +390,11 @@ fn parse_equal() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Equal(
-			n!(1 0),
-			n!(3 5)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Equal,
+			lhs: n!(1 0),
+			rhs: n!(3 5)
+		}))
 	)
 }
 
@@ -396,10 +404,11 @@ fn parse_not_equal() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::NotEqual(
-			n!(1 0),
-			n!(3 5)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::NotEqual,
+			lhs: n!(1 0),
+			rhs: n!(3 5)
+		}))
 	)
 }
 
@@ -409,10 +418,11 @@ fn parse_less_than() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::LessThan(
-			n!(1 0),
-			n!(2 4)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::LessThan,
+			lhs: n!(1 0),
+			rhs: n!(2 4)
+		}))
 	)
 }
 
@@ -422,10 +432,11 @@ fn parse_less_than_equal() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::LessThanEqual(
-			n!(1 0),
-			n!(2 5)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::LessThanEqual,
+			lhs: n!(1 0),
+			rhs: n!(2 5)
+		}))
 	)
 }
 
@@ -435,10 +446,11 @@ fn parse_greater_than() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::GreaterThan(
-			n!(1 0),
-			n!(2 4)
-		)))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::GreaterThan,
+			lhs: n!(1 0),
+			rhs: n!(2 4)
+		}))
 	)
 }
 
@@ -448,9 +460,11 @@ fn parse_greater_than_equal() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(
-			BinExpr::GreaterThanEqual(n!(1 0), n!(2 5))
-		))
+		Ok(Expr::BinExpr(BinExpr {
+			op: BinExprKind::GreaterThanEqual,
+			lhs: n!(1 0),
+			rhs: n!(2 5)
+		}))
 	)
 }
 
@@ -561,9 +575,11 @@ fn parse_if_expr2() {
 	assert_eq!(
 		res,
 		Ok(Expr::If {
-			condition: Box::new(Expr::BinExpr(
-				BinExpr::GreaterThanEqual(ident!(a 3..4) - n!(4 7), n!(0 12))
-			)),
+			condition: Box::new(Expr::BinExpr(BinExpr {
+				op: BinExprKind::GreaterThanEqual,
+				lhs: ident!(a 3..4) - n!(4 7),
+				rhs: n!(0 12)
+			})),
 			yes: code! {
 				call_ident!(abc 15..18 ()),
 				call_ident!(def 21..24 ())
@@ -597,10 +613,11 @@ fn parse_else_expression() {
 	assert_eq!(
 		res,
 		Ok(Expr::IfElse {
-			condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
-				ident!(a 3..4),
-				ident!(b 7..8)
-			))),
+			condition: Box::new(Expr::BinExpr(BinExpr {
+				op: BinExprKind::GreaterThan,
+				lhs: ident!(a 3..4),
+				rhs: ident!(b 7..8)
+			})),
 			yes: code! {
 				call_ident!(fetch 11..16 ())
 			},
@@ -847,10 +864,11 @@ fn parse_for_loop_over_if_else_expression() {
 		res,
 		Ok(Expr::For {
 			collection: Box::new(Expr::IfElse {
-				condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
-					ident!(a 8..9),
-					n!(10 12)
-				))),
+				condition: Box::new(Expr::BinExpr(BinExpr {
+					op: BinExprKind::GreaterThan,
+					lhs: ident!(a 8..9),
+					rhs: n!(10 12)
+				})),
 				yes: code! {
 					*str!("this" 18)
 				},
@@ -883,10 +901,15 @@ fn parse_for_loop_with_break_expression_in_it() {
 			item: var!(x 12..13),
 			body: code! {
 				Expr::If {
-					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
-						ident!(x 20..21),
-						n!(10 24)
-					))),
+					condition: Box::new(
+						Expr::BinExpr(
+							BinExpr {
+								op: BinExprKind::GreaterThan,
+								lhs: ident!(x 20..21),
+								rhs: n!(10 24)
+							}
+						)
+					),
 					yes: code!{
 						Expr::Break(ident!(x 37..38))
 					}

@@ -261,7 +261,11 @@ impl Add for Box<Expr> {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Add(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Add,
+			lhs: self,
+			rhs,
+		}))
 	}
 }
 
@@ -270,10 +274,11 @@ impl Add for Expr {
 	type Output = Self;
 
 	fn add(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr::Add(
-			Box::new(self),
-			Box::new(rhs),
-		))
+		Expr::BinExpr(BinExpr {
+			op: BinExprKind::Add,
+			lhs: Box::new(self),
+			rhs: Box::new(rhs),
+		})
 	}
 }
 
@@ -282,7 +287,11 @@ impl Sub for Box<Expr> {
 	type Output = Self;
 
 	fn sub(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Sub(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Sub,
+			lhs: self,
+			rhs,
+		}))
 	}
 }
 
@@ -291,10 +300,11 @@ impl Sub for Expr {
 	type Output = Self;
 
 	fn sub(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr::Sub(
-			Box::new(self),
-			Box::new(rhs),
-		))
+		Expr::BinExpr(BinExpr {
+			op: BinExprKind::Sub,
+			lhs: Box::new(self),
+			rhs: Box::new(rhs),
+		})
 	}
 }
 
@@ -303,7 +313,11 @@ impl Mul for Box<Expr> {
 	type Output = Self;
 
 	fn mul(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Mul(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Mul,
+			lhs: self,
+			rhs,
+		}))
 	}
 }
 
@@ -312,10 +326,11 @@ impl Mul for Expr {
 	type Output = Self;
 
 	fn mul(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr::Mul(
-			Box::new(self),
-			Box::new(rhs),
-		))
+		Expr::BinExpr(BinExpr {
+			op: BinExprKind::Mul,
+			lhs: Box::new(self),
+			rhs: Box::new(rhs),
+		})
 	}
 }
 
@@ -324,7 +339,11 @@ impl Div for Box<Expr> {
 	type Output = Self;
 
 	fn div(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Mod(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Div,
+			lhs: self,
+			rhs,
+		}))
 	}
 }
 
@@ -333,10 +352,11 @@ impl Div for Expr {
 	type Output = Self;
 
 	fn div(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr::Div(
-			Box::new(self),
-			Box::new(rhs),
-		))
+		Expr::BinExpr(BinExpr {
+			op: BinExprKind::Div,
+			lhs: Box::new(self),
+			rhs: Box::new(rhs),
+		})
 	}
 }
 
@@ -345,7 +365,11 @@ impl Rem for Box<Expr> {
 	type Output = Self;
 
 	fn rem(self, rhs: Self) -> Self::Output {
-		Box::new(Expr::BinExpr(BinExpr::Div(self, rhs)))
+		Box::new(Expr::BinExpr(BinExpr {
+			op: BinExprKind::Div,
+			lhs: self,
+			rhs,
+		}))
 	}
 }
 
@@ -354,9 +378,10 @@ impl Rem for Expr {
 	type Output = Self;
 
 	fn rem(self, rhs: Self) -> Self::Output {
-		Expr::BinExpr(BinExpr::Mod(
-			Box::new(self),
-			Box::new(rhs),
-		))
+		Expr::BinExpr(BinExpr {
+			op: BinExprKind::Mod,
+			lhs: Box::new(self),
+			rhs: Box::new(rhs),
+		})
 	}
 }
