@@ -10,8 +10,8 @@ use dyn_clone::{clone_trait_object, DynClone};
 use error::{InterpreterError, ReferenceError, RuntimeError};
 use parser::{
 	ast::{
-		Array, BinExpr, BinExprKind, Boolean, Code, Expr, Function, Ident,
-		Integer, Literal, Nil, StringT,
+		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
+		Ident, Integer, Literal, Nil, StringT,
 	},
 	parse_code,
 };
@@ -374,24 +374,24 @@ impl Interpreter {
 					Ok(Value::Boolean(i || j))
 				},
 			},
-			Tree::Expr(i) => match i {
-				Expr::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
-				Expr::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
-				Expr::UnaryMinus(i) => {
+			Tree::Expr(i) => match i.kind {
+				ExprKind::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
+				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
+				ExprKind::UnaryMinus(i) => {
 					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
 						panic!();
 					};
 					Ok(Value::Integer(-i))
 				},
-				Expr::UnaryNot(i) => {
+				ExprKind::UnaryNot(i) => {
 					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
 						panic!();
 					};
 					Ok(Value::Boolean(!i))
 				},
-				Expr::Array(i) => self.eval(Tree::Array(i)),
-				Expr::Function(_) => todo!(),
-				Expr::Call(i, j) => {
+				ExprKind::Array(i) => self.eval(Tree::Array(i)),
+				ExprKind::Function(_) => todo!(),
+				ExprKind::Call(i, j) => {
 					let j = ArgumentValues(
 						j.0.into_iter()
 							.map(|a| self.eval(Tree::Expr(a)))
@@ -406,8 +406,8 @@ impl Interpreter {
 						FunctionValue::Lambda(_) => unimplemented!(),
 					}
 				},
-				Expr::Prop(_, _) => todo!(),
-				Expr::Index(i, j) => {
+				ExprKind::Prop(_, _) => todo!(),
+				ExprKind::Index(i, j) => {
 					let Value::Array(i) = self.eval(Tree::Expr(*i))? else {
 						panic!()
 					};
@@ -421,8 +421,8 @@ impl Interpreter {
 						.nth(j as usize)
 						.unwrap_or(Value::Nil))
 				},
-				Expr::BinExpr(i) => self.eval(Tree::BinExpr(i)),
-				Expr::Assign(ident, j) => {
+				ExprKind::BinExpr(i) => self.eval(Tree::BinExpr(i)),
+				ExprKind::Assign(ident, j) => {
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
@@ -431,7 +431,7 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::AddAssign(ident, j) => {
+				ExprKind::AddAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
 						.read_value(ident.clone().into())?
@@ -446,7 +446,7 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::SubAssign(ident, j) => {
+				ExprKind::SubAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
 						.read_value(ident.clone().into())?
@@ -461,7 +461,7 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::MulAssign(ident, j) => {
+				ExprKind::MulAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
 						.read_value(ident.clone().into())?
@@ -476,7 +476,7 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::DivAssign(ident, j) => {
+				ExprKind::DivAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
 						.read_value(ident.clone().into())?
@@ -491,7 +491,7 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::ModAssign(ident, j) => {
+				ExprKind::ModAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
 						.read_value(ident.clone().into())?
@@ -506,19 +506,19 @@ impl Interpreter {
 						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
-				Expr::Declare(ident, value) => {
+				ExprKind::Declare(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
 						.declare(ident.into(), value.clone(), false)?;
 					Ok(value)
 				},
-				Expr::DeclareMut(ident, value) => {
+				ExprKind::DeclareMut(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
 						.declare(ident.into(), value.clone(), true)?;
 					Ok(value)
 				},
-				Expr::If { condition, yes } => {
+				ExprKind::If { condition, yes } => {
 					let Value::Boolean(condition) =
 						self.eval(Tree::Expr(*condition))?
 					else {
@@ -530,7 +530,7 @@ impl Interpreter {
 						Value::Nil
 					})
 				},
-				Expr::IfElse { condition, yes, no } => {
+				ExprKind::IfElse { condition, yes, no } => {
 					let Value::Boolean(condition) =
 						self.eval(Tree::Expr(*condition))?
 					else {
@@ -542,7 +542,7 @@ impl Interpreter {
 						self.eval(Tree::Code(no))?
 					})
 				},
-				Expr::For {
+				ExprKind::For {
 					collection,
 					item,
 					body,
@@ -562,11 +562,11 @@ impl Interpreter {
 					self.mem.free(item.into())?;
 					Ok(Value::Nil)
 				},
-				Expr::Panic(_) => todo!(),
-				Expr::Assert(_) => todo!(),
-				Expr::Return(_) => todo!(),
-				Expr::Break(_) => todo!(),
-				Expr::Continue(_) => todo!(),
+				ExprKind::Panic(_) => todo!(),
+				ExprKind::Assert(_) => todo!(),
+				ExprKind::Return(_) => todo!(),
+				ExprKind::Break(_) => todo!(),
+				ExprKind::Continue(_) => todo!(),
 			},
 			Tree::Code(i) => {
 				let mut last = Value::Nil;
