@@ -72,39 +72,73 @@ L2 = {
 
 L3 = {
 	<l:@L> <lhs:L3> "*" <rhs:L2> <r:@R> => Expr::new(
-		ExprKind::BinExpr(
-			BinExprKind::new(BinExprKind::Add, lhs, rhs),
-		),
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Mul, lhs, rhs, l..r)),
 		l..r
 	),
-	<l:@L> <lhs:L3> "/" <rhs:L2> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Div, lhs, rhs, l..r))),
-	<l:@L> <lhs:L3> "%" <rhs:L2> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Mod, lhs, rhs, l..r))),
+	<l:@L> <lhs:L3> "/" <rhs:L2> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Div, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L3> "%" <rhs:L2> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Mod, lhs, rhs, l..r)),
+		l..r
+	),
 	L2,
 }
 
 L4 = {
-	<l:@L> <lhs:L4> "+" <rhs:L3> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Add, lhs, rhs, l..r))),
-	<l:@L> <lhs:L4> "-" <rhs:L3> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Sub, lhs, rhs, l..r))),
+	<l:@L> <lhs:L4> "+" <rhs:L3> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Add, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L4> "-" <rhs:L3> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Sub, lhs, rhs, l..r)),
+		l..r
+	),
 	L3,
 };
 
 L5 = {
-	<l:@L> <lhs:L5> "==" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Equal, lhs, rhs, l..r))),
-	<l:@L> <lhs:L5> "!=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::NotEqual, lhs, rhs, l..r))),
-	<l:@L> <lhs:L5> "<" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThan, lhs, rhs, l..r))),
-	<l:@L> <lhs:L5> "<=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThanEqual, lhs, rhs, l..r))),
-	<l:@L> <lhs:L5> ">" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThan, lhs, rhs, l..r))),
-	<l:@L> <lhs:L5> ">=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThanEqual, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> "==" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Equal, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L5> "!=" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::NotEqual, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L5> "<" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::LessThan, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L5> "<=" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::LessThanEqual, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L5> ">" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::GreaterThan, lhs, rhs, l..r)),
+		l..r
+	),
+	<l:@L> <lhs:L5> ">=" <rhs:L4> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::GreaterThanEqual, lhs, rhs, l..r)),
+		l..r
+	),
 	L4,
 };
 
 L6 = {
-	<l:@L> <lhs:L6> "&&" <rhs:L5> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::And, lhs, rhs, l..r))),
+	<l:@L> <lhs:L6> "&&" <rhs:L5> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::And, lhs, rhs, l..r)),
+		l..r,
+	),
 	L5,
 };
 
 L7 = {
-	<l:@L> <lhs:L7> "||" <rhs:L6> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Or, lhs, rhs, l..r))),
+	<l:@L> <lhs:L7> "||" <rhs:L6> <r:@R> => Expr::new(
+		ExprKind::BinExpr(BinExpr::new(BinExprKind::Or, lhs, rhs, l..r)),
+		l..r,
+	),
 	L6,
 };
 
