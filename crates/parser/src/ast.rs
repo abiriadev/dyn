@@ -263,6 +263,10 @@ pub enum ExprKind {
 	Continue(Box<Expr>),
 }
 
+impl From<BinExpr> for ExprKind {
+	fn from(value: BinExpr) -> Self { Self::BinExpr(value) }
+}
+
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct Expr {
 	span: Span,
@@ -282,6 +286,15 @@ impl Expr {
 		Self {
 			span: Span::DUMMY_SPAN,
 			kind,
+		}
+	}
+}
+
+impl From<BinExpr> for Expr {
+	fn from(value: BinExpr) -> Self {
+		Self {
+			span: value.span,
+			kind: value.into(),
 		}
 	}
 }
