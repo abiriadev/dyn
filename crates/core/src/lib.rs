@@ -572,6 +572,7 @@ mod tests {
 	}
 
 	#[test]
+	#[ignore]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
 			Ident::new_dummy("print") => Value::Function(

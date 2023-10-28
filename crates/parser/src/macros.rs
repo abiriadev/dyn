@@ -16,6 +16,12 @@ macro_rules! ident {
 			$crate::ast::Ident::new_dummy(stringify!($id)),
 		))
 	};
+
+	($id:ident $start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Ident(
+			$crate::ast::Ident::new(stringify!($id), $start..$end),
+		))
+	};
 }
 
 pub(crate) use ident;
@@ -23,6 +29,10 @@ pub(crate) use ident;
 macro_rules! var {
 	($id:ident) => {
 		$crate::ast::Ident::new_dummy(stringify!($id))
+	};
+
+	($id:ident $start:literal.. $end:literal) => {
+		$crate::ast::Ident::new(stringify!($id), $start..$end)
 	};
 }
 
@@ -118,7 +128,21 @@ macro_rules! call_ident {
 		$crate::ast::Expr::Call(
 			Box::new($crate::ast::Expr::Ident(
 				$crate::ast::Ident::new_dummy(
-					stringify!($func)
+					stringify!($func),
+				),
+			)),
+			$crate::ast::Arguments(vec![
+				$($args),*
+			])
+		)
+	};
+
+	($func:ident $start:literal..$end:literal ( $($args:expr),* $(,)? )) => {
+		$crate::ast::Expr::Call(
+			Box::new($crate::ast::Expr::Ident(
+				$crate::ast::Ident::new(
+					stringify!($func),
+					$start..$end
 				),
 			)),
 			$crate::ast::Arguments(vec![

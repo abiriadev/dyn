@@ -29,10 +29,12 @@ pub struct Ident {
 }
 
 impl Ident {
-	pub fn new<T>(symbol: T) -> Self
-	where T: Into<String> {
+	pub fn new<T, S>(symbol: T, span: S) -> Self
+	where
+		T: Into<String>,
+		S: Into<Span>, {
 		Self {
-			span: Span::DUMMY_SPAN,
+			span: span.into(),
 			symbol: symbol.into(),
 		}
 	}
@@ -45,7 +47,13 @@ impl Ident {
 		}
 	}
 
-	pub fn with_span(self, span: Span) -> Self { Self { span, ..self } }
+	pub fn with_span<S>(self, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			..self
+		}
+	}
 }
 
 #[derive(Debug, Clone, PartialEq)]
