@@ -243,6 +243,7 @@ dependencies = [
  "indoc",
  "maplit",
  "parser",
+ "pretty_assertions",
  "strum",
 ]
 

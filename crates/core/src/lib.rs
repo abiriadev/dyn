@@ -552,6 +552,7 @@ impl Interpreter {
 mod tests {
 	use indoc::indoc;
 	use maplit::hashmap;
+	use pretty_assertions::assert_eq;
 
 	use super::*;
 
