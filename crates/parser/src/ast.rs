@@ -44,6 +44,8 @@ impl Ident {
 			symbol: symbol.into(),
 		}
 	}
+
+	pub fn with_span(self, span: Span) -> Self { Self { span, ..self } }
 }
 
 #[derive(Debug, Clone, PartialEq)]
