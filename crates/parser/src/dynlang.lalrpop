@@ -143,14 +143,14 @@ L7 = {
 };
 
 L8 = {
-	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Declare(i, e), l..r),
-	<l:@L> "let!" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::DeclareMut(i, e), l..r),
-	<l:@L> <i:Ident> "=" <e:L8> <r:@R> => ExprKind::Assign(i, Box::new(e)),
-	<l:@L> <i:Ident> "+=" <e:L8> <r:@R> => ExprKind::AddAssign(i, Box::new(e)),
-	<l:@L> <i:Ident> "-=" <e:L8> <r:@R> => ExprKind::SubAssign(i, Box::new(e)),
-	<l:@L> <i:Ident> "*=" <e:L8> <r:@R> => ExprKind::MulAssign(i, Box::new(e)),
-	<l:@L> <i:Ident> "/=" <e:L8> <r:@R> => ExprKind::DivAssign(i, Box::new(e)),
-	<l:@L> <i:Ident> "%=" <e:L8> <r:@R> => ExprKind::ModAssign(i, Box::new(e)),
+	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Declare(i, Box::new(e)), l..r),
+	<l:@L> "let!" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::DeclareMut(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Assign(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "+=" <e:L8> <r:@R> => Expr::new(ExprKind::AddAssign(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "-=" <e:L8> <r:@R> => Expr::new(ExprKind::SubAssign(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "*=" <e:L8> <r:@R> => Expr::new(ExprKind::MulAssign(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "/=" <e:L8> <r:@R> => Expr::new(ExprKind::DivAssign(i, Box::new(e)), l..r),
+	<l:@L> <i:Ident> "%=" <e:L8> <r:@R> => Expr::new(ExprKind::ModAssign(i, Box::new(e)), l..r),
 	<l:@L> "return" <i:L8> <r:@R> => Expr::new(ExprKind::return_box(i), l..r),
 	<l:@L> "break" <i:L8> <r:@R> => Expr::new(ExprKind::break_box(i), l..r),
 	<l:@L> "continue" <i:L8> <r:@R> => Expr::new(ExprKind::continue_box(i), l..r),
@@ -162,16 +162,16 @@ L8 = {
 		yes: t,
 		no: f
 	}, l..r),
-	<l:@L> "iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" <r:@R> => ExprKind::For {
+	<l:@L> "iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" <r:@R> => Expr::new(ExprKind::For {
 		collection: Box::new(a),
 		item: i,
 		body: b
-	},
+	}, l..r),
 	<l:@L> "|" <parameters:Parameters> "|" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
 		body: Code(vec![e]),
 	}), l..r),
-	<l:@L> "||" "->" <e:L8> <r:@R> => Expr(ExprKind::Function(Function {
+	<l:@L> "||" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body: Code(vec![e]),
 	}), l..r),
