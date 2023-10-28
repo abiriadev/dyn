@@ -185,21 +185,28 @@ pub struct Function {
 	pub body: Code,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum BinExprKind {
+	Add,
+	Sub,
+	Mul,
+	Div,
+	Mod,
+	Equal,
+	NotEqual,
+	LessThan,
+	GreaterThan,
+	LessThanEqual,
+	GreaterThanEqual,
+	And,
+	Or,
+}
+
 #[derive(Debug, Clone, PartialEq, BoxNew)]
-pub enum BinExpr {
-	Add(Box<Expr>, Box<Expr>),
-	Sub(Box<Expr>, Box<Expr>),
-	Mul(Box<Expr>, Box<Expr>),
-	Div(Box<Expr>, Box<Expr>),
-	Mod(Box<Expr>, Box<Expr>),
-	Equal(Box<Expr>, Box<Expr>),
-	NotEqual(Box<Expr>, Box<Expr>),
-	LessThan(Box<Expr>, Box<Expr>),
-	GreaterThan(Box<Expr>, Box<Expr>),
-	LessThanEqual(Box<Expr>, Box<Expr>),
-	GreaterThanEqual(Box<Expr>, Box<Expr>),
-	And(Box<Expr>, Box<Expr>),
-	Or(Box<Expr>, Box<Expr>),
+pub struct BinExpr {
+	op: BinExprKind,
+	lhs: Box<Expr>,
+	rhs: Box<Expr>,
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
