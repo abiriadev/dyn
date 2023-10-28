@@ -59,7 +59,25 @@ pub(crate) use var;
 macro_rules! str {
 	($str:expr) => {
 		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::String($crate::ast::StringT($str.to_owned())),
+			$crate::ast::Literal::String($crate::ast::StringT::new_dummy($str)),
+		))
+	};
+
+	($str:literal $start:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::String($crate::ast::StringT::new(
+				$str,
+				$start..$start + $str.len(),
+			)),
+		))
+	};
+
+	($str:literal $start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::String($crate::ast::StringT::new(
+				$str,
+				$start..$end,
+			)),
 		))
 	};
 }

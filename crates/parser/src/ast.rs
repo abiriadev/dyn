@@ -77,7 +77,32 @@ impl Integer {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct StringT(pub String);
+pub struct StringT {
+	span: Span,
+	pub value: String,
+}
+
+impl StringT {
+	pub fn new<T, S>(value: T, span: S) -> Self
+	where
+		T: Into<String>,
+		S: Into<Span>, {
+		Self {
+			span: span.into(),
+			value: value.into(),
+		}
+	}
+
+	pub fn new_dummy<T>(value: T) -> Self
+	where T: Into<String> {
+		Self {
+			span: Span::DUMMY_SPAN,
+			value: value.into(),
+		}
+	}
+
+	pub fn into_string(self) -> String { self.value }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Literal {

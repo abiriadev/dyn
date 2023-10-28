@@ -78,7 +78,7 @@ impl Value {
 			Literal::Nil(Nil) => Self::Nil,
 			Literal::Boolean(Boolean { value, .. }) => Self::Boolean(value),
 			Literal::Integer(Integer { value, .. }) => Self::Integer(value),
-			Literal::String(StringT(v)) => Self::String(v),
+			Literal::String(StringT { value, .. }) => Self::String(value),
 		}
 	}
 }
@@ -243,7 +243,7 @@ impl Interpreter {
 			Tree::Nil(_) => Ok(Value::Nil),
 			Tree::Boolean(i) => Ok(Value::Boolean(i.value())),
 			Tree::Integer(i) => Ok(Value::Integer(i.value)),
-			Tree::StringT(i) => Ok(Value::String(i.0)),
+			Tree::StringT(i) => Ok(Value::String(i.value)),
 			Tree::Literal(i) => match i {
 				Literal::Nil(i) => self.eval(Tree::Nil(i)),
 				Literal::Boolean(i) => self.eval(Tree::Boolean(i)),

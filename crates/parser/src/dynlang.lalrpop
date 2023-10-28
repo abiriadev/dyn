@@ -29,7 +29,7 @@ Boolean: Boolean = {
 Integer: Integer = <l:@L> <v:"int"> <r:@R> => Integer::new(v, l..r);
 
 // string
-StringT: StringT = "string" => StringT(<>);
+StringT: StringT = <l:@L> <v:"string"> <r:@R> => StringT::new(v, l..r);
 
 // literal
 Literal: Literal = {
