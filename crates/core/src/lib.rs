@@ -573,7 +573,7 @@ mod tests {
 	#[test]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
-			Ident("print".to_owned()) => Value::Function(
+			Ident::new_dummy("print") => Value::Function(
 				FunctionValue::Builtin(Print::new())
 			)
 		})

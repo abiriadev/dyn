@@ -13,7 +13,7 @@ pub(crate) use n;
 macro_rules! ident {
 	($id:ident) => {
 		Box::new($crate::ast::Expr::Ident(
-			$crate::ast::Ident(stringify!($id).to_owned()),
+			$crate::ast::Ident::new_dummy(stringify!($id)),
 		))
 	};
 }
@@ -22,7 +22,7 @@ pub(crate) use ident;
 
 macro_rules! var {
 	($id:ident) => {
-		$crate::ast::Ident(stringify!($id).to_owned())
+		$crate::ast::Ident::new_dummy(stringify!($id))
 	};
 }
 
@@ -117,8 +117,8 @@ macro_rules! call_ident {
 	($func:ident ( $($args:expr),* $(,)? )) => {
 		$crate::ast::Expr::Call(
 			Box::new($crate::ast::Expr::Ident(
-				$crate::ast::Ident(
-					stringify!($func).to_owned()
+				$crate::ast::Ident::new_dummy(
+					stringify!($func)
 				),
 			)),
 			$crate::ast::Arguments(vec![
