@@ -1,9 +1,27 @@
 #![allow(unused)]
 
 macro_rules! n {
-	($n:expr) => {
+	($n:literal) => {
 		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Integer($crate::ast::Integer($n)),
+			$crate::ast::Literal::Integer($crate::ast::Integer::new_dummy($n)),
+		))
+	};
+
+	($n:literal $start:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Integer($crate::ast::Integer::new(
+				$n,
+				$start..$start + ($start.to_string()).len(),
+			)),
+		))
+	};
+
+	($n:literal $start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Integer($crate::ast::Integer::new(
+				$n,
+				$start..$end,
+			)),
 		))
 	};
 }

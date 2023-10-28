@@ -26,7 +26,7 @@ Boolean: Boolean = {
 };
 
 // int
-Integer: Integer = "int" => Integer(<>);
+Integer: Integer = <l:@L> <v:"int"> <r:@R> => Integer::new(v, l..r);
 
 // string
 StringT: StringT = "string" => StringT(<>);

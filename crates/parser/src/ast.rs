@@ -54,7 +54,27 @@ impl Boolean {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Integer(pub i32);
+pub struct Integer {
+	span: Span,
+	pub value: i32,
+}
+
+impl Integer {
+	pub fn new<S>(value: i32, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			value,
+			span: span.into(),
+		}
+	}
+
+	pub fn new_dummy(value: i32) -> Self {
+		Self {
+			value,
+			span: Span::DUMMY_SPAN,
+		}
+	}
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StringT(pub String);
