@@ -265,9 +265,25 @@ pub enum ExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct Expr {
-	// TODO: hide this field
-	pub span: Span,
+	span: Span,
 	pub kind: ExprKind,
+}
+
+impl Expr {
+	pub fn new<S>(kind: ExprKind, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			kind,
+		}
+	}
+
+	pub fn new_dummy(kind: ExprKind) -> Self {
+		Self {
+			span: Span::DUMMY_SPAN,
+			kind,
+		}
+	}
 }
 
 #[derive(Debug, Clone, PartialEq)]
