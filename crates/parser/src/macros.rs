@@ -2,26 +2,32 @@
 
 macro_rules! n {
 	($n:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Integer($crate::ast::Integer::new_dummy($n)),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Integer(
+				$crate::ast::Integer::new_dummy($n),
+			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($n:literal $start:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Integer($crate::ast::Integer::new(
-				$n,
-				$start..$start + $n.to_string().len(),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Integer(
+				$crate::ast::Integer::new(
+					$n,
+					$start..$start + $n.to_string().len(),
+				),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($n:literal $start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Integer($crate::ast::Integer::new(
-				$n,
-				$start..$end,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Integer(
+				$crate::ast::Integer::new($n, $start..$end),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -30,14 +36,21 @@ pub(crate) use n;
 
 macro_rules! ident {
 	($id:ident) => {
-		Box::new($crate::ast::Expr::Ident(
-			$crate::ast::Ident::new_dummy(stringify!($id)),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Ident($crate::ast::Ident::new_dummy(
+				stringify!($id),
+			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($id:ident $start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Ident(
-			$crate::ast::Ident::new(stringify!($id), $start..$end),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Ident($crate::ast::Ident::new(
+				stringify!($id),
+				$start..$end,
+			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -64,20 +77,26 @@ macro_rules! str {
 	};
 
 	($str:literal $start:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::String($crate::ast::StringT::new(
-				$str,
-				$start..$start + $str.len() + 2,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::String(
+				$crate::ast::StringT::new(
+					$str,
+					$start..$start + $str.len() + 2,
+				),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($str:literal $start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::String($crate::ast::StringT::new(
-				$str,
-				$start..$end,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::String(
+				$crate::ast::Literal::String($crate::ast::StringT::new(
+					$str,
+					$start..$end,
+				)),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -85,57 +104,67 @@ pub(crate) use str;
 
 macro_rules! arr {
 	[$($ele:expr),* $(,)?] => {
-		Box::new(
-			$crate::ast::Expr::Array(
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Array(
 				$crate::ast::Array::new_dummy(
 					vec![$($ele),*]
 				)
-			)
-		)
+			),
+			span::Span::DUMMY_SPAN,
+		))
 	};
 
 	[$($ele:expr),* $(,)? ; $start:literal] => {
-		Box::new(
-			$crate::ast::Expr::Array(
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Array(
 				$crate::ast::Array::new(
 					vec![$($ele),*],
 					$start..$start + 2
 				)
-			)
-		)
+			),
+			span::Span::DUMMY_SPAN,
+		))
 	};
 
 	[$($ele:expr),* $(,)? ; $start:literal .. $end:literal] => {
-		Box::new(
-			$crate::ast::Expr::Array(
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Array(
 				$crate::ast::Array::new(
 					vec![$($ele),*],
 					$start..$end
 				)
-			)
-		)
+			),
+			span::Span::DUMMY_SPAN,
+		))
 	};
 }
 pub(crate) use arr;
 
 macro_rules! nil {
 	() => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Nil($crate::ast::Nil::new_dummy()),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Nil(
+				$crate::ast::Nil::new_dummy(),
+			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Nil($crate::ast::Nil::new(
-				$start..$start + 3,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Nil(
+				$crate::ast::Nil::new($start..$start + 3),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Nil($crate::ast::Nil(start..end)),
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Nil(
+				$crate::ast::Nil(start..end),
+			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -144,28 +173,29 @@ pub(crate) use nil;
 
 macro_rules! tru {
 	() => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new_dummy(
-				true,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new_dummy(true),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
-				true,
-				$start..$start + 4,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new(true, $start..$start + 4),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
-				true,
-				$start..$end,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new(true, $start..$end),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -174,28 +204,29 @@ pub(crate) use tru;
 
 macro_rules! fal {
 	() => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new_dummy(
-				false,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new_dummy(false),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
-				false,
-				$start..$start + 5,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new(false, $start..$start + 5),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 
 	($start:literal.. $end:literal) => {
-		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
-				false,
-				$start..$end,
+		Box::new($crate::ast::Expr::new(
+			$crate::ast::ExprKind::Literal($crate::ast::Literal::Boolean(
+				$crate::ast::Boolean::new(false, $start..$end),
 			)),
+			span::Span::DUMMY_SPAN,
 		))
 	};
 }
@@ -223,11 +254,14 @@ pub(crate) use save_token;
 macro_rules! call {
 	($func:expr ; ( $($args:expr),* $(,)? )) => {
 		Box::new(
-			$crate::ast::Expr::Call(
-				$func,
-				$crate::ast::Arguments(vec![
-					$($args),*
-				])
+			$crate::ast::Expr::new(
+				$crate::ast::ExprKind::Call(
+					$func,
+					$crate::ast::Arguments(vec![
+						$($args),*
+					])
+				),
+				span::Span::DUMMY_SPAN
 			)
 		)
 	};
@@ -250,16 +284,20 @@ macro_rules! call_ident {
 	};
 
 	($func:ident $start:literal..$end:literal ( $($args:expr),* $(,)? )) => {
-		$crate::ast::Expr::Call(
-			Box::new($crate::ast::Expr::Ident(
-				$crate::ast::Ident::new(
-					stringify!($func),
-					$start..$end
-				),
-			)),
-			$crate::ast::Arguments(vec![
-				$($args),*
-			])
+		$crate::ast::Expr::new(
+			$crate::ast::ExprKind::Call(
+				Box::new($crate::ast::Expr::new(
+					$crate::ast::ExprKind::Ident($crate::ast::Ident::new(
+						stringify!($id),
+						$start..$end,
+					)),
+					span::Span::DUMMY_SPAN,
+				)),
+				$crate::ast::Arguments(vec![
+					$($args),*
+				])
+			),
+			span::Span::DUMMY_SPAN
 		)
 	};
 }
