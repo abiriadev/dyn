@@ -265,7 +265,8 @@ pub enum ExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct Expr {
-	span: Span,
+	// TODO: hide this field
+	pub span: Span,
 	pub kind: ExprKind,
 }
 
