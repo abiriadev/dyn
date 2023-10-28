@@ -54,6 +54,10 @@ impl Ident {
 			..self
 		}
 	}
+
+	pub fn symbol(&self) -> &str { &self.symbol }
+
+	pub fn into_symbol(self) -> String { self.symbol }
 }
 
 #[derive(Debug, Clone, PartialEq)]

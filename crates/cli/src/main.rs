@@ -2,7 +2,8 @@ use std::{collections::HashMap, fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
-	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
+	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, ResolvedIdent,
+	Value,
 };
 use maplit::hashmap;
 use parser::ast::Ident;
@@ -33,7 +34,7 @@ fn main() -> anyhow::Result<()> {
 	let source = read_to_string(args.source_path)?;
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
-		Ident::new_dummy("print") => Value::Function(
+		ResolvedIdent::new("print") => Value::Function(
 			FunctionValue::Builtin(Printer::new())
 		),
 	})

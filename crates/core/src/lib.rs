@@ -101,8 +101,22 @@ struct SymbolInfo {
 	value: Value,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ResolvedIdent(String);
+
+impl ResolvedIdent {
+	pub fn new<T>(symbol: T) -> Self
+	where T: Into<String> {
+		Self(symbol.into())
+	}
+}
+
+impl From<Ident> for ResolvedIdent {
+	fn from(value: Ident) -> Self { Self(value.into_symbol()) }
+}
+
 pub struct Environment {
-	store: HashMap<Ident, SymbolInfo>,
+	store: HashMap<ResolvedIdent, SymbolInfo>,
 }
 
 impl Environment {
@@ -114,8 +128,8 @@ impl Environment {
 
 	fn entry(
 		&mut self,
-		ident: Ident,
-	) -> Result<OccupiedEntry<'_, Ident, SymbolInfo>, RuntimeError> {
+		ident: ResolvedIdent,
+	) -> Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
 		match self.store.entry(ident) {
 			Entry::Occupied(o) => Ok(o),
 			Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
@@ -126,8 +140,8 @@ impl Environment {
 
 	fn entry_vacant(
 		&mut self,
-		ident: Ident,
-	) -> Result<VacantEntry<'_, Ident, SymbolInfo>, RuntimeError> {
+		ident: ResolvedIdent,
+	) -> Result<VacantEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
 		match self.store.entry(ident) {
 			Entry::Occupied(_) => Err(RuntimeError::AlreadyDeclared),
 			Entry::Vacant(v) => Ok(v),
@@ -136,7 +150,7 @@ impl Environment {
 
 	pub fn declare(
 		&mut self,
-		ident: Ident,
+		ident: ResolvedIdent,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
@@ -147,7 +161,7 @@ impl Environment {
 
 	pub fn assign(
 		&mut self,
-		ident: Ident,
+		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
 		let mut e = self.entry(ident)?;
@@ -161,11 +175,14 @@ impl Environment {
 		Ok(())
 	}
 
-	pub fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
+	pub fn read_value(
+		&mut self,
+		ident: ResolvedIdent,
+	) -> Result<Value, RuntimeError> {
 		Ok(self.entry(ident)?.get().value.clone())
 	}
 
-	pub fn free(&mut self, ident: Ident) -> Result<(), RuntimeError> {
+	pub fn free(&mut self, ident: ResolvedIdent) -> Result<(), RuntimeError> {
 		self.entry(ident)?.remove();
 		Ok(())
 	}
@@ -197,7 +214,7 @@ impl Interpreter {
 	}
 
 	pub fn init_with_builtins(
-		builtin: HashMap<Ident, Value>,
+		builtin: HashMap<ResolvedIdent, Value>,
 	) -> Result<Self, RuntimeError> {
 		let mut mem = Environment::new();
 
@@ -233,7 +250,7 @@ impl Interpreter {
 				Literal::Integer(i) => self.eval(Tree::Integer(i)),
 				Literal::String(i) => self.eval(Tree::StringT(i)),
 			},
-			Tree::Ident(ident) => Ok(self.mem.read_value(ident)?),
+			Tree::Ident(ident) => Ok(self.mem.read_value(ident.into())?),
 			Tree::Array(i) => Ok(Value::Array(
 				i.0 .0
 					.into_iter()
@@ -408,12 +425,14 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::AddAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
+					let Value::Integer(i) = self
+						.mem
+						.read_value(ident.clone().into())?
 					else {
 						panic!()
 					};
@@ -421,12 +440,14 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i + j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::SubAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
+					let Value::Integer(i) = self
+						.mem
+						.read_value(ident.clone().into())?
 					else {
 						panic!()
 					};
@@ -434,12 +455,14 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i - j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::MulAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
+					let Value::Integer(i) = self
+						.mem
+						.read_value(ident.clone().into())?
 					else {
 						panic!()
 					};
@@ -447,12 +470,14 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i * j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::DivAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
+					let Value::Integer(i) = self
+						.mem
+						.read_value(ident.clone().into())?
 					else {
 						panic!()
 					};
@@ -460,12 +485,14 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i / j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::ModAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
+					let Value::Integer(i) = self
+						.mem
+						.read_value(ident.clone().into())?
 					else {
 						panic!()
 					};
@@ -473,19 +500,20 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i % j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem
+						.assign(ident.into(), v.clone())?;
 					Ok(v)
 				},
 				Expr::Declare(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident, value.clone(), false)?;
+						.declare(ident.into(), value.clone(), false)?;
 					Ok(value)
 				},
 				Expr::DeclareMut(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident, value.clone(), true)?;
+						.declare(ident.into(), value.clone(), true)?;
 					Ok(value)
 				},
 				Expr::If { condition, yes } => {
@@ -523,12 +551,13 @@ impl Interpreter {
 						panic!()
 					};
 					self.mem
-						.declare(item.clone(), Value::Nil, true)?;
+						.declare(item.clone().into(), Value::Nil, true)?;
 					for i in collection {
-						self.mem.assign(item.clone(), i)?;
+						self.mem
+							.assign(item.clone().into(), i)?;
 						self.eval(Tree::Code(body.clone()))?;
 					}
-					self.mem.free(item)?;
+					self.mem.free(item.into())?;
 					Ok(Value::Nil)
 				},
 				Expr::Panic(_) => todo!(),
@@ -575,7 +604,7 @@ mod tests {
 	#[ignore]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
-			Ident::new_dummy("print") => Value::Function(
+			ResolvedIdent::new("print") => Value::Function(
 				FunctionValue::Builtin(Print::new())
 			)
 		})
