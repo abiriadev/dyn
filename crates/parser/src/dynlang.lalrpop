@@ -44,29 +44,29 @@ Ident: Ident = <l:@L> <i:"ident"> <r:@R> => Ident::new_box(Span::new(l, r), i);
 
 // atom
 L0: Expr = {
-	Literal => Expr { kind: ExprKind::Literal(<>), span: l..r, },
-	Ident => Expr { kind: ExprKind::Ident(<>), span: l..r },
+	<l:@L> <i:Literal> <r:@R> => Expr { kind: ExprKind::Literal(i), span: l..r, },
+	<l:@L> <i:Ident> <r:@R> => Expr { kind: ExprKind::Ident(i), span: l..r },
 	"(" <Expr> ")",
 	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr { kind: ExprKind::Array(Array::new(e, l..r)), span: l..r },
-	"|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" <r:@R> => Expr { kind: ExprKind::Function(Function {
 		parameters,
 		body,
 	}), span: l..r },
-	"||" "->" "{" <Code> "}" => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "||" "->" "{" <i:Code> "}" <r:@R> => Expr { kind: ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
-		body: <>,
+		body: i,
 	}), span: l..r },
 };
 
 L1 = {
-	<L1> "[" <Expr> "]" => Expr { kind: ExprKind::index_box(<>), span: l..r },
-	<L1> "(" <Arguments> ")" => Expr { kind: ExprKind::call_box(<>), span: l..r },
+	<l:@L> <i:L1> "[" <j:Expr> "]" <r:@R> => Expr { kind: ExprKind::index_box(i, j), span: l..r },
+	<l:@L> <i:L1> "(" <j:Arguments> ")" <r:@R> => Expr { kind: ExprKind::call_box(i, j), span: l..r },
 	L0,
 }
 
 L2 = {
-	"-" <L2> => Expr { kind: ExprKind::unary_minus_box(<>), span: l..r },
-	"!" <L2> => Expr { kind: ExprKind::unary_not_box(<>), span: l..r },
+	<l:@L> "-" <i:L2> <r:@R> => Expr { kind: ExprKind::unary_minus_box(i), span: l..r },
+	<l:@L> "!" <i:L2> <r:@R> => Expr { kind: ExprKind::unary_not_box(i), span: l..r },
 	L1,
 }
 
@@ -104,35 +104,35 @@ L7 = {
 };
 
 L8 = {
-	"let" <i:Ident> "=" <e:L8> => Expr { kind: ExprKind::Declare(i, Box::new(e)), span: l..r },
-	"let!" <i:Ident> "=" <e:L8> => Expr { kind: ExprKind::DeclareMut(i, Box::new(e)), span: l..r },
-	<i:Ident> "=" <e:L8> => ExprKind::Assign(i, Box::new(e)),
-	<i:Ident> "+=" <e:L8> => ExprKind::AddAssign(i, Box::new(e)),
-	<i:Ident> "-=" <e:L8> => ExprKind::SubAssign(i, Box::new(e)),
-	<i:Ident> "*=" <e:L8> => ExprKind::MulAssign(i, Box::new(e)),
-	<i:Ident> "/=" <e:L8> => ExprKind::DivAssign(i, Box::new(e)),
-	<i:Ident> "%=" <e:L8> => ExprKind::ModAssign(i, Box::new(e)),
-	"return" <L8> => Expr { kind: ExprKind::return_box(<>), span: l..r },
-	"break" <L8> => Expr { kind: ExprKind::break_box(<>), span: l..r },
-	"continue" <L8> => Expr { kind: ExprKind::continue_box(<>), span: l..r },
-	"panic" <L8> => Expr { kind: ExprKind::panic_box(<>), span: l..r },
-	"assert" <L8> => Expr { kind: ExprKind::assert_box(<>), span: l..r },
-	"if" <c:L8> "{" <b:Code> "}" => Expr { kind: ExprKind::If { condition: Box::new(c), yes: b }, span: l..r },
-	"if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" => Expr { kind: ExprKind::IfElse {
+	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr { kind: ExprKind::Declare(i, Box::new(e)), span: l..r },
+	<l:@L> 	"let!" <i:Ident> "=" <e:L8> <r:@R> => Expr { kind: ExprKind::DeclareMut(i, Box::new(e)), span: l..r },
+	<l:@L> 	<i:Ident> "=" <e:L8> <r:@R> => ExprKind::Assign(i, Box::new(e)),
+	<l:@L> 	<i:Ident> "+=" <e:L8> <r:@R> => ExprKind::AddAssign(i, Box::new(e)),
+	<l:@L> 	<i:Ident> "-=" <e:L8> <r:@R> => ExprKind::SubAssign(i, Box::new(e)),
+	<l:@L> 	<i:Ident> "*=" <e:L8> <r:@R> => ExprKind::MulAssign(i, Box::new(e)),
+	<l:@L> 	<i:Ident> "/=" <e:L8> <r:@R> => ExprKind::DivAssign(i, Box::new(e)),
+	<l:@L> 	<i:Ident> "%=" <e:L8> <r:@R> => ExprKind::ModAssign(i, Box::new(e)),
+	<l:@L> 	"return" <i:L8> <r:@R> => Expr { kind: ExprKind::return_box(i), span: l..r },
+	<l:@L> 	"break" <i:L8> <r:@R> => Expr { kind: ExprKind::break_box(i), span: l..r },
+	<l:@L> 	"continue" <i:L8> <r:@R> => Expr { kind: ExprKind::continue_box(i), span: l..r },
+	<l:@L> 	"panic" <i:L8> <r:@R> => Expr { kind: ExprKind::panic_box(i), span: l..r },
+	<l:@L> 	"assert" <i:L8> <r:@R> => Expr { kind: ExprKind::assert_box(i), span: l..r },
+	<l:@L> 	"if" <c:L8> "{" <b:Code> "}" <r:@R> => Expr { kind: ExprKind::If { condition: Box::new(c), yes: b }, span: l..r },
+	<l:@L> "if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" <r:@R> => Expr { kind: ExprKind::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
 	}, span: l..r },
-	"iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" => ExprKind::For {
+	<l:@L> "iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" <r:@R> => ExprKind::For {
 		collection: Box::new(a),
 		item: i,
 		body: b
 	},
-	"|" <parameters:Parameters> "|" "->" <e:L8> => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "|" <parameters:Parameters> "|" "->" <e:L8> <r:@R> => Expr { kind: ExprKind::Function(Function {
 		parameters,
 		body: Code(vec![e]),
 	}), span: l..r },
-	"||" "->" <e:L8> => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "||" "->" <e:L8> <r:@R> => Expr { kind: ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body: Code(vec![e]),
 	}), span: l..r },
