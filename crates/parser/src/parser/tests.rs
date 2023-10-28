@@ -91,7 +91,8 @@ fn parse_array() {
 		Ok(*arr![
 			*n!(1 1),
 			*ident!(a 4..5),
-			*str!("str" 7)
+			*str!("str" 7);
+			0..13
 		])
 	)
 }
@@ -100,21 +101,24 @@ fn parse_array() {
 fn parse_empty_array() {
 	let res = parse(r#"[]"#);
 
-	assert_eq!(res, Ok(*arr![]))
+	assert_eq!(res, Ok(*arr![;0]))
 }
 
 #[test]
 fn parse_arrary_with_one_element() {
 	let res = parse(r#"[1]"#);
 
-	assert_eq!(res, Ok(*arr![*n!(1 1)]))
+	assert_eq!(res, Ok(*arr![*n!(1 1); 0..3]))
 }
 
 #[test]
 fn parse_nested_array() {
 	let res = parse(r#"[[[]]]"#);
 
-	assert_eq!(res, Ok(*arr![*arr![*arr![]]]))
+	assert_eq!(
+		res,
+		Ok(*arr![*arr![*arr![;2]; 1..5]; 0..6])
+	)
 }
 
 #[test]
@@ -123,10 +127,19 @@ fn parse_nested_array2() {
 
 	assert_eq!(
 		res,
-		Ok(*arr![*arr![*arr![], *arr![]], *arr![
-			*arr![],
-			*arr![]
-		]])
+		Ok(*arr![
+			*arr![
+				*arr![;2],
+				*arr![;6];
+				1..9
+			],
+			*arr![
+				*arr![;12],
+				*arr![; 16];
+				11..19
+			];
+			0..20
+		])
 	)
 }
 
@@ -137,8 +150,8 @@ fn parse_array_with_indexing() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::Index(
-			arr![*arr![]],
-			arr![]
+			arr![*arr![;1]; 0..4],
+			arr![;5]
 		)))
 	)
 }
@@ -468,7 +481,7 @@ fn parse_mutable_declare() {
 		res,
 		Ok(Expr::declare_mut_box(
 			var!(v 5..6),
-			*arr![]
+			*arr![;9]
 		))
 	)
 }
@@ -815,7 +828,7 @@ fn parse_for_loop_over_expression() {
 	assert_eq!(
 		res,
 		Ok(Expr::For {
-			collection: arr![*str!("some string" 8), *n!(12345 23)],
+			collection: arr![*str!("some string" 8), *n!(12345 23); 5..30],
 			item: var!(item 34..38),
 			body: code! {
 				call_ident!(print 42..47 (*ident!(item 48..52)))
@@ -848,7 +861,7 @@ fn parse_for_loop_over_if_else_expression() {
 					*str!("this" 18)
 				},
 				no: code! {
-					*arr![*str!("or" 36), *str!("this" 42)]
+					*arr![*str!("or" 36), *str!("this" 42); 35..49]
 				}
 			}),
 			item: var!(item 55..59),

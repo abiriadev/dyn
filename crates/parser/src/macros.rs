@@ -87,8 +87,30 @@ macro_rules! arr {
 	[$($ele:expr),* $(,)?] => {
 		Box::new(
 			$crate::ast::Expr::Array(
-				$crate::ast::Array(
-					$crate::ast::Code(vec![$($ele),*])
+				$crate::ast::Array::new_dummy(
+					vec![$($ele),*]
+				)
+			)
+		)
+	};
+
+	[$($ele:expr),* $(,)? ; $start:literal] => {
+		Box::new(
+			$crate::ast::Expr::Array(
+				$crate::ast::Array::new(
+					vec![$($ele),*],
+					$start..$start + 2
+				)
+			)
+		)
+	};
+
+	[$($ele:expr),* $(,)? ; $start:literal .. $end:literal] => {
+		Box::new(
+			$crate::ast::Expr::Array(
+				$crate::ast::Array::new(
+					vec![$($ele),*],
+					$start..$end
 				)
 			)
 		)
