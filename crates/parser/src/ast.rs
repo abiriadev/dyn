@@ -151,7 +151,27 @@ impl Ident {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Array(pub Code);
+pub struct Array {
+	span: Span,
+	pub elements: Vec<Expr>,
+}
+
+impl Array {
+	pub fn new<S>(elements: Vec<Expr>, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			elements,
+		}
+	}
+
+	pub fn new_dummy(elements: Vec<Expr>) -> Self {
+		Self {
+			span: Span::DUMMY_SPAN,
+			elements,
+		}
+	}
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Parameters(pub Vec<Ident>);

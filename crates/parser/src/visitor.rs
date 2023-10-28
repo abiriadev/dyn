@@ -29,7 +29,7 @@ pub trait Visit {
 	fn visit_ident(&mut self, i: &Ident) {}
 
 	fn visit_array(&mut self, i: &Array) {
-		for i in &i.0 .0 {
+		for i in &i.elements {
 			self.visit_expr(i);
 		}
 	}
@@ -212,7 +212,7 @@ pub trait VisitMut {
 	fn visit_mut_ident(&mut self, i: &mut Ident) {}
 
 	fn visit_mut_array(&mut self, i: &mut Array) {
-		for i in &mut i.0 .0 {
+		for i in &mut i.elements {
 			self.visit_mut_expr(i);
 		}
 	}

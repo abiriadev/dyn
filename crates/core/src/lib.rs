@@ -252,7 +252,7 @@ impl Interpreter {
 			},
 			Tree::Ident(ident) => Ok(self.mem.read_value(ident.into())?),
 			Tree::Array(i) => Ok(Value::Array(
-				i.0 .0
+				i.elements
 					.into_iter()
 					.map(|e| self.eval(Tree::Expr(e)))
 					.collect::<Result<Vec<_>, RuntimeError>>()?,

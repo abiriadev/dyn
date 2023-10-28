@@ -47,7 +47,7 @@ L0: Expr = {
 	Literal => Expr::Literal(<>),
 	Ident => Expr::Ident(<>),
 	"(" <Expr> ")",
-	"[" <Elements> "]" => Expr::Array(Array(Code(<>))),
+	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr::Array(Array::new(e, l..r)),
 	"|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" => Expr::Function(Function {
 		parameters,
 		body,
