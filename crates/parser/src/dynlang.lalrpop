@@ -44,98 +44,103 @@ Ident: Ident = <l:@L> <i:"ident"> <r:@R> => Ident::new_box(Span::new(l, r), i);
 
 // atom
 L0: Expr = {
-	<l:@L> <i:Literal> <r:@R> => Expr { kind: ExprKind::Literal(i), span: l..r, },
-	<l:@L> <i:Ident> <r:@R> => Expr { kind: ExprKind::Ident(i), span: l..r },
+	<l:@L> <i:Literal> <r:@R> => Expr::new(ExprKind::Literal(i), l..r),
+	<l:@L> <i:Ident> <r:@R> => Expr::new(ExprKind::Ident(i), l..r),
 	"(" <Expr> ")",
-	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr { kind: ExprKind::Array(Array::new(e, l..r)), span: l..r },
-	<l:@L> "|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" <r:@R> => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr::new(ExprKind::Array(Array::new(e, l..r)), l..r),
+	<l:@L> "|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
 		body,
-	}), span: l..r },
-	<l:@L> "||" "->" "{" <i:Code> "}" <r:@R> => Expr { kind: ExprKind::Function(Function {
+	}), l..r),
+	<l:@L> "||" "->" "{" <i:Code> "}" <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body: i,
-	}), span: l..r },
+	}), l..r),
 };
 
 L1 = {
-	<l:@L> <i:L1> "[" <j:Expr> "]" <r:@R> => Expr { kind: ExprKind::index_box(i, j), span: l..r },
-	<l:@L> <i:L1> "(" <j:Arguments> ")" <r:@R> => Expr { kind: ExprKind::call_box(i, j), span: l..r },
+	<l:@L> <i:L1> "[" <j:Expr> "]" <r:@R> => Expr::new(ExprKind::index_box(i, j), l..r),
+	<l:@L> <i:L1> "(" <j:Arguments> ")" <r:@R> => Expr::new(ExprKind::call_box(i, j), l..r),
 	L0,
 }
 
 L2 = {
-	<l:@L> "-" <i:L2> <r:@R> => Expr { kind: ExprKind::unary_minus_box(i), span: l..r },
-	<l:@L> "!" <i:L2> <r:@R> => Expr { kind: ExprKind::unary_not_box(i), span: l..r },
+	<l:@L> "-" <i:L2> <r:@R> => Expr::new(ExprKind::unary_minus_box(i), l..r),
+	<l:@L> "!" <i:L2> <r:@R> => Expr::new(ExprKind::unary_not_box(i), l..r),
 	L1,
 }
 
 L3 = {
-	<l:@L> <lhs:L3> "*" <rhs:L2> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Add, lhs, rhs, l..r)),
-	<l:@L> <lhs:L3> "/" <rhs:L2> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Div, lhs, rhs, l..r)),
-	<l:@L> <lhs:L3> "%" <rhs:L2> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Mod, lhs, rhs, l..r)),
+	<l:@L> <lhs:L3> "*" <rhs:L2> <r:@R> => Expr::new(
+		ExprKind::BinExpr(
+			BinExprKind::new(BinExprKind::Add, lhs, rhs),
+		),
+		l..r
+	),
+	<l:@L> <lhs:L3> "/" <rhs:L2> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Div, lhs, rhs, l..r))),
+	<l:@L> <lhs:L3> "%" <rhs:L2> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Mod, lhs, rhs, l..r))),
 	L2,
 }
 
 L4 = {
-	<l:@L> <lhs:L4> "+" <rhs:L3> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Add, lhs, rhs, l..r)),
-	<l:@L> <lhs:L4> "-" <rhs:L3> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Sub, lhs, rhs, l..r)),
+	<l:@L> <lhs:L4> "+" <rhs:L3> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Add, lhs, rhs, l..r))),
+	<l:@L> <lhs:L4> "-" <rhs:L3> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Sub, lhs, rhs, l..r))),
 	L3,
 };
 
 L5 = {
-	<l:@L> <lhs:L5> "==" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Equal, lhs, rhs, l..r)),
-	<l:@L> <lhs:L5> "!=" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::NotEqual, lhs, rhs, l..r)),
-	<l:@L> <lhs:L5> "<" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThan, lhs, rhs, l..r)),
-	<l:@L> <lhs:L5> "<=" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThanEqual, lhs, rhs, l..r)),
-	<l:@L> <lhs:L5> ">" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThan, lhs, rhs, l..r)),
-	<l:@L> <lhs:L5> ">=" <rhs:L4> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThanEqual, lhs, rhs, l..r)),
+	<l:@L> <lhs:L5> "==" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Equal, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> "!=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::NotEqual, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> "<" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThan, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> "<=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::LessThanEqual, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> ">" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThan, lhs, rhs, l..r))),
+	<l:@L> <lhs:L5> ">=" <rhs:L4> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::GreaterThanEqual, lhs, rhs, l..r))),
 	L4,
 };
 
 L6 = {
-	<l:@L> <lhs:L6> "&&" <rhs:L5> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::And, lhs, rhs, l..r)),
+	<l:@L> <lhs:L6> "&&" <rhs:L5> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::And, lhs, rhs, l..r))),
 	L5,
 };
 
 L7 = {
-	<l:@L> <lhs:L7> "||" <rhs:L6> <r:@R> => ExprKind::BinExpr(BinExprKind::new(BinExprKind::Or, lhs, rhs, l..r)),
+	<l:@L> <lhs:L7> "||" <rhs:L6> <r:@R> => Expr::new(ExprKind::BinExpr(BinExprKind::new(BinExprKind::Or, lhs, rhs, l..r))),
 	L6,
 };
 
 L8 = {
-	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr { kind: ExprKind::Declare(i, Box::new(e)), span: l..r },
-	<l:@L> 	"let!" <i:Ident> "=" <e:L8> <r:@R> => Expr { kind: ExprKind::DeclareMut(i, Box::new(e)), span: l..r },
-	<l:@L> 	<i:Ident> "=" <e:L8> <r:@R> => ExprKind::Assign(i, Box::new(e)),
-	<l:@L> 	<i:Ident> "+=" <e:L8> <r:@R> => ExprKind::AddAssign(i, Box::new(e)),
-	<l:@L> 	<i:Ident> "-=" <e:L8> <r:@R> => ExprKind::SubAssign(i, Box::new(e)),
-	<l:@L> 	<i:Ident> "*=" <e:L8> <r:@R> => ExprKind::MulAssign(i, Box::new(e)),
-	<l:@L> 	<i:Ident> "/=" <e:L8> <r:@R> => ExprKind::DivAssign(i, Box::new(e)),
-	<l:@L> 	<i:Ident> "%=" <e:L8> <r:@R> => ExprKind::ModAssign(i, Box::new(e)),
-	<l:@L> 	"return" <i:L8> <r:@R> => Expr { kind: ExprKind::return_box(i), span: l..r },
-	<l:@L> 	"break" <i:L8> <r:@R> => Expr { kind: ExprKind::break_box(i), span: l..r },
-	<l:@L> 	"continue" <i:L8> <r:@R> => Expr { kind: ExprKind::continue_box(i), span: l..r },
-	<l:@L> 	"panic" <i:L8> <r:@R> => Expr { kind: ExprKind::panic_box(i), span: l..r },
-	<l:@L> 	"assert" <i:L8> <r:@R> => Expr { kind: ExprKind::assert_box(i), span: l..r },
-	<l:@L> 	"if" <c:L8> "{" <b:Code> "}" <r:@R> => Expr { kind: ExprKind::If { condition: Box::new(c), yes: b }, span: l..r },
-	<l:@L> "if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" <r:@R> => Expr { kind: ExprKind::IfElse {
+	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Declare(i, e), l..r),
+	<l:@L> "let!" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::DeclareMut(i, e), l..r),
+	<l:@L> <i:Ident> "=" <e:L8> <r:@R> => ExprKind::Assign(i, Box::new(e)),
+	<l:@L> <i:Ident> "+=" <e:L8> <r:@R> => ExprKind::AddAssign(i, Box::new(e)),
+	<l:@L> <i:Ident> "-=" <e:L8> <r:@R> => ExprKind::SubAssign(i, Box::new(e)),
+	<l:@L> <i:Ident> "*=" <e:L8> <r:@R> => ExprKind::MulAssign(i, Box::new(e)),
+	<l:@L> <i:Ident> "/=" <e:L8> <r:@R> => ExprKind::DivAssign(i, Box::new(e)),
+	<l:@L> <i:Ident> "%=" <e:L8> <r:@R> => ExprKind::ModAssign(i, Box::new(e)),
+	<l:@L> "return" <i:L8> <r:@R> => Expr::new(ExprKind::return_box(i), l..r),
+	<l:@L> "break" <i:L8> <r:@R> => Expr::new(ExprKind::break_box(i), l..r),
+	<l:@L> "continue" <i:L8> <r:@R> => Expr::new(ExprKind::continue_box(i), l..r),
+	<l:@L> "panic" <i:L8> <r:@R> => Expr::new(ExprKind::panic_box(i), l..r),
+	<l:@L> "assert" <i:L8> <r:@R> => Expr::new(ExprKind::assert_box(i), l..r),
+	<l:@L> "if" <c:L8> "{" <b:Code> "}" <r:@R> => Expr::new(ExprKind::If { condition: Box::new(c), yes: b }, l..r),
+	<l:@L> "if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" <r:@R> => Expr::new(ExprKind::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
-	}, span: l..r },
+	}, l..r),
 	<l:@L> "iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" <r:@R> => ExprKind::For {
 		collection: Box::new(a),
 		item: i,
 		body: b
 	},
-	<l:@L> "|" <parameters:Parameters> "|" "->" <e:L8> <r:@R> => Expr { kind: ExprKind::Function(Function {
+	<l:@L> "|" <parameters:Parameters> "|" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
 		body: Code(vec![e]),
-	}), span: l..r },
-	<l:@L> "||" "->" <e:L8> <r:@R> => Expr { kind: ExprKind::Function(Function {
+	}), l..r),
+	<l:@L> "||" "->" <e:L8> <r:@R> => Expr(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body: Code(vec![e]),
-	}), span: l..r },
+	}), l..r),
 	L7,
 };
 
