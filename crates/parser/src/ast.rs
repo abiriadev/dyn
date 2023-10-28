@@ -211,7 +211,7 @@ pub enum Expr {
 	Array(Array),
 	Function(Function),
 	Call(Box<Expr>, Arguments),
-	Prop(Box<Expr>, Box<Expr>),
+	Prop(Box<Expr>, Ident),
 	Index(Box<Expr>, Box<Expr>),
 	BinExpr(BinExpr),
 	Assign(Ident, Box<Expr>),

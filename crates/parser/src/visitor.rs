@@ -114,7 +114,7 @@ pub trait Visit {
 			},
 			Expr::Prop(i, j) => {
 				self.visit_expr(i);
-				self.visit_expr(j);
+				self.visit_ident(j);
 			},
 			Expr::Index(i, j) => {
 				self.visit_expr(i);
@@ -297,7 +297,7 @@ pub trait VisitMut {
 			},
 			Expr::Prop(i, j) => {
 				self.visit_mut_expr(i);
-				self.visit_mut_expr(j);
+				self.visit_mut_ident(j);
 			},
 			Expr::Index(i, j) => {
 				self.visit_mut_expr(i);
