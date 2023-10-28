@@ -29,7 +29,29 @@ impl Nil {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Boolean(pub bool);
+pub struct Boolean {
+	span: Span,
+	pub value: bool,
+}
+
+impl Boolean {
+	pub fn new<S>(value: bool, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			value,
+			span: span.into(),
+		}
+	}
+
+	pub fn new_dummy(value: bool) -> Self {
+		Self {
+			value,
+			span: Span::DUMMY_SPAN,
+		}
+	}
+
+	pub fn value(&self) -> bool { self.value }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Integer(pub i32);

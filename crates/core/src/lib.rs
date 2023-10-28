@@ -76,7 +76,7 @@ impl Value {
 	fn from_literal(ex: Literal) -> Self {
 		match ex {
 			Literal::Nil(Nil) => Self::Nil,
-			Literal::Boolean(Boolean(v)) => Self::Boolean(v),
+			Literal::Boolean(Boolean { value, .. }) => Self::Boolean(value),
 			Literal::Integer(Integer(v)) => Self::Integer(v),
 			Literal::String(StringT(v)) => Self::String(v),
 		}
@@ -241,7 +241,7 @@ impl Interpreter {
 	fn eval(&mut self, ast: Tree) -> Result<Value, RuntimeError> {
 		match ast {
 			Tree::Nil(_) => Ok(Value::Nil),
-			Tree::Boolean(i) => Ok(Value::Boolean(i.0)),
+			Tree::Boolean(i) => Ok(Value::Boolean(i.value())),
 			Tree::Integer(i) => Ok(Value::Integer(i.0)),
 			Tree::StringT(i) => Ok(Value::String(i.0)),
 			Tree::Literal(i) => match i {

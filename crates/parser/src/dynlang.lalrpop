@@ -21,8 +21,8 @@ Nil: Nil = <l:@L> "nil" <r:@R> => Nil::new(l..r);
 
 // bool
 Boolean: Boolean = {
-	"true" => Boolean(true),
-	"false" => Boolean(false),
+	<l:@L> "true" <r:@R> => Boolean::new(true, l..r),
+	<l:@L> "false" <r:@R> => Boolean::new(false, l..r),
 };
 
 // int

@@ -87,7 +87,27 @@ pub(crate) use nil;
 macro_rules! tru {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean(true)),
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new_dummy(
+				true,
+			)),
+		))
+	};
+
+	($start:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
+				true,
+				$start..$start + 4,
+			)),
+		))
+	};
+
+	($start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
+				true,
+				$start..$end,
+			)),
 		))
 	};
 }
@@ -97,7 +117,27 @@ pub(crate) use tru;
 macro_rules! fal {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Boolean($crate::ast::Boolean(false)),
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new_dummy(
+				false,
+			)),
+		))
+	};
+
+	($start:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
+				false,
+				$start..$start + 5,
+			)),
+		))
+	};
+
+	($start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Boolean($crate::ast::Boolean::new(
+				false,
+				$start..$end,
+			)),
 		))
 	};
 }

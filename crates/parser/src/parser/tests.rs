@@ -299,7 +299,7 @@ fn unary_minus_followed_by_multiplication() {
 fn parse_unary_not() {
 	let res = parse(r#"!true"#);
 
-	assert_eq!(res, Ok(Expr::UnaryNot(tru!())));
+	assert_eq!(res, Ok(Expr::UnaryNot(tru!(1))));
 }
 
 #[test]
@@ -321,8 +321,8 @@ fn parse_and() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::And(
-			tru!(),
-			fal!()
+			tru!(0),
+			fal!(8)
 		)))
 	);
 }
@@ -334,8 +334,8 @@ fn parse_or() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::Or(
-			tru!(),
-			fal!()
+			tru!(0),
+			fal!(8)
 		)))
 	);
 }
@@ -347,8 +347,8 @@ fn boolean_operator_precedence() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::or_box(
-			*tru!(),
-			Expr::BinExpr(BinExpr::And(fal!(), tru!()))
+			*tru!(0),
+			Expr::BinExpr(BinExpr::And(fal!(8), tru!(17)))
 		)))
 	);
 }
@@ -532,7 +532,7 @@ fn parse_if_expr() {
 	assert_eq!(
 		res,
 		Ok(Expr::If {
-			condition: tru!(),
+			condition: tru!(3),
 			yes: code! {
 				call_ident!(print 10..15 (*str!("it's true!")))
 			}
@@ -566,10 +566,10 @@ fn parse_nested_if() {
 	assert_eq!(
 		res,
 		Ok(Expr::If {
-			condition: tru!(),
+			condition: tru!(3),
 			yes: code! {
 				Expr::If {
-					condition: fal!(),
+					condition: fal!(13),
 					yes: code! {}
 				}
 			}
