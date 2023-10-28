@@ -67,7 +67,7 @@ macro_rules! str {
 		Box::new($crate::ast::Expr::Literal(
 			$crate::ast::Literal::String($crate::ast::StringT::new(
 				$str,
-				$start..$start + $str.len(),
+				$start..$start + $str.len() + 2,
 			)),
 		))
 	};

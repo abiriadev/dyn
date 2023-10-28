@@ -91,7 +91,7 @@ fn parse_array() {
 		Ok(*arr![
 			*n!(1 1),
 			*ident!(a 4..5),
-			*str!("str")
+			*str!("str" 7)
 		])
 	)
 }
@@ -540,7 +540,7 @@ fn parse_if_expr() {
 		Ok(Expr::If {
 			condition: tru!(3),
 			yes: code! {
-				call_ident!(print 10..15 (*str!("it's true!")))
+				call_ident!(print 10..15 (*str!("it's true!" 16)))
 			}
 		})
 	)
@@ -815,7 +815,7 @@ fn parse_for_loop_over_expression() {
 	assert_eq!(
 		res,
 		Ok(Expr::For {
-			collection: arr![*str!("some string"), *n!(12345 23)],
+			collection: arr![*str!("some string" 8), *n!(12345 23)],
 			item: var!(item 34..38),
 			body: code! {
 				call_ident!(print 42..47 (*ident!(item 48..52)))
@@ -845,10 +845,10 @@ fn parse_for_loop_over_if_else_expression() {
 					n!(10 12)
 				))),
 				yes: code! {
-					*str!("this")
+					*str!("this" 18)
 				},
 				no: code! {
-					*arr![*str!("or"), *str!("this")]
+					*arr![*str!("or" 36), *str!("this" 42)]
 				}
 			}),
 			item: var!(item 55..59),
