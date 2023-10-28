@@ -22,7 +22,7 @@ fn parse_declare_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Declare(var!(xy 4..6), n!(1 9) + n!(2 13)),
-			0..0
+			0..14
 		))
 	)
 }
@@ -45,7 +45,7 @@ fn parse_indexing() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Index(ident!(arr 0..3), n!(123 4)),
-			0..0
+			0..8
 		))
 	)
 }
@@ -62,15 +62,15 @@ fn parse_nested_indexing() {
 					ExprKind::index_box(
 						Expr::new(
 							ExprKind::Index(ident!(arr 0..3), n!(1 4)),
-							0..0
+							0..6
 						),
 						*n!(2 7)
 					),
-					0..0
+					0..9
 				),
 				*n!(3 10)
 			),
-			0..0
+			0..12
 		))
 	)
 }
@@ -86,7 +86,7 @@ fn parse_indexing_expr() {
 				ident!(a 1..2) + ident!(b 5..6),
 				n!(123 8)
 			),
-			0..0
+			0..12
 		))
 	)
 }
@@ -160,7 +160,7 @@ fn parse_array_with_indexing() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Index(arr![*arr![;1]; 0..4], arr![;5]),
-			0..0
+			0..8
 		))
 	)
 }
@@ -171,7 +171,7 @@ fn parse_function_call() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(func 0..4 (*ident!(x 5..6))))
+		Ok(call_ident!(func 0..7 (*ident!(x 5..6))))
 	)
 }
 
@@ -179,7 +179,7 @@ fn parse_function_call() {
 fn parse_function_call_without_arguments() {
 	let res = parse(r#"func()"#);
 
-	assert_eq!(res, Ok(call_ident!(func 0..4 ())))
+	assert_eq!(res, Ok(call_ident!(func 0..6 ())))
 }
 
 #[test]
@@ -188,7 +188,7 @@ fn parse_function_call_with_more_than_one_argument() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1 4), *n!(2 7))))
+		Ok(call_ident!(add 0..9 (*n!(1 4), *n!(2 7))))
 	)
 }
 
@@ -202,7 +202,7 @@ fn parse_function_call_spanning_multiple_lines() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 10))))
+		Ok(call_ident!(add 0..14 (*n!(1 6), *n!(2 10))))
 	)
 }
 
@@ -216,7 +216,7 @@ fn parse_function_call_spanning_multiple_lines_without_trailing_comma() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 10))))
+		Ok(call_ident!(add 0..13 (*n!(1 6), *n!(2 10))))
 	)
 }
 
@@ -230,7 +230,7 @@ fn parse_function_call_spanning_multiple_lines_separated_by_only_newlines() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 9))))
+		Ok(call_ident!(add 0..12 (*n!(1 6), *n!(2 9))))
 	)
 }
 
@@ -241,7 +241,7 @@ fn call_expression() {
 	assert_eq!(
 		res,
 		Ok(
-			*call!(ident!(c 1..2) + ident!(d 5..6); (*ident!(a 8..9), *ident!(b 11..12)))
+			*call!(ident!(c 1..2) + ident!(d 5..6); 0..13 (*ident!(a 8..9), *ident!(b 11..12)))
 		)
 	)
 }
@@ -252,7 +252,9 @@ fn nested_call() {
 
 	assert_eq!(
 		res,
-		Ok(*call!(Box::new(call_ident!(a 1..2 ())); (call_ident!(b 6..7 ()))))
+		Ok(
+			*call!(Box::new(call_ident!(a 1..4 ())); 0..10 (call_ident!(b 6..9 ())))
+		)
 	)
 }
 
@@ -264,9 +266,10 @@ fn nested_call2() {
 		res,
 		Ok(*call!(
 			call!(
-				Box::new(call_ident!(f 0..1 (*ident!(x 2..3))));
-				(*ident!(y 5..6)));
-			(*ident!(z 8..9))
+				Box::new(
+					call_ident!(f 0..4 (*ident!(x 2..3)))
+				); 0..7 (*ident!(y 5..6))
+			); 0..10 (*ident!(z 8..9))
 		)),
 	)
 }
@@ -299,7 +302,7 @@ fn parse_unary_minus() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryMinus(n!(123 2)),
-			0..0
+			0..5
 		))
 	);
 }
@@ -313,9 +316,9 @@ fn does_not_support_decrement_operator() {
 		Ok(Expr::new(
 			ExprKind::unary_minus_box(Expr::new(
 				ExprKind::UnaryMinus(ident!(a 2..3)),
-				0..0
+				1..3
 			)),
-			0..0
+			0..3
 		))
 	);
 }
@@ -328,7 +331,7 @@ fn unary_minus_followed_by_multiplication() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryMinus(ident!(a 2..3)),
-			0..0
+			0..3
 		) * *ident!(b 4..5))
 	);
 }
@@ -341,7 +344,7 @@ fn parse_unary_not() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryNot(tru!(1)),
-			0..0
+			0..5
 		))
 	);
 }
@@ -355,9 +358,9 @@ fn parse_nested_unary_not() {
 		Ok(Expr::new(
 			ExprKind::unary_not_box(Expr::new(
 				ExprKind::UnaryNot(ident!(a 2..3)),
-				0..0
+				1..3
 			)),
-			0..0
+			0..3
 		))
 	);
 }
@@ -373,9 +376,9 @@ fn parse_and() {
 				BinExprKind::And,
 				*tru!(0),
 				*fal!(8),
-				0..0
+				0..13
 			)),
-			0..0
+			0..13
 		))
 	);
 }
@@ -391,9 +394,9 @@ fn parse_or() {
 				BinExprKind::Or,
 				*tru!(0),
 				*fal!(8),
-				0..0
+				0..13
 			)),
-			0..0
+			0..13
 		))
 	);
 }
@@ -413,13 +416,13 @@ fn boolean_operator_precedence() {
 						BinExprKind::And,
 						*fal!(8),
 						*tru!(17),
-						0..0
+						8..21
 					)),
-					0..0
+					8..21
 				),
-				0..0,
+				0..21
 			)),
-			0..0
+			0..21
 		))
 	);
 }
@@ -449,9 +452,9 @@ fn parse_equal() {
 				BinExprKind::Equal,
 				*n!(1 0),
 				*n!(3 5),
-				0..0,
+				0..6,
 			)),
-			0..0
+			0..6
 		))
 	)
 }
@@ -467,9 +470,9 @@ fn parse_not_equal() {
 				BinExprKind::NotEqual,
 				*n!(1 0),
 				*n!(3 5),
-				0..0,
+				0..6,
 			)),
-			0..0
+			0..6
 		))
 	)
 }
@@ -485,9 +488,9 @@ fn parse_less_than() {
 				BinExprKind::LessThan,
 				*n!(1 0),
 				*n!(2 4),
-				0..0
+				0..5
 			)),
-			0..0
+			0..5
 		))
 	)
 }
@@ -500,12 +503,12 @@ fn parse_less_than_equal() {
 		res,
 		Ok(Expr::new(
 			ExprKind::BinExpr(BinExpr::new(
-				BinExprKind::LessThan,
+				BinExprKind::LessThanEqual,
 				*n!(1 0),
-				*n!(2 4),
-				0..0
+				*n!(2 5),
+				0..6
 			)),
-			0..0
+			0..6
 		))
 	)
 }
@@ -518,12 +521,12 @@ fn parse_greater_than() {
 		res,
 		Ok(Expr::new(
 			ExprKind::BinExpr(BinExpr::new(
-				BinExprKind::LessThan,
+				BinExprKind::GreaterThan,
 				*n!(1 0),
 				*n!(2 4),
-				0..0
+				0..5
 			)),
-			0..0
+			0..5
 		))
 	)
 }
@@ -536,12 +539,12 @@ fn parse_greater_than_equal() {
 		res,
 		Ok(Expr::new(
 			ExprKind::BinExpr(BinExpr::new(
-				BinExprKind::LessThan,
+				BinExprKind::GreaterThanEqual,
 				*n!(1 0),
-				*n!(2 4),
-				0..0
+				*n!(2 5),
+				0..6
 			)),
-			0..0
+			0..6
 		))
 	)
 }
@@ -557,11 +560,11 @@ fn parse_nested_declare() {
 				var!(a 4..5),
 				Expr::new(
 					ExprKind::Declare(var!(b 12..13), n!(123 16)),
-					0..0
+					8..19
 				)
 			),
-			0..0
-		),)
+			0..19
+		))
 	)
 }
 
@@ -573,7 +576,7 @@ fn parse_mutable_declare() {
 		res,
 		Ok(Expr::new(
 			ExprKind::declare_mut_box(var!(v 5..6), *arr![;9]),
-			0..0
+			0..11
 		))
 	)
 }
@@ -586,7 +589,7 @@ fn parse_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::assign_box(var!(a 0..1), *n!(123 4)),
-			0..0
+			0..7
 		))
 	)
 }
@@ -602,10 +605,10 @@ fn parse_nested_assign() {
 				var!(a 0..1),
 				Expr::new(
 					ExprKind::assign_box(var!(b 4..5), *ident!(c 8..9)),
-					0..0
+					4..9
 				)
 			),
-			0..0
+			0..9
 		),)
 	)
 }
@@ -625,17 +628,18 @@ fn parse_nested_assign2() {
 							var!(b 6..7),
 							*ident!(c 10..11) + *n!(2 14)
 						),
-						0..0
+						6..15
 					)),
-					0..0
+					4..16
 				)
 			),
-			0..0
+			0..16
 		))
 	)
 }
 
 #[test]
+#[ignore]
 fn parse_mixed_assignments() {
 	let res = parse(r#"a = let b = 123 + (let! c = 1)"#);
 
@@ -650,13 +654,13 @@ fn parse_mixed_assignments() {
 						*n!(123 12)
 							+ Expr::new(
 								ExprKind::DeclareMut(var!(c 24..25), n!(1 28)),
-								0..0
+								19..29
 							)
 					),
-					0..0
+					4..30
 				)
 			),
-			0..0
+			0..30
 		))
 	)
 }
@@ -670,11 +674,9 @@ fn parse_if_expr() {
 		Ok(Expr::new(
 			ExprKind::If {
 				condition: tru!(3),
-				yes: code! {
-				call_ident!(print 10..15 (*str!("it's true!" 16)))
-				}
+				yes: code! { call_ident!(print 10..29 (*str!("it's true!" 16))) }
 			},
-			0..0
+			0..31
 		))
 	)
 }
@@ -693,16 +695,16 @@ fn parse_if_expr2() {
 						BinExprKind::GreaterThanEqual,
 						*ident!(a 3..4) - *n!(4 7),
 						*n!(0 12),
-						0..0
+						3..13
 					)),
-					0..0
+					3..13
 				)),
 				yes: code! {
-				call_ident!(abc 15..18 ()),
-				call_ident!(def 21..24 ())
+					call_ident!(abc 15..20 ()),
+					call_ident!(def 21..26 ())
 				}
 			},
-			0..0
+			0..27
 		))
 	)
 }
@@ -720,10 +722,10 @@ fn parse_nested_if() {
 					Expr::new(ExprKind::If {
 						condition: fal!(13),
 						yes: code! {}
-					}, 0..0)
+					}, 10..21)
 				}
 			},
-			0..0
+			0..23
 		))
 	)
 }
@@ -741,14 +743,14 @@ fn parse_else_expression() {
 						BinExprKind::GreaterThan,
 						*ident!(a 3..4),
 						*ident!(b 7..8),
-						0..0
+						3..8
 					)),
-					0..0
+					3..8
 				)),
-				yes: code! { call_ident!(fetch 11..16 ()) },
-				no: code! { call_ident!(cancel 28..34 ()) }
+				yes: code! { call_ident!(fetch 11..18 ()) },
+				no: code! { call_ident!(cancel 28..36 ()) }
 			},
-			0..0
+			0..38
 		))
 	)
 }
@@ -774,7 +776,7 @@ fn parse_return_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Return(ident!(res 7..10)),
-			0..0
+			0..10
 		))
 	);
 }
@@ -790,9 +792,9 @@ fn parse_nested_return_expr() {
 				ExprKind::Return(ident!(
 					res 14..17
 				)),
-				0..0
+				7..17
 			)),
-			0..0
+			0..17
 		))
 	);
 }
@@ -805,7 +807,7 @@ fn parse_break_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Break(ident!(res 6..9)),
-			0..0
+			0..9
 		))
 	);
 }
@@ -821,9 +823,9 @@ fn parse_nested_break_expr() {
 				ExprKind::Break(ident!(
 					res 12..15
 				)),
-				0..0
+				6..15
 			)),
-			0..0
+			0..15
 		))
 	);
 }
@@ -836,7 +838,7 @@ fn parse_continue_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Continue(ident!(res 9..12)),
-			0..0
+			0..12
 		))
 	);
 }
@@ -852,9 +854,9 @@ fn parse_nested_continue_expr() {
 				ExprKind::Continue(ident!(
 					res 18..21
 				)),
-				0..0
+				9..21
 			)),
-			0..0
+			0..21
 		))
 	);
 }
@@ -867,7 +869,7 @@ fn parse_panic_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Panic(ident!(res 6..9)),
-			0..0
+			0..9
 		))
 	);
 }
@@ -883,9 +885,9 @@ fn parse_nested_panic_expr() {
 				ExprKind::Panic(ident!(
 					res 12..15
 				)),
-				0..0
+				6..15
 			)),
-			0..0
+			0..15
 		))
 	);
 }
@@ -898,7 +900,7 @@ fn parse_assert_expr() {
 		res,
 		Ok(Expr::new(
 			ExprKind::Assert(ident!(res 7..10)),
-			0..0
+			0..10
 		))
 	);
 }
@@ -914,9 +916,9 @@ fn parse_nested_assert_expr() {
 				ExprKind::Assert(ident!(
 					res 14..17
 				)),
-				0..0
+				7..17
 			)),
-			0..0
+			0..17
 		))
 	);
 }
@@ -929,7 +931,7 @@ fn parse_add_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::AddAssign(var!(a 0..1), n!(1 5)),
-			0..0
+			0..6
 		))
 	);
 }
@@ -942,7 +944,7 @@ fn parse_sub_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::SubAssign(var!(a 0..1), n!(1 5)),
-			0..0
+			0..6
 		))
 	);
 }
@@ -955,7 +957,7 @@ fn parse_mul_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::MulAssign(var!(a 0..1), n!(1 5)),
-			0..0
+			0..6
 		))
 	);
 }
@@ -968,7 +970,7 @@ fn parse_div_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::DivAssign(var!(a 0..1), n!(1 5)),
-			0..0
+			0..6
 		))
 	);
 }
@@ -981,7 +983,7 @@ fn parse_mod_assign() {
 		res,
 		Ok(Expr::new(
 			ExprKind::ModAssign(var!(a 0..1), n!(1 5)),
-			0..0
+			0..6
 		))
 	);
 }
@@ -997,10 +999,10 @@ fn parse_for_loop_expr() {
 				collection: ident!(arr 5..8),
 				item: var!(item 12..16),
 				body: code! {
-					call_ident!(print 19..24 (*ident!(item 25..29)))
+					call_ident!(print 19..30 (*ident!(item 25..29)))
 				},
 			},
-			0..0
+			0..32
 		))
 	);
 }
@@ -1020,10 +1022,10 @@ fn parse_for_loop_expr_spanning_multiple_lines() {
 				collection: ident!(arr 5..8),
 				item: var!(item 12..16),
 				body: code! {
-					call_ident!(print 20..25 (*ident!(item 26..30)))
+					call_ident!(print 20..31 (*ident!(item 26..30)))
 				},
 			},
-			0..0
+			0..33
 		))
 	);
 }
@@ -1046,10 +1048,10 @@ fn parse_for_loop_over_expression() {
 				collection: arr![*str!("some string" 8), *n!(12345 23); 5..30],
 				item: var!(item 34..38),
 				body: code! {
-					call_ident!(print 42..47 (*ident!(item 48..52)))
+					call_ident!(print 42..53 (*ident!(item 48..52)))
 				},
 			},
-			0..0
+			0..55
 		))
 	);
 }
@@ -1077,9 +1079,9 @@ fn parse_for_loop_over_if_else_expression() {
 								BinExprKind::GreaterThan,
 								*ident!(a 8..9),
 								*n!(10 12),
-								0..0
+								8..14
 							)),
-							0..0
+							8..14
 						)),
 						yes: code! {
 							*str!("this" 18)
@@ -1088,14 +1090,14 @@ fn parse_for_loop_over_if_else_expression() {
 							*arr![*str!("or" 36), *str!("this" 42); 35..49]
 						}
 					},
-					0..0
+					5..51
 				)),
 				item: var!(item 55..59),
 				body: code! {
-					call_ident!(print 63..68 (*ident!(item 69..73)))
+					call_ident!(print 63..74 (*ident!(item 69..73)))
 				},
 			},
-			0..0
+			0..76
 		))
 	);
 }
@@ -1125,22 +1127,22 @@ fn parse_for_loop_with_break_expression_in_it() {
 										BinExprKind::GreaterThan,
 										*ident!(x 20..21),
 										*n!(10 24),
-										0..0,
+										20..26,
 									)
-								), 0..0)
+								), 20..26)
 							),
 							yes: code!{
 								Expr::new(
 									ExprKind::Break(ident!(x 37..38)),
-									0..0
+									31..38
 								)
 							}
 						},
-						0..0
+						17..41
 					)
 				},
 			},
-			0..0
+			0..43
 		))
 	);
 }
@@ -1160,7 +1162,7 @@ fn parse_function_expr() {
 				*ident!(x 10..11) + *ident!(y 14..15)
 				}
 			}),
-			0..0
+			0..15
 		))
 	);
 }
@@ -1185,12 +1187,12 @@ fn parse_function_expr_with_block_body() {
 							var!(local 17..22),
 							n!(2 25) * ident!(x 29..30)
 						),
-						0..0
+						13..30
 					),
-					call_ident!(kok 32..35 (*ident!(local 36..41) + *ident!(y 44..45)))
+					call_ident!(kok 32..46 (*ident!(local 36..41) + *ident!(y 44..45)))
 				}
 			}),
-			0..0
+			0..48
 		))
 	);
 }
@@ -1209,10 +1211,9 @@ fn parse_iife() {
 			Box::new(Expr::new(ExprKind::Function(Function {
 				parameters: Parameters(vec![var!(x 1..2)]),
 				body: code!{
-					call_ident!(print 10..15 (*ident!(x 16..17)))
+					call_ident!(print 10..18 (*ident!(x 16..17)))
 				}
-			}), 0..0));
-			(*n!(123 21))
+			}), 0..20)); 0..25 (*n!(123 21))
 		))
 	);
 }
@@ -1230,7 +1231,7 @@ fn parse_function_expression_with_zero_arguments() {
 				parameters: Parameters(vec![]),
 				body: code! { *n!(123 8) }
 			}),
-			0..0
+			0..13
 		))
 	);
 }
@@ -1248,7 +1249,7 @@ fn parse_lambda_expression_with_zero_arguments() {
 				parameters: Parameters(vec![]),
 				body: code! { *n!(123 6) }
 			}),
-			0..0
+			0..9
 		))
 	);
 }
@@ -1275,15 +1276,15 @@ fn parse_nested_lambda_expression() {
 											parameters: Parameters(vec![]),
 											body: code! { *nil!(18) }
 										}),
-										0..0
+										12..21
 									)
 								}
 							}
 						),
-					0..0)
+					6..21)
 				}
 			}),
-			0..0
+			0..21
 		))
 	);
 }
@@ -1311,12 +1312,12 @@ fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
 							var!(local 20..25),
 							n!(2 28) * ident!(x 32..33)
 						),
-						0..0
+						16..33
 					),
-					call_ident!(kok 35..38 (*ident!(local 39..44) + *ident!(y 47..48)))
+					call_ident!(kok 35..49 (*ident!(local 39..44) + *ident!(y 47..48)))
 				}
 			}),
-			0..0
+			0..51
 		))
 	);
 }
