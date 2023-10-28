@@ -63,7 +63,21 @@ pub(crate) use arr;
 macro_rules! nil {
 	() => {
 		Box::new($crate::ast::Expr::Literal(
-			$crate::ast::Literal::Nil($crate::ast::Nil),
+			$crate::ast::Literal::Nil($crate::ast::Nil::new_dummy()),
+		))
+	};
+
+	($start:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Nil($crate::ast::Nil::new(
+				$start..$start + 3,
+			)),
+		))
+	};
+
+	($start:literal.. $end:literal) => {
+		Box::new($crate::ast::Expr::Literal(
+			$crate::ast::Literal::Nil($crate::ast::Nil(start..end)),
 		))
 	};
 }

@@ -17,7 +17,7 @@ Punctuated<T, U>: Vec<T> = {
 };
 
 // nil
-Nil: Nil = "nil" => Nil;
+Nil: Nil = <l:@L> "nil" <r:@R> => Nil::new(l..r);
 
 // bool
 Boolean: Boolean = {

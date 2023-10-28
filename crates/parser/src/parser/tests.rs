@@ -990,7 +990,7 @@ fn parse_nested_lambda_expression() {
 						Expr::Function(Function {
 							parameters: Parameters(vec![]),
 							body: code! {
-								*nil!()
+								*nil!(18)
 							}
 						})
 					}

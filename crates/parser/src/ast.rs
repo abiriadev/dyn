@@ -3,7 +3,30 @@ use box_tt::BoxNew;
 use span::Span;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Nil;
+pub struct Nil {
+	span: Span,
+}
+
+impl Nil {
+	pub fn new<S>(span: S) -> Self
+	where S: Into<Span> {
+		Self { span: span.into() }
+	}
+
+	pub fn new_dummy() -> Self {
+		Self {
+			span: Span::DUMMY_SPAN,
+		}
+	}
+
+	pub fn with_span<S>(self, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			..self
+		}
+	}
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Boolean(pub bool);
