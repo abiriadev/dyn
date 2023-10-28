@@ -11,7 +11,7 @@ use crate::{
 fn parse_math_expr() {
 	let res = parse("1 + 2 * 3");
 
-	assert_eq!(res, Ok(*(n!(1) + n!(2) * n!(3))))
+	assert_eq!(res, Ok(*(n!(1 0) + n!(2 4) * n!(3 8))))
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn parse_declare_expr() {
 		res,
 		Ok(Expr::Declare(
 			var!(xy 4..6),
-			n!(1) + n!(2)
+			n!(1 9) + n!(2 13)
 		))
 	)
 }
@@ -33,7 +33,7 @@ fn parse_math_expr_involving_variable() {
 
 	assert_eq!(
 		res,
-		Ok(*(n!(2) * ident!(pi 4..6) * ident!(r 9..10)))
+		Ok(*(n!(2 0) * ident!(pi 4..6) * ident!(r 9..10)))
 	)
 }
 
@@ -45,7 +45,7 @@ fn parse_indexing() {
 		res,
 		Ok(Expr::BinExpr(BinExpr::Index(
 			ident!(arr 0..3),
-			n!(123)
+			n!(123 4)
 		)))
 	)
 }
@@ -58,10 +58,13 @@ fn parse_nested_indexing() {
 		res,
 		Ok(Expr::BinExpr(BinExpr::index_box(
 			Expr::BinExpr(BinExpr::index_box(
-				Expr::BinExpr(BinExpr::Index(ident!(arr 0..3), n!(1))),
-				*n!(2)
+				Expr::BinExpr(BinExpr::Index(
+					ident!(arr 0..3),
+					n!(1 4)
+				)),
+				*n!(2 7)
 			)),
-			*n!(3)
+			*n!(3 10)
 		)))
 	)
 }
@@ -74,7 +77,7 @@ fn parse_indexing_expr() {
 		res,
 		Ok(Expr::BinExpr(BinExpr::Index(
 			ident!(a 1..2) + ident!(b 5..6),
-			n!(123)
+			n!(123 8)
 		)))
 	)
 }
@@ -86,7 +89,7 @@ fn parse_array() {
 	assert_eq!(
 		res,
 		Ok(*arr![
-			*n!(1),
+			*n!(1 1),
 			*ident!(a 4..5),
 			*str!("str")
 		])
@@ -104,7 +107,7 @@ fn parse_empty_array() {
 fn parse_arrary_with_one_element() {
 	let res = parse(r#"[1]"#);
 
-	assert_eq!(res, Ok(*arr![*n!(1)]))
+	assert_eq!(res, Ok(*arr![*n!(1 1)]))
 }
 
 #[test]
@@ -163,7 +166,7 @@ fn parse_function_call_with_more_than_one_argument() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1), *n!(2))))
+		Ok(call_ident!(add 0..3 (*n!(1 4), *n!(2 7))))
 	)
 }
 
@@ -177,7 +180,7 @@ fn parse_function_call_spanning_multiple_lines() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1), *n!(2))))
+		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 10))))
 	)
 }
 
@@ -191,7 +194,7 @@ fn parse_function_call_spanning_multiple_lines_without_trailing_comma() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1), *n!(2))))
+		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 10))))
 	)
 }
 
@@ -205,7 +208,7 @@ fn parse_function_call_spanning_multiple_lines_separated_by_only_newlines() {
 
 	assert_eq!(
 		res,
-		Ok(call_ident!(add 0..3 (*n!(1), *n!(2))))
+		Ok(call_ident!(add 0..3 (*n!(1 6), *n!(2 9))))
 	)
 }
 
@@ -250,7 +253,7 @@ fn nested_call2() {
 fn parse_sub() {
 	let res = parse(r#"a - 123"#);
 
-	assert_eq!(res, Ok(*ident!(a 0..1) - *n!(123)))
+	assert_eq!(res, Ok(*ident!(a 0..1) - *n!(123 4)))
 }
 
 #[test]
@@ -270,7 +273,7 @@ fn parse_sequencial_sub() {
 fn parse_unary_minus() {
 	let res = parse(r#"- 123"#);
 
-	assert_eq!(res, Ok(Expr::UnaryMinus(n!(123))));
+	assert_eq!(res, Ok(Expr::UnaryMinus(n!(123 2))));
 }
 
 #[test]
@@ -357,14 +360,14 @@ fn boolean_operator_precedence() {
 fn parse_div() {
 	let res = parse(r#"a / 123"#);
 
-	assert_eq!(res, Ok(*ident!(a 0..1) / *n!(123)))
+	assert_eq!(res, Ok(*ident!(a 0..1) / *n!(123 4)))
 }
 
 #[test]
 fn parse_mod() {
 	let res = parse(r#"a % 123"#);
 
-	assert_eq!(res, Ok(*ident!(a 0..1) % *n!(123)))
+	assert_eq!(res, Ok(*ident!(a 0..1) % *n!(123 4)))
 }
 
 #[test]
@@ -374,8 +377,8 @@ fn parse_equal() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::Equal(
-			n!(1),
-			n!(3)
+			n!(1 0),
+			n!(3 5)
 		)))
 	)
 }
@@ -387,8 +390,8 @@ fn parse_not_equal() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::NotEqual(
-			n!(1),
-			n!(3)
+			n!(1 0),
+			n!(3 5)
 		)))
 	)
 }
@@ -400,8 +403,8 @@ fn parse_less_than() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::LessThan(
-			n!(1),
-			n!(2)
+			n!(1 0),
+			n!(2 4)
 		)))
 	)
 }
@@ -413,8 +416,8 @@ fn parse_less_than_equal() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::LessThanEqual(
-			n!(1),
-			n!(2)
+			n!(1 0),
+			n!(2 5)
 		)))
 	)
 }
@@ -426,8 +429,8 @@ fn parse_greater_than() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(BinExpr::GreaterThan(
-			n!(1),
-			n!(2)
+			n!(1 0),
+			n!(2 4)
 		)))
 	)
 }
@@ -439,7 +442,7 @@ fn parse_greater_than_equal() {
 	assert_eq!(
 		res,
 		Ok(Expr::BinExpr(
-			BinExpr::GreaterThanEqual(n!(1), n!(2))
+			BinExpr::GreaterThanEqual(n!(1 0), n!(2 5))
 		))
 	)
 }
@@ -452,7 +455,7 @@ fn parse_nested_declare() {
 		res,
 		Ok(Expr::declare_box(
 			var!(a 4..5),
-			Expr::Declare(var!(b 12..13), n!(123))
+			Expr::Declare(var!(b 12..13), n!(123 16))
 		))
 	)
 }
@@ -476,7 +479,10 @@ fn parse_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::assign_box(var!(a 0..1), *n!(123)))
+		Ok(Expr::assign_box(
+			var!(a 0..1),
+			*n!(123 4)
+		))
 	)
 }
 
@@ -503,7 +509,7 @@ fn parse_nested_assign2() {
 			var!(a 0..1),
 			Expr::unary_not_box(Expr::assign_box(
 				var!(b 6..7),
-				*ident!(c 10..11) + *n!(2)
+				*ident!(c 10..11) + *n!(2 14)
 			))
 		))
 	)
@@ -519,7 +525,7 @@ fn parse_mixed_assignments() {
 			var!(a 0..1),
 			Expr::declare_box(
 				var!(b 8..9),
-				*n!(123) + Expr::DeclareMut(var!(c 24..25), n!(1))
+				*n!(123 12) + Expr::DeclareMut(var!(c 24..25), n!(1 28))
 			)
 		))
 	)
@@ -549,7 +555,7 @@ fn parse_if_expr2() {
 		res,
 		Ok(Expr::If {
 			condition: Box::new(Expr::BinExpr(
-				BinExpr::GreaterThanEqual(ident!(a 3..4) - n!(4), n!(0))
+				BinExpr::GreaterThanEqual(ident!(a 3..4) - n!(4 7), n!(0 12))
 			)),
 			yes: code! {
 				call_ident!(abc 15..18 ()),
@@ -715,7 +721,7 @@ fn parse_add_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::AddAssign(var!(a 0..1), n!(1)))
+		Ok(Expr::AddAssign(var!(a 0..1), n!(1 5)))
 	);
 }
 
@@ -725,7 +731,7 @@ fn parse_sub_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::SubAssign(var!(a 0..1), n!(1)))
+		Ok(Expr::SubAssign(var!(a 0..1), n!(1 5)))
 	);
 }
 
@@ -735,7 +741,7 @@ fn parse_mul_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::MulAssign(var!(a 0..1), n!(1)))
+		Ok(Expr::MulAssign(var!(a 0..1), n!(1 5)))
 	);
 }
 
@@ -745,7 +751,7 @@ fn parse_div_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::DivAssign(var!(a 0..1), n!(1)))
+		Ok(Expr::DivAssign(var!(a 0..1), n!(1 5)))
 	);
 }
 
@@ -755,7 +761,7 @@ fn parse_mod_assign() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::ModAssign(var!(a 0..1), n!(1)))
+		Ok(Expr::ModAssign(var!(a 0..1), n!(1 5)))
 	);
 }
 
@@ -809,7 +815,7 @@ fn parse_for_loop_over_expression() {
 	assert_eq!(
 		res,
 		Ok(Expr::For {
-			collection: arr![*str!("some string"), *n!(12345)],
+			collection: arr![*str!("some string"), *n!(12345 23)],
 			item: var!(item 34..38),
 			body: code! {
 				call_ident!(print 42..47 (*ident!(item 48..52)))
@@ -836,7 +842,7 @@ fn parse_for_loop_over_if_else_expression() {
 			collection: Box::new(Expr::IfElse {
 				condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
 					ident!(a 8..9),
-					n!(10)
+					n!(10 12)
 				))),
 				yes: code! {
 					*str!("this")
@@ -872,7 +878,7 @@ fn parse_for_loop_with_break_expression_in_it() {
 				Expr::If {
 					condition: Box::new(Expr::BinExpr(BinExpr::GreaterThan(
 						ident!(x 20..21),
-						n!(10)
+						n!(10 24)
 					))),
 					yes: code!{
 						Expr::Break(ident!(x 37..38))
@@ -914,7 +920,7 @@ fn parse_function_expr_with_block_body() {
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![var!(x 1..2), var!(y 4..5)]),
 			body: code! {
-				Expr::Declare(var!(local 17..22), n!(2) * ident!(x 29..30)),
+				Expr::Declare(var!(local 17..22), n!(2 25) * ident!(x 29..30)),
 				call_ident!(kok 32..35 (*ident!(local 36..41) + *ident!(y 44..45)))
 			}
 		}))
@@ -938,7 +944,7 @@ fn parse_iife() {
 					call_ident!(print 10..15 (*ident!(x 16..17)))
 				}
 			}));
-			(*n!(123))
+			(*n!(123 21))
 		))
 	);
 }
@@ -953,7 +959,7 @@ fn parse_function_expression_with_zero_arguments() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![]),
-			body: code! { *n!(123) }
+			body: code! { *n!(123 8) }
 		}))
 	);
 }
@@ -968,7 +974,7 @@ fn parse_lambda_expression_with_zero_arguments() {
 		res,
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![]),
-			body: code! { *n!(123) }
+			body: code! { *n!(123 6) }
 		}))
 	);
 }
@@ -1017,7 +1023,7 @@ fn parse_function_expr_with_multiple_argument_delimited_by_newline() {
 		Ok(Expr::Function(Function {
 			parameters: Parameters(vec![var!(x 3..4), var!(y 6..7)]),
 			body: code! {
-				Expr::Declare(var!(local 20..25), n!(2) * ident!(x 32..33)),
+				Expr::Declare(var!(local 20..25), n!(2 28) * ident!(x 32..33)),
 				call_ident!(kok 35..38 (*ident!(local 39..44) + *ident!(y 47..48)))
 			}
 		}))

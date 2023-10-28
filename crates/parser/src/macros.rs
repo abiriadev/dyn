@@ -11,7 +11,7 @@ macro_rules! n {
 		Box::new($crate::ast::Expr::Literal(
 			$crate::ast::Literal::Integer($crate::ast::Integer::new(
 				$n,
-				$start..$start + ($start.to_string()).len(),
+				$start..$start + $n.to_string().len(),
 			)),
 		))
 	};
