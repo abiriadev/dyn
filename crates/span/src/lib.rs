@@ -5,7 +5,7 @@ use std::{
 	ops::{Add, Range},
 };
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Span {
 	start: usize,
 	end: usize,
