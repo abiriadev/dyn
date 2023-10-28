@@ -308,7 +308,27 @@ impl From<BinExpr> for Expr {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Code(pub Vec<Expr>);
+pub struct Code {
+	span: Span,
+	pub stmts: Vec<Expr>,
+}
+
+impl Code {
+	pub fn new<S>(stmts: Vec<Expr>, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			stmts,
+		}
+	}
+
+	pub fn new_dummy(stmts: Vec<Expr>) -> Self {
+		Self {
+			span: Span::DUMMY_SPAN,
+			stmts,
+		}
+	}
+}
 
 #[cfg(test)]
 use std::ops::{Add, Div, Mul, Rem, Sub};

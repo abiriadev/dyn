@@ -169,11 +169,11 @@ L8 = {
 	}, l..r),
 	<l:@L> "|" <parameters:Parameters> "|" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
-		body: Code(vec![e]),
+		body: Code::new_dummy(vec![e]),
 	}), l..r),
 	<l:@L> "||" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
-		body: Code(vec![e]),
+		body: Code::new_dummy(vec![e]),
 	}), l..r),
 	L7,
 };
@@ -190,7 +190,7 @@ Arguments: Arguments = <Elements> => Arguments(<>);
 
 Parameters: Parameters = Punctuated<Ident, ElementSeparator> => Parameters(<>);
 	
-pub Code: Code = Punctuated<Expr, "\n"+> => Code(<>);
+pub Code: Code = <l:@L> <s:Punctuated<Expr, "\n"+>> <r:@R> => Code::new(s, l..r);
 
 extern {
 	type Location = usize;
