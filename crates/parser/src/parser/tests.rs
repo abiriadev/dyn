@@ -43,10 +43,7 @@ fn parse_indexing() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Index(
-			ident!(arr 0..3),
-			n!(123 4)
-		)))
+		Ok(Expr::Index(ident!(arr 0..3), n!(123 4)))
 	)
 }
 
@@ -56,16 +53,13 @@ fn parse_nested_indexing() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::index_box(
-			Expr::BinExpr(BinExpr::index_box(
-				Expr::BinExpr(BinExpr::Index(
-					ident!(arr 0..3),
-					n!(1 4)
-				)),
+		Ok(Expr::index_box(
+			Expr::index_box(
+				Expr::Index(ident!(arr 0..3), n!(1 4)),
 				*n!(2 7)
-			)),
+			),
 			*n!(3 10)
-		)))
+		))
 	)
 }
 
@@ -75,10 +69,10 @@ fn parse_indexing_expr() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Index(
+		Ok(Expr::Index(
 			ident!(a 1..2) + ident!(b 5..6),
 			n!(123 8)
-		)))
+		))
 	)
 }
 
@@ -149,10 +143,10 @@ fn parse_array_with_indexing() {
 
 	assert_eq!(
 		res,
-		Ok(Expr::BinExpr(BinExpr::Index(
+		Ok(Expr::Index(
 			arr![*arr![;1]; 0..4],
 			arr![;5]
-		)))
+		))
 	)
 }
 
