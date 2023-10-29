@@ -8,7 +8,7 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
-use error::{InterpreterError, ReferenceError, RuntimeError};
+pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use miette::SourceSpan;
 use parser::{
 	ast::{

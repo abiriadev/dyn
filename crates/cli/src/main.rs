@@ -1,12 +1,12 @@
-use std::{collections::HashMap, fs::read_to_string, path::PathBuf};
+use std::{fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
-	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, ResolvedIdent,
-	Value,
+	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter,
+	InterpreterError, ResolvedIdent, Value,
 };
 use maplit::hashmap;
-use parser::ast::Ident;
+use miette::Report;
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -31,7 +31,7 @@ impl BuiltinFunction for Printer {
 fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
 
-	let source = read_to_string(args.source_path)?;
+	let source = read_to_string(args.source_path).unwrap();
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
 		ResolvedIdent::new("print") => Value::Function(
@@ -41,6 +41,19 @@ fn main() -> anyhow::Result<()> {
 	.unwrap();
 	let res = intpr.run(&source);
 
-	println!("final result: {:?}", res);
+	if let Err(diag) = res {
+		match diag {
+			InterpreterError::ParseError(e) => println!("{:#?}", e),
+			InterpreterError::RuntimeError(e) => {
+				let rep: Report = e.into();
+				let rep = rep.with_source_code(source);
+
+				println!("{rep:?}");
+			},
+		}
+	} else {
+		println!("final result: {:?}", res);
+	}
+
 	Ok(())
 }

@@ -226,6 +226,7 @@ dependencies = [
  "clap",
  "dyn-core",
  "maplit",
+ "miette",
  "parser",
 ]
 
