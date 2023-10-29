@@ -105,19 +105,17 @@ L5 = {
 	L4,
 };
 
+L6Op: BinExprKind = "&&" => BinExprKind::And;
+
 L6 = {
-	<l:@L> <lhs:L6> "&&" <rhs:L5> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::And, lhs, rhs, l..r)),
-		l..r,
-	),
+	<l:@L> <lhs:L6> <op:L6Op> <rhs:L5> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
 	L5,
 };
 
+L7Op: BinExprKind = "||" => BinExprKind::Or;
+
 L7 = {
-	<l:@L> <lhs:L7> "||" <rhs:L6> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Or, lhs, rhs, l..r)),
-		l..r,
-	),
+	<l:@L> <lhs:L7> <op:L7Op> <rhs:L6> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
 	L6,
 };
 
