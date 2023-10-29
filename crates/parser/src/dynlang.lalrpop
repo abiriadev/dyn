@@ -16,6 +16,8 @@ Punctuated<T, U>: Vec<T> = {
     }
 };
 
+Spanned<T> = @L T @R;
+
 // nil
 Nil: Nil = <l:@L> "nil" <r:@R> => Nil::new(l..r);
 
@@ -77,7 +79,7 @@ L3Op: BinExprKind = {
 }
 
 L3 = {
-	@L L3 L3Op L2 @R => Expr::new_lalr_binexpr(<>),
+	Spanned<(L3 L3Op L2)> => Expr::new_lalr_binexpr(<>),
 	L2,
 }
 
@@ -87,7 +89,7 @@ L4Op: BinExprKind = {
 }
 
 L4 = {
-	@L L4 L4Op L3 @R => Expr::new_lalr_binexpr(<>),
+	Spanned<(L4 L4Op L3)> => Expr::new_lalr_binexpr(<>),
 	L3,
 };
 
@@ -101,21 +103,21 @@ L5Op: BinExprKind = {
 }
 
 L5 = {
-	@L L5 L5Op L4 @R => Expr::new_lalr_binexpr(<>),
+	Spanned<(L5 L5Op L4)> => Expr::new_lalr_binexpr(<>),
 	L4,
 };
 
 L6Op: BinExprKind = "&&" => BinExprKind::And;
 
 L6 = {
-	@L L6 L6Op L5 @R => Expr::new_lalr_binexpr(<>),
+	Spanned<(L6 L6Op L5)> => Expr::new_lalr_binexpr(<>),
 	L5,
 };
 
 L7Op: BinExprKind = "||" => BinExprKind::Or;
 
 L7 = {
-	@L L7 L7Op L6 @R => Expr::new_lalr_binexpr(<>),
+	Spanned<(L7 L7Op L6)> => Expr::new_lalr_binexpr(<>),
 	L6,
 };
 

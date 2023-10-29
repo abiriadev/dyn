@@ -298,11 +298,7 @@ impl Expr {
 	}
 
 	pub fn new_lalr_binexpr(
-		start: usize,
-		lhs: Expr,
-		op: BinExprKind,
-		rhs: Expr,
-		end: usize,
+		(start, (lhs, op, rhs), end): (usize, (Expr, BinExprKind, Expr), usize),
 	) -> Self {
 		Self {
 			span: (start..end).into(),
