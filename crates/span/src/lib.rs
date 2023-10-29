@@ -18,6 +18,10 @@ impl Span {
 
 	// TODO: use Option<T> later?
 	pub const fn is_dummy(&self) -> bool { self.start == 0 && self.end == 0 }
+
+	pub const fn start(&self) -> usize { self.start }
+
+	pub const fn end(&self) -> usize { self.end }
 }
 
 impl From<Range<usize>> for Span {
@@ -61,6 +65,14 @@ impl Add for Span {
 			end: max(self.end, rhs.end),
 		}
 	}
+}
+
+impl From<Span> for (usize, usize) {
+	fn from(value: Span) -> Self { (value.start, value.end) }
+}
+
+impl From<Span> for Range<usize> {
+	fn from(value: Span) -> Self { value.start..value.end }
 }
 
 #[cfg(test)]
