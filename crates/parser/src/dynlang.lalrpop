@@ -70,19 +70,14 @@ L2 = {
 	L1,
 }
 
+L3Op: BinExprKind = {
+	"*" => BinExprKind::Mul,
+	"/" => BinExprKind::Div,
+	"%" => BinExprKind::Mod,
+}
+
 L3 = {
-	<l:@L> <lhs:L3> "*" <rhs:L2> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Mul, lhs, rhs, l..r)),
-		l..r
-	),
-	<l:@L> <lhs:L3> "/" <rhs:L2> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Div, lhs, rhs, l..r)),
-		l..r
-	),
-	<l:@L> <lhs:L3> "%" <rhs:L2> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Mod, lhs, rhs, l..r)),
-		l..r
-	),
+	<l:@L> <lhs:L3> <op:L3Op> <rhs:L2> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
 	L2,
 }
 
