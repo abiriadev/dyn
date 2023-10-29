@@ -234,8 +234,12 @@ macro_rules! fal {
 pub(crate) use fal;
 
 macro_rules! code {
-	{ $($ele:expr),* $(,)? } => {
-		$crate::ast::Code(vec![$($ele),*])
+	{ $($ele:expr),* $(,)? ; $start:literal } => {
+		$crate::ast::Code::new(vec![$($ele),*], $start..$start + 2)
+	};
+
+	{ $($ele:expr),* $(,)? ; $start:literal .. $end:literal } => {
+		$crate::ast::Code::new(vec![$($ele),*], $start..$end)
 	};
 }
 
