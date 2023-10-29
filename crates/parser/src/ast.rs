@@ -2,6 +2,21 @@
 use box_tt::BoxNew;
 use span::Span;
 
+pub trait HasSpan {
+	fn span(&self) -> Span;
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span>;
+
+	fn with_span<S>(mut self, span: S) -> Self
+	where
+		S: Into<Span>,
+		Self: Sized, {
+		self.set_span(span);
+		self
+	}
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Nil {
 	span: Span,
@@ -18,13 +33,14 @@ impl Nil {
 			span: Span::DUMMY_SPAN,
 		}
 	}
+}
 
-	pub fn with_span<S>(self, span: S) -> Self
+impl HasSpan for Nil {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
 	where S: Into<Span> {
-		Self {
-			span: span.into(),
-			..self
-		}
+		self.span = span.into();
 	}
 }
 
@@ -53,6 +69,15 @@ impl Boolean {
 	pub fn value(&self) -> bool { self.value }
 }
 
+impl HasSpan for Boolean {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
+	}
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Integer {
 	span: Span,
@@ -73,6 +98,15 @@ impl Integer {
 			value,
 			span: Span::DUMMY_SPAN,
 		}
+	}
+}
+
+impl HasSpan for Integer {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
@@ -102,6 +136,15 @@ impl StringT {
 	}
 
 	pub fn into_string(self) -> String { self.value }
+}
+
+impl HasSpan for StringT {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
+	}
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -137,17 +180,18 @@ impl Ident {
 		}
 	}
 
-	pub fn with_span<S>(self, span: S) -> Self
-	where S: Into<Span> {
-		Self {
-			span: span.into(),
-			..self
-		}
-	}
-
 	pub fn symbol(&self) -> &str { &self.symbol }
 
 	pub fn into_symbol(self) -> String { self.symbol }
+}
+
+impl HasSpan for Ident {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
+	}
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -170,6 +214,15 @@ impl Array {
 			span: Span::DUMMY_SPAN,
 			elements,
 		}
+	}
+}
+
+impl HasSpan for Array {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
@@ -219,6 +272,15 @@ impl BinExpr {
 			lhs: Box::new(lhs),
 			rhs: Box::new(rhs),
 		}
+	}
+}
+
+impl HasSpan for BinExpr {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
@@ -289,14 +351,6 @@ impl Expr {
 		}
 	}
 
-	pub fn with_span<S>(self, span: S) -> Self
-	where S: Into<Span> {
-		Self {
-			span: span.into(),
-			..self
-		}
-	}
-
 	pub fn new_lalr_binexpr(
 		(start, (lhs, op, rhs), end): (usize, (Expr, BinExprKind, Expr), usize),
 	) -> Self {
@@ -309,6 +363,15 @@ impl Expr {
 				rhs: Box::new(rhs),
 			}),
 		}
+	}
+}
+
+impl HasSpan for Expr {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
@@ -341,6 +404,15 @@ impl Code {
 			span: Span::DUMMY_SPAN,
 			stmts,
 		}
+	}
+}
+
+impl HasSpan for Code {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
