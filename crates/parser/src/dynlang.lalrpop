@@ -77,7 +77,7 @@ L3Op: BinExprKind = {
 }
 
 L3 = {
-	<l:@L> <lhs:L3> <op:L3Op> <rhs:L2> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
+	@L L3 L3Op L2 @R => Expr::new_lalr_binexpr(<>),
 	L2,
 }
 
@@ -87,7 +87,7 @@ L4Op: BinExprKind = {
 }
 
 L4 = {
-	<l:@L> <lhs:L4> <op:L4Op> <rhs:L3> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
+	@L L4 L4Op L3 @R => Expr::new_lalr_binexpr(<>),
 	L3,
 };
 
@@ -101,21 +101,21 @@ L5Op: BinExprKind = {
 }
 
 L5 = {
-	<l:@L> <lhs:L5> <op:L5Op> <rhs:L4> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
+	@L L5 L5Op L4 @R => Expr::new_lalr_binexpr(<>),
 	L4,
 };
 
 L6Op: BinExprKind = "&&" => BinExprKind::And;
 
 L6 = {
-	<l:@L> <lhs:L6> <op:L6Op> <rhs:L5> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
+	@L L6 L6Op L5 @R => Expr::new_lalr_binexpr(<>),
 	L5,
 };
 
 L7Op: BinExprKind = "||" => BinExprKind::Or;
 
 L7 = {
-	<l:@L> <lhs:L7> <op:L7Op> <rhs:L6> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
+	@L L7 L7Op L6 @R => Expr::new_lalr_binexpr(<>),
 	L6,
 };
 

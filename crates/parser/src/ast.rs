@@ -296,6 +296,24 @@ impl Expr {
 			..self
 		}
 	}
+
+	pub fn new_lalr_binexpr(
+		start: usize,
+		lhs: Expr,
+		op: BinExprKind,
+		rhs: Expr,
+		end: usize,
+	) -> Self {
+		Self {
+			span: (start..end).into(),
+			kind: ExprKind::BinExpr(BinExpr {
+				span: (start..end).into(),
+				op,
+				lhs: Box::new(lhs),
+				rhs: Box::new(rhs),
+			}),
+		}
+	}
 }
 
 impl From<BinExpr> for Expr {
