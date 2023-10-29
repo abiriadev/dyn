@@ -18,6 +18,11 @@ Punctuated<T, U>: Vec<T> = {
 
 Spanned<T> = @L T @R;
 
+LevelBinExpr<L, O> = {
+	Spanned<(LevelBinExpr<L, O> O L)> => Expr::new_lalr_binexpr(<>),
+	L,
+};
+	
 // nil
 Nil: Nil = <l:@L> "nil" <r:@R> => Nil::new(l..r);
 
@@ -78,20 +83,14 @@ L3Op: BinExprKind = {
 	"%" => BinExprKind::Mod,
 }
 
-L3 = {
-	Spanned<(L3 L3Op L2)> => Expr::new_lalr_binexpr(<>),
-	L2,
-}
+L3 = LevelBinExpr<L2, L3Op>;
 
 L4Op: BinExprKind = {
 	"+" => BinExprKind::Add,
 	"-" => BinExprKind::Sub,
 }
 
-L4 = {
-	Spanned<(L4 L4Op L3)> => Expr::new_lalr_binexpr(<>),
-	L3,
-};
+L4 = LevelBinExpr<L3, L4Op>;
 
 L5Op: BinExprKind = {
 	"==" => BinExprKind::Equal,
@@ -102,24 +101,15 @@ L5Op: BinExprKind = {
 	">=" => BinExprKind::GreaterThanEqual,
 }
 
-L5 = {
-	Spanned<(L5 L5Op L4)> => Expr::new_lalr_binexpr(<>),
-	L4,
-};
+L5 = LevelBinExpr<L4, L5Op>;
 
 L6Op: BinExprKind = "&&" => BinExprKind::And;
 
-L6 = {
-	Spanned<(L6 L6Op L5)> => Expr::new_lalr_binexpr(<>),
-	L5,
-};
+L6 = LevelBinExpr<L5, L6Op>;
 
 L7Op: BinExprKind = "||" => BinExprKind::Or;
 
-L7 = {
-	Spanned<(L7 L7Op L6)> => Expr::new_lalr_binexpr(<>),
-	L6,
-};
+L7 = LevelBinExpr<L6, L7Op>;
 
 L8 = {
 	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Declare(i, Box::new(e)), l..r),
