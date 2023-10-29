@@ -81,15 +81,13 @@ L3 = {
 	L2,
 }
 
+L4Op: BinExprKind = {
+	"+" => BinExprKind::Add,
+	"-" => BinExprKind::Sub,
+}
+
 L4 = {
-	<l:@L> <lhs:L4> "+" <rhs:L3> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Add, lhs, rhs, l..r)),
-		l..r
-	),
-	<l:@L> <lhs:L4> "-" <rhs:L3> <r:@R> => Expr::new(
-		ExprKind::BinExpr(BinExpr::new(BinExprKind::Sub, lhs, rhs, l..r)),
-		l..r
-	),
+	<l:@L> <lhs:L4> <op:L4Op> <rhs:L3> <r:@R> => BinExpr::new(op, lhs, rhs, l..r).into(),
 	L3,
 };
 
