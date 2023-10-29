@@ -9,8 +9,10 @@ edition = "2021"
 dyn-clone = "1.0.14"
 indoc = "2.0.4"
 maplit = "1.0.2"
+miette = { version = "5.10.0", features = ["fancy"] }
 parser = { version = "0.1.0", path = "../parser" }
 strum = { version = "0.25.0", features = ["derive"] }
+thiserror = "1.0.50"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
