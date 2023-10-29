@@ -48,13 +48,13 @@ L0: Expr = {
 	<l:@L> <i:Ident> <r:@R> => Expr::new(ExprKind::Ident(i), l..r),
 	"(" <Expr> ")",
 	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr::new(ExprKind::Array(Array::new(e, l..r)), l..r),
-	<l:@L> "|" <parameters:Parameters> "|" "->" "{" <body:Code> "}" <r:@R> => Expr::new(ExprKind::Function(Function {
+	<l:@L> "|" <parameters:Parameters> "|" "->" <body:Block> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
 		body,
 	}), l..r),
-	<l:@L> "||" "->" "{" <i:Code> "}" <r:@R> => Expr::new(ExprKind::Function(Function {
+	<l:@L> "||" "->" <body:Block> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
-		body: i,
+		body,
 	}), l..r),
 };
 
@@ -156,13 +156,13 @@ L8 = {
 	<l:@L> "continue" <i:L8> <r:@R> => Expr::new(ExprKind::continue_box(i), l..r),
 	<l:@L> "panic" <i:L8> <r:@R> => Expr::new(ExprKind::panic_box(i), l..r),
 	<l:@L> "assert" <i:L8> <r:@R> => Expr::new(ExprKind::assert_box(i), l..r),
-	<l:@L> "if" <c:L8> "{" <b:Code> "}" <r:@R> => Expr::new(ExprKind::If { condition: Box::new(c), yes: b }, l..r),
-	<l:@L> "if" <c:L8> "{" <t:Code> "}" "else" "{" <f:Code> "}" <r:@R> => Expr::new(ExprKind::IfElse {
+	<l:@L> "if" <c:L8> <b:Block> <r:@R> => Expr::new(ExprKind::If { condition: Box::new(c), yes: b }, l..r),
+	<l:@L> "if" <c:L8> <t:Block> "else" <f:Block> <r:@R> => Expr::new(ExprKind::IfElse {
 		condition: Box::new(c),
 		yes: t,
 		no: f
 	}, l..r),
-	<l:@L> "iter" <a:L8> "of" <i:Ident> "{" <b:Code> "}" <r:@R> => Expr::new(ExprKind::For {
+	<l:@L> "iter" <a:L8> "of" <i:Ident> <b:Block> <r:@R> => Expr::new(ExprKind::For {
 		collection: Box::new(a),
 		item: i,
 		body: b
@@ -191,6 +191,8 @@ Arguments: Arguments = <Elements> => Arguments(<>);
 Parameters: Parameters = Punctuated<Ident, ElementSeparator> => Parameters(<>);
 	
 pub Code: Code = <l:@L> <s:Punctuated<Expr, "\n"+>> <r:@R> => Code::new(s, l..r);
+
+Block = "{" <Code> "}";
 
 extern {
 	type Location = usize;
@@ -252,5 +254,4 @@ extern {
 		"ident" => Token::Identifier(<String>),
 	}
 }
-
 
