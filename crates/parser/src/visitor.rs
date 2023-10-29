@@ -128,7 +128,7 @@ pub trait Visit {
 	}
 
 	fn visit_code(&mut self, i: &Code) {
-		for i in &i.0 {
+		for i in &i.stmts {
 			self.visit_expr(i);
 		}
 	}
@@ -259,7 +259,7 @@ pub trait VisitMut {
 	}
 
 	fn visit_mut_code(&mut self, i: &mut Code) {
-		for i in &mut i.0 {
+		for i in &mut i.stmts {
 			self.visit_mut_expr(i);
 		}
 	}

@@ -570,7 +570,7 @@ impl Interpreter {
 			},
 			Tree::Code(i) => {
 				let mut last = Value::Nil;
-				for i in i.0 {
+				for i in i.stmts {
 					last = self.eval(Tree::Expr(i))?;
 				}
 				Ok(last)
