@@ -22,6 +22,8 @@ impl Span {
 	pub const fn start(&self) -> usize { self.start }
 
 	pub const fn end(&self) -> usize { self.end }
+
+	pub const fn range(&self) -> Range<usize> { self.start..self.end }
 }
 
 impl From<Range<usize>> for Span {

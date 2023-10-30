@@ -1,4 +1,4 @@
-use miette::{Diagnostic, SourceSpan};
+use miette::{Diagnostic, LabeledSpan, SourceSpan};
 use parser::{LexError, ParseError, Token};
 use thiserror::Error;
 
@@ -12,7 +12,7 @@ impl From<RuntimeError> for InterpreterError {
 	fn from(value: RuntimeError) -> Self { Self::RuntimeError(value) }
 }
 
-#[derive(Debug, PartialEq, Error, Diagnostic)]
+#[derive(Debug, PartialEq, Error)]
 pub enum RuntimeError {
 	#[error("Reference Error")]
 	ReferenceError(ReferenceError),
@@ -24,10 +24,20 @@ pub enum RuntimeError {
 	AlreadyDeclared,
 
 	#[error("Type Error")]
-	TypeError {
-		#[label("location")]
-		location: SourceSpan,
-	},
+	TypeError { lhs: LabeledSpan, rhs: LabeledSpan },
+}
+
+impl Diagnostic for RuntimeError {
+	fn labels(
+		&self,
+	) -> Option<Box<dyn Iterator<Item = miette::LabeledSpan> + '_>> {
+		match self {
+			RuntimeError::TypeError { lhs, rhs } => Some(Box::new(
+				[lhs.clone(), rhs.clone()].into_iter(),
+			)),
+			_ => None,
+		}
+	}
 }
 
 #[derive(Debug, PartialEq)]

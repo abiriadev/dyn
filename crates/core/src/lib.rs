@@ -9,7 +9,7 @@ use std::{
 
 use dyn_clone::{clone_trait_object, DynClone};
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
-use miette::SourceSpan;
+use miette::{LabeledSpan, SourceSpan};
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
@@ -283,17 +283,23 @@ impl Interpreter {
 						})
 					},
 					BinExprKind::Sub => {
-						let Value::Integer(i) = self.eval(Tree::Expr(*lhs))?
-						else {
-							let rng: Range<usize> = span.into();
+						let lrng = lhs.span().range();
+						let rrng = rhs.span().range();
+						let lhs = self.eval(Tree::Expr(*lhs))?;
+						let rhs = self.eval(Tree::Expr(*rhs))?;
+						let Value::Integer(i) = lhs else {
 							return Err(RuntimeError::TypeError {
-								location: rng.into(),
+								lhs: LabeledSpan::at(
+									lrng,
+									format!("value: {}", lhs),
+								),
+								rhs: LabeledSpan::at(
+									rrng,
+									format!("value: {}", rhs),
+								),
 							});
 						};
-						let Value::Integer(j) = self.eval(Tree::Expr(*rhs))?
-						else {
-							panic!()
-						};
+						let Value::Integer(j) = rhs else { panic!() };
 						Ok(Value::Integer(i - j))
 					},
 					BinExprKind::Mul => {
