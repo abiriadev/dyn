@@ -10,5 +10,5 @@ anyhow = "1.0.75"
 clap = { version = "4.4.7", features = ["derive"] }
 dyn-core = { version = "0.1.0", path = "../core" }
 maplit = "1.0.2"
-miette = { version = "5.10.0", features = ["fancy"] }
+miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b", features = ["fancy"] }
 parser = { version = "0.1.0", path = "../parser" }

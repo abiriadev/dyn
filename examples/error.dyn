@@ -1,1 +1,6 @@
-let a = "string" - 123
+let a = 123
+let b = "string"
+
+print(
+	b - a
+)
