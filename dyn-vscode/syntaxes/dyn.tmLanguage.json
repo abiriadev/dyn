@@ -4,6 +4,7 @@
 	"patterns": [
 		{ "include": "#comment" },
 		{ "include": "#keyword" },
+		{ "include": "#literal" },
 		{ "include": "#ident" }
 	],
 	"repository": {
@@ -27,6 +28,17 @@
 		"ident": {
 			"name": "variable",
 			"match": "[_a-zA-Z][_0-9a-zA-Z]*"
+		},
+		"literal": {
+			"patterns": [
+				{ "include": "#nil" }
+			],
+			"repository": {
+				"nil": {
+					"name": "constant.language",
+					"match": "nil"
+				}
+			}
 		}
 	},
 	"scopeName": "source.dyn"

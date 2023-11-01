@@ -1,0 +1,7 @@
+let! a = nil
+
+if a == nil {
+	a = 123
+} else {
+	print(a)
+}
