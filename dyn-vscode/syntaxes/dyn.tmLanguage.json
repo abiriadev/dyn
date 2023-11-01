@@ -1,7 +1,26 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Dyn",
-	"patterns": [],
-	"repository": {},
+	"patterns": [
+		{
+			"include": "#comment"
+		}
+	],
+	"repository": {
+		"comment": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.dyn",
+					"match": "\/\/.*"
+				},
+				{
+					"name": "comment.block.dyn",
+					"begin": "/\\*",
+					"end": "([^*]|\\*[^\/])*\\*/"
+				}
+			]
+			
+		}
+	},
 	"scopeName": "source.dyn"
 }

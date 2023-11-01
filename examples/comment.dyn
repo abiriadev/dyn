@@ -1,0 +1,17 @@
+// single line comment
+
+/* block comment */
+
+/* block
+	comment
+	can
+	span
+	multiple
+	lines! */
+
+
+/* block comments
+	/*
+	can be nested!
+	*/
+*/
