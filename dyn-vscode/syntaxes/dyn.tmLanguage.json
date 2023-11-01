@@ -32,7 +32,8 @@
 		"literal": {
 			"patterns": [
 				{ "include": "#nil" },
-				{ "include": "#integer" }
+				{ "include": "#integer" },
+				{ "include": "#string" }
 			],
 			"repository": {
 				"nil": {
@@ -42,6 +43,23 @@
 				"integer": {
 					"name": "constant.numeric",
 					"match": "-?(0|[1-9][0-9]*)"
+				},
+				"string": {
+					"name": "string",
+					"patterns": [
+						{ "include": "#string-single" },
+						{ "include": "#string-double" }
+					],
+					"repository": {
+						"string-single": {
+							"name": "string.quoted.single",
+							"match": "'(?:[^']|\\'|\\n|\\t)*'"
+						},
+						"string-double": {
+							"name": "string.quoted.double",
+							"match": "\"(?:[^\"]|\\\\\"|\\n|\\t)*\""
+						}
+					}
 				}
 			}
 		}
