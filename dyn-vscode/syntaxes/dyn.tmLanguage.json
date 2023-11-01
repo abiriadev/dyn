@@ -30,15 +30,15 @@
 			"repository": {
 				"control": {
 					"name": "keyword.control",
-					"match": "if|else|iter|of|return|break|continue"
+					"match": "\\b(?:if|else|iter|of|return|break|continue)\\b"
 				},
 				"operator": {
 					"name": "keyword.operator",
-					"match": "\\+|-|\\*|/|%|=|\\+=|-=|\\*=|/=|%=|==|!=|<|>|<=|>=|&&|\\|\\|"
+					"match": "\\+=|-=|\\*=|/=|%=|\\+|-|\\*|/|%|==|!=|<=|>=|<|>|=|&&|\\|\\|"
 				},
 				"other": {
 					"name": "keyword.other",
-					"match": "panic|assert|let!|let|import|export"
+					"match": "\\b(?:panic|assert|let!|let|import|export)\\b"
 				}
 			}
 		},
