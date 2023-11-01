@@ -31,12 +31,17 @@
 		},
 		"literal": {
 			"patterns": [
-				{ "include": "#nil" }
+				{ "include": "#nil" },
+				{ "include": "#integer" }
 			],
 			"repository": {
 				"nil": {
 					"name": "constant.language",
 					"match": "nil"
+				},
+				"integer": {
+					"name": "constant.numeric",
+					"match": "-?(0|[1-9][0-9]*)"
 				}
 			}
 		}
