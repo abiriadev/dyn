@@ -2,9 +2,8 @@
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Dyn",
 	"patterns": [
-		{
-			"include": "#comment"
-		}
+		{ "include": "#comment" },
+		{ "include": "#keyword" }
 	],
 	"repository": {
 		"comment": {
@@ -19,7 +18,10 @@
 					"end": "([^*]|\\*[^\/])*\\*/"
 				}
 			]
-			
+		},
+		"keyword": {
+			"name": "keyword",
+			"match": "panic|assert|let|let!|if|else|iter|of|return|break|continue|import|export"
 		}
 	},
 	"scopeName": "source.dyn"
