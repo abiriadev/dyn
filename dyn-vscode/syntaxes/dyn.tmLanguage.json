@@ -23,7 +23,7 @@
 		},
 		"keyword": {
 			"name": "keyword",
-			"match": "panic|assert|let|let!|if|else|iter|of|return|break|continue|import|export"
+			"match": "panic|assert|let!|let|if|else|iter|of|return|break|continue|import|export"
 		},
 		"ident": {
 			"name": "variable",
