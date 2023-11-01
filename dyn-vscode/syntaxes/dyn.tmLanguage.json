@@ -37,8 +37,20 @@
 					"match": "\\+=|-=|\\*=|/=|%=|\\+|-|\\*|/|%|==|!=|<=|>=|<|>|=|&&|\\|\\|"
 				},
 				"other": {
-					"name": "keyword.other",
-					"match": "\\b(?:panic|assert|let!|let|import|export)\\b"
+					"patterns": [
+						{ "include": "#letmut" },
+						{ "include": "#other-other" }
+					],
+					"repository": {
+						"letmut": {
+							"name": "keyword.other",
+							"match": "let!"
+						},
+						"other-other": {
+							"name": "keyword.other",
+							"match": "\\b(?:panic|assert|let|import|export)\\b"
+						}
+					}
 				}
 			}
 		},
