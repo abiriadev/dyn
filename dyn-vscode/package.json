@@ -1,0 +1,25 @@
+{
+  "name": "dyn",
+  "displayName": "Dyn",
+  "description": "dyn language support",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "dyn",
+      "aliases": ["Dyn", "dyn"],
+      "extensions": [".dyn"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "dyn",
+      "scopeName": "source.dyn",
+      "path": "./syntaxes/dyn.tmLanguage.json"
+    }]
+  }
+}
