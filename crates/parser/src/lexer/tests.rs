@@ -199,7 +199,7 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_left_paranthesis() {
+	fn lex_left_parenthesis() {
 		assert_eq!(
 			Token::lexer("(")
 				.spanned()
@@ -209,7 +209,7 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_right_paranthesis() {
+	fn lex_right_parenthesis() {
 		assert_eq!(
 			Token::lexer(")")
 				.spanned()
@@ -499,7 +499,7 @@ fn lex_comment_between_newlines() {
 			.collect::<Vec<_>>(),
 		[
 			// (Ok(Token::NewLine), 0..1), fix: ASI
-			(Ok(Token::BlockCommnet), 1..14),
+			(Ok(Token::BlockComment), 1..14),
 			// (Ok(Token::NewLine), 14..15)
 		]
 	);
@@ -584,14 +584,14 @@ mod lex_comments {
 			Token::lexer("/**/")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::BlockCommnet), 0..4)]
+			[(Ok(Token::BlockComment), 0..4)]
 		);
 
 		assert_eq!(
 			Token::lexer("/* */")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::BlockCommnet), 0..5)]
+			[(Ok(Token::BlockComment), 0..5)]
 		);
 	}
 
@@ -602,7 +602,7 @@ mod lex_comments {
 			Token::lexer("/*\n\n\n*/")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::BlockCommnet), 0..7)]
+			[(Ok(Token::BlockComment), 0..7)]
 		);
 	}
 
@@ -613,7 +613,7 @@ mod lex_comments {
 			Token::lexer("/*/**/*/")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::BlockCommnet), 0..8),]
+			[(Ok(Token::BlockComment), 0..8),]
 		);
 	}
 }
@@ -799,7 +799,7 @@ mod lex_identifier {
 			Token::lexer("123a")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Err(LexError::InvalidIndentifier), 0..4)]
+			[(Err(LexError::InvalidIdentifier), 0..4)]
 		);
 	}
 

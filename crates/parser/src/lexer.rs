@@ -10,7 +10,7 @@ pub type Spanned<Tok, Loc, E> = Result<(Loc, Tok, Loc), E>;
 
 #[derive(Default, Debug, Clone, PartialEq)]
 pub enum LexError {
-	InvalidIndentifier,
+	InvalidIdentifier,
 
 	#[default]
 	InvalidToken,

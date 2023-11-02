@@ -217,7 +217,7 @@ extern {
 		"export" => Token::Export,
 		"\n" => Token::NewLine,
 		// "lcomment" => Token::LineComment,
-		// "bcomment" => Token::BlockCommnet,
+		// "bcomment" => Token::BlockComment,
 		"int" => Token::Integer(<i32>),
 		"string" => Token::String(<String>),
 		"ident" => Token::Identifier(<String>),

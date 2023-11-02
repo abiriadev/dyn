@@ -100,7 +100,7 @@ pub enum Token {
 	#[token("||", save_token!(TokenKind::DoublePipe))]
 	DoublePipe,
 
-	// Parantheses
+	// Parentheses
 	#[token("(", save_token!(TokenKind::LeftParenthesis))]
 	LeftParenthesis,
 
@@ -197,7 +197,7 @@ pub enum Token {
 	LineComment,
 
 	#[regex(r"/\*([^*]|\*[^/])*\*/", |_| Skip)]
-	BlockCommnet,
+	BlockComment,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| {
 		lex.extras = Some(TokenKind::Integer);
@@ -213,6 +213,6 @@ pub enum Token {
 		lex.extras = Some(TokenKind::Identifier);
 		lex.slice().to_owned()
 	})]
-	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIndentifier))]
+	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
 	Identifier(String),
 }

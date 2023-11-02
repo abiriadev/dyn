@@ -144,7 +144,7 @@ let f = |x, y| -> x + y
 
 ```dyn
 if x > 10 {
-  print("x is greather than 10!")
+  print("x is greater than 10!")
 }
 ```
 

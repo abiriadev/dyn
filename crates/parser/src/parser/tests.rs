@@ -114,7 +114,7 @@ fn parse_empty_array() {
 }
 
 #[test]
-fn parse_arrary_with_one_element() {
+fn parse_array_with_one_element() {
 	let res = parse(r#"[1]"#);
 
 	assert_eq!(res, Ok(*arr![*n!(1 1); 0..3]))
@@ -282,7 +282,7 @@ fn parse_sub() {
 }
 
 #[test]
-fn parse_sequencial_sub() {
+fn parse_sequential_sub() {
 	let res = parse(r#"a - b - c - d"#);
 
 	assert_eq!(
