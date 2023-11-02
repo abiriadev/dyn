@@ -16,6 +16,7 @@ use parser::{
 	},
 	parse_code,
 };
+use strum::EnumDiscriminants;
 
 pub mod error;
 
@@ -63,7 +64,8 @@ impl PartialEq for FunctionValue {
 	}
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
+#[strum_discriminants(name(ValueType))]
 pub enum Value {
 	Nil,
 	Boolean(bool),
@@ -104,6 +106,8 @@ impl Value {
 			Value::Function(_) => "[FUNCTION]".to_owned(),
 		}
 	}
+
+	fn get_type(&self) -> ValueType { self.into() }
 }
 
 impl Display for Value {
@@ -116,6 +120,19 @@ impl Display for Value {
 			Value::Array(i) => format!("{i:?}"),
 			Value::Function(_) => "FUNCTION".to_owned(),
 		})
+	}
+}
+
+impl ValueType {
+	pub fn type_name(&self) -> &'static str {
+		match self {
+			ValueType::Nil => "nil",
+			ValueType::Boolean => "bool",
+			ValueType::Integer => "number",
+			ValueType::String => "string",
+			ValueType::Array => "array",
+			ValueType::Function => "function",
+		}
 	}
 }
 
