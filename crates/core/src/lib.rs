@@ -326,14 +326,24 @@ impl Interpreter {
 						let lhs = self.eval(Tree::Expr(*lhs))?;
 						let rhs = self.eval(Tree::Expr(*rhs))?;
 						let Value::Integer(i) = lhs else {
+							let lhs_type = lhs.get_type().type_name();
+							let rhs_type = rhs.get_type().type_name();
 							return Err(RuntimeError::TypeError {
 								lhs: LabeledSpan::at(
 									lrng,
-									format!("value: {}", lhs),
+									format!(
+										"{} is of type {}",
+										lhs.to_debug(),
+										lhs_type
+									),
 								),
 								rhs: LabeledSpan::at(
 									rrng,
-									format!("value: {}", rhs),
+									format!(
+										"{} is of type {}",
+										rhs.to_debug(),
+										rhs_type
+									),
 								),
 							});
 						};
