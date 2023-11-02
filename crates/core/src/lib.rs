@@ -4,12 +4,11 @@ use std::{
 		HashMap,
 	},
 	fmt::{self, Debug, Display, Formatter},
-	ops::Range,
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
-use miette::{LabeledSpan, SourceSpan};
+use miette::LabeledSpan;
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
@@ -81,6 +80,28 @@ impl Value {
 			Literal::Boolean(Boolean { value, .. }) => Self::Boolean(value),
 			Literal::Integer(Integer { value, .. }) => Self::Integer(value),
 			Literal::String(StringT { value, .. }) => Self::String(value),
+		}
+	}
+
+	fn to_debug(&self) -> String {
+		match self {
+			Value::Nil => "nil".to_owned(),
+			Value::Boolean(v) =>
+				if *v {
+					"true".to_owned()
+				} else {
+					"false".to_owned()
+				},
+			Value::Integer(v) => format!("{v}"),
+			Value::String(v) => format!(r#""{}""#, v),
+			Value::Array(v) => format!(
+				"[{}]",
+				v.into_iter()
+					.map(|e| e.to_debug())
+					.collect::<Vec<_>>()
+					.join(", ")
+			),
+			Value::Function(_) => "[FUNCTION]".to_owned(),
 		}
 	}
 }
