@@ -1,0 +1,4 @@
+let level = 123
+let name = "hello"
+
+let c = name - level
