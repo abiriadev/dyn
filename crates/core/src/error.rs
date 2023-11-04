@@ -63,8 +63,58 @@ impl Display for TypeError {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		let m = match self {
 			TypeError::BinOp { op, lhs, rhs, .. } => match op {
+				BinExprKind::Add => format!(
+					"cannot add `{}` to `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
 				BinExprKind::Sub => format!(
 					"cannot subtract `{}` from `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::Mul => format!(
+					"cannot multiply `{}` by `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::Div => format!(
+					"cannot divide `{}` by `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::Mod => format!(
+					"cannot calculate the remainder of `{}` divided by `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::LessThan => format!(
+					"`<` cannot be applied to `{}` and `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::GreaterThan => format!(
+					"`>` cannot be applied to `{}` and `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::LessThanEqual => format!(
+					"`<=` cannot be applied to `{}` and `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::GreaterThanEqual => format!(
+					"`>=` cannot be applied to `{}` and `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::And => format!(
+					"`&&` cannot be applied to `{}` and `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				BinExprKind::Or => format!(
+					"`||` cannot be applied to `{}` and `{}`",
 					rhs.get_type().type_name(),
 					lhs.get_type().type_name()
 				),
