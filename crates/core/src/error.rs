@@ -38,7 +38,7 @@ impl Diagnostic for ParseError {
 					[LabeledSpan::at(
 						*location..location + 1,
 						format!(
-							"Expected one of {}",
+							"Expected one of {} but found EOF",
 							display_vec(expected)
 						),
 					)]
@@ -49,8 +49,9 @@ impl Diagnostic for ParseError {
 					[LabeledSpan::at(
 						token.0..token.2,
 						format!(
-							"Expected one of {}",
-							display_vec(expected)
+							"Expected one of {} but found {:?}",
+							display_vec(expected),
+							token.1
 						),
 					)]
 					.into_iter(),
