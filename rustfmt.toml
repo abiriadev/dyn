@@ -1,0 +1,28 @@
+# turn on unstable features
+unstable_features = true
+
+brace_style = "PreferSameLine"
+chain_width = 40
+comment_width = 70
+fn_call_width = 40
+fn_single_line = true
+format_code_in_doc_comments = true
+format_macro_matchers = true
+group_imports = "StdExternalCrate"
+hard_tabs = true
+hex_literal_case = "Upper"
+imports_granularity = "Crate"
+inline_attribute_width = 50
+match_arm_blocks = false
+match_block_trailing_comma = true
+max_width = 80
+newline_style = "Unix"
+normalize_comments = true
+normalize_doc_attributes = true
+overflow_delimited_expr = true
+reorder_impl_items = true
+trailing_semicolon = false
+use_field_init_shorthand = true
+use_try_shorthand = true
+where_single_line = true
+wrap_comments = true

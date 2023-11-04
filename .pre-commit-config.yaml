@@ -2,28 +2,31 @@ repos:
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
-      - id: fmt
-        args:
-          - '--'
-          - '--error-on-unformatted'
-          - '--unstable-features'
       - id: cargo-check
       - id: clippy
   - repo: local
     hooks:
-      - id: fmt
+      - id: rustfmt
+        name: Rust formatting
+        description: format all rust files
+        entry: cargo +nightly fmt
+        files: \.rs$
+        language: system
+      - id: taplo-fmt
         name: Taplo formatting
         description: format all toml files
         entry: taplo format
         args:
           - '--verbose'
           - '--diff'
+        files: \.toml$
         language: system
-      - id: fmt
+      - id: cargo-sort
         name: Cargo sort
         description: sort cargo dependencies
         entry: cargo sort
         args:
           - '--workspace'
+        files: Cargo\.toml$
         language: system
 fail_fast: true
