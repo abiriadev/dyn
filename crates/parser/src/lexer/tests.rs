@@ -642,6 +642,7 @@ mod lex_string {
 	use logos::Logos;
 
 	use super::{assert_eq, LexError, Token};
+	use crate::lexer::QuotedString;
 
 	#[test]
 	fn lex_string() {
@@ -649,27 +650,42 @@ mod lex_string {
 			Token::lexer(r#""""#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::String("".to_owned())), 0..2)]
+			[(
+				Ok(Token::String(QuotedString::Double(
+					"".to_owned()
+				))),
+				0..2
+			)]
 		);
 
 		assert_eq!(
 			Token::lexer(r#"''"#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::String("".to_owned())), 0..2)]
+			[(
+				Ok(Token::String(QuotedString::Single(
+					"".to_owned()
+				))),
+				0..2
+			)]
 		);
 	}
 
 	#[test]
 	fn strings_should_have_same_content_regardless_of_quotes_used() {
-		assert_eq!(
-			Token::lexer(r#""abc""#)
-				.spanned()
-				.collect::<Vec<_>>(),
-			Token::lexer(r#"'abc'"#)
-				.spanned()
-				.collect::<Vec<_>>(),
-		);
+		let Some(Ok(Token::String(QuotedString::Double(qs1)))) =
+			Token::lexer(r#""abc""#).next()
+		else {
+			panic!()
+		};
+
+		let Some(Ok(Token::String(QuotedString::Single(qs2)))) =
+			Token::lexer(r#"'abc'"#).next()
+		else {
+			panic!()
+		};
+
+		assert_eq!(qs1, qs2);
 	}
 
 	#[test]
@@ -679,7 +695,9 @@ mod lex_string {
 				.spanned()
 				.collect::<Vec<_>>(),
 			[(
-				Ok(Token::String(r#"\"'"#.to_owned())),
+				Ok(Token::String(QuotedString::Double(
+					r#"\"'"#.to_owned()
+				))),
 				0..5,
 			)]
 		);
@@ -689,7 +707,9 @@ mod lex_string {
 				.spanned()
 				.collect::<Vec<_>>(),
 			[(
-				Ok(Token::String(r#"\'""#.to_owned())),
+				Ok(Token::String(QuotedString::Single(
+					r#"\'""#.to_owned()
+				))),
 				0..5,
 			)]
 		);
