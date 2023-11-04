@@ -2,8 +2,8 @@ use std::{fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
-	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter,
-	InterpreterError, ResolvedIdent, Value,
+	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, ResolvedIdent,
+	Value,
 };
 use maplit::hashmap;
 use miette::Report;
@@ -42,15 +42,10 @@ fn main() -> anyhow::Result<()> {
 	let res = intpr.run(&source);
 
 	if let Err(diag) = res {
-		match diag {
-			InterpreterError::ParseError(e) => println!("{:#?}", e),
-			InterpreterError::RuntimeError(e) => {
-				let rep: Report = e.into();
-				let rep = rep.with_source_code(source);
+		let rep: Report = diag.into();
+		let rep = rep.with_source_code(source);
 
-				println!("{rep:?}");
-			},
-		}
+		println!("{rep:?}");
 	} else {
 		println!("final result: {:?}", res);
 	}

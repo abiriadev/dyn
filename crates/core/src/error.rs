@@ -7,7 +7,7 @@ use thiserror::Error;
 
 use crate::Value;
 
-#[derive(Debug, PartialEq, Error)]
+#[derive(Debug, PartialEq, Error, Diagnostic)]
 #[error("InterpreterError")]
 pub enum InterpreterError {
 	ParseError(#[from] ParseError),
