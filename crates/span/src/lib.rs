@@ -115,6 +115,10 @@ impl<T> Spanned<T> {
 		}
 	}
 
+	pub fn get(&self) -> &T { &self.value }
+
+	pub fn get_mut(&mut self) -> &mut T { &mut self.value }
+
 	pub fn into_inner(self) -> T { self.value }
 }
 
