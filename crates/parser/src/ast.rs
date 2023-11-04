@@ -1,6 +1,7 @@
 #![allow(unused)]
 use box_tt::BoxNew;
 use span::Span;
+use strum::AsRefStr;
 
 pub trait HasSpan {
 	fn span(&self) -> Span;
@@ -238,20 +239,45 @@ pub struct Function {
 	pub body: Code,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, AsRefStr)]
 pub enum BinExprKind {
+	#[strum(serialize = "+")]
 	Add,
+
+	#[strum(serialize = "-")]
 	Sub,
+
+	#[strum(serialize = "*")]
 	Mul,
+
+	#[strum(serialize = "/")]
 	Div,
+
+	#[strum(serialize = "%")]
 	Mod,
+
+	#[strum(serialize = "==")]
 	Equal,
+
+	#[strum(serialize = "!=")]
 	NotEqual,
+
+	#[strum(serialize = "<")]
 	LessThan,
+
+	#[strum(serialize = ">")]
 	GreaterThan,
+
+	#[strum(serialize = "<=")]
 	LessThanEqual,
+
+	#[strum(serialize = ">=")]
 	GreaterThanEqual,
+
+	#[strum(serialize = "&&")]
 	And,
+
+	#[strum(serialize = "||")]
 	Or,
 }
 
