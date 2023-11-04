@@ -85,6 +85,42 @@ impl From<Span> for SourceSpan {
 	fn from(value: Span) -> Self { Self::from(value.range()) }
 }
 
+pub struct Spanned<T> {
+	span: Span,
+	value: T,
+}
+
+impl<T> Spanned<T> {
+	pub fn new<S>(span: S, value: T) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			value,
+		}
+	}
+
+	pub fn with_span<S>(self, span: S) -> Self
+	where S: Into<Span> {
+		Self {
+			span: span.into(),
+			..self
+		}
+	}
+
+	pub fn into_inner(self) -> T { self.value }
+}
+
+impl<T, S> From<(S, T)> for Spanned<T>
+where S: Into<Span>
+{
+	fn from((span, value): (S, T)) -> Self {
+		Self {
+			span: span.into(),
+			value,
+		}
+	}
+}
+
 #[cfg(test)]
 mod tests {
 	use pretty_assertions::assert_eq;
