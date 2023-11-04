@@ -32,7 +32,7 @@ impl Diagnostic for ParseError {
 		use parser::ParseError;
 
 		match &self.0 {
-			ParseError::InvalidToken { location } => unreachable!(),
+			ParseError::InvalidToken { .. } => unreachable!(),
 			ParseError::UnrecognizedEof { location, expected } =>
 				Some(Box::new(
 					[LabeledSpan::at(
@@ -44,7 +44,17 @@ impl Diagnostic for ParseError {
 					)]
 					.into_iter(),
 				)),
-			ParseError::UnrecognizedToken { token, expected } => todo!(),
+			ParseError::UnrecognizedToken { token, expected } =>
+				Some(Box::new(
+					[LabeledSpan::at(
+						token.0..token.2,
+						format!(
+							"Expected one of {}",
+							display_vec(expected)
+						),
+					)]
+					.into_iter(),
+				)),
 			ParseError::ExtraToken { token } => todo!(),
 			ParseError::User { error } => {
 				let span = error.span();
