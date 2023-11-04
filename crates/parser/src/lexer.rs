@@ -3,7 +3,7 @@ use logos::{Logos, SpannedIter};
 mod token;
 
 use span::Spanned;
-pub use token::Token;
+pub use token::{QuotedString, Token};
 
 #[cfg(test)] mod tests;
 

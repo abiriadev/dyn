@@ -1,5 +1,5 @@
 use std::string::String;
-use crate::lexer::{Token, LexError};
+use crate::lexer::{Token, LexError, QuotedString};
 use crate::ast::*;
 use tap::Tap;
 use span::{Span, Spanned};
@@ -36,7 +36,7 @@ Boolean: Boolean = {
 Integer: Integer = <l:@L> <v:"int"> <r:@R> => Integer::new(v, l..r);
 
 // string
-StringT: StringT = <l:@L> <v:"string"> <r:@R> => StringT::new(v, l..r);
+StringT: StringT = <l:@L> <v:"string"> <r:@R> => StringT::new(v.into_string(), l..r);
 
 // literal
 Literal: Literal = {
@@ -219,7 +219,7 @@ extern {
 		// "lcomment" => Token::LineComment,
 		// "bcomment" => Token::BlockComment,
 		"int" => Token::Integer(<i32>),
-		"string" => Token::String(<String>),
+		"string" => Token::String(<QuotedString>),
 		"ident" => Token::Identifier(<String>),
 	}
 }

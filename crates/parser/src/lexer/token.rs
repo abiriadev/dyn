@@ -31,6 +31,19 @@ pub enum QuotedString {
 	Double(String),
 }
 
+impl QuotedString {
+	pub fn into_string(self) -> String {
+		match self {
+			QuotedString::Single(v) => v,
+			QuotedString::Double(v) => v,
+		}
+	}
+}
+
+impl From<QuotedString> for String {
+	fn from(value: QuotedString) -> Self { value.into_string() }
+}
+
 fn lex_string_single(lex: &mut Lexer<Token>) -> QuotedString {
 	lex.extras = Some(TokenKind::String);
 	let sl = lex.slice();
