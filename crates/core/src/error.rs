@@ -1,5 +1,7 @@
+use std::fmt::{self, Display, Formatter};
+
 use miette::{Diagnostic, LabeledSpan, SourceSpan};
-use parser::{LexError, ParseError, Token};
+use parser::{ast::BinExprKind, LexError, ParseError, Token};
 use span::Span;
 use thiserror::Error;
 
@@ -48,15 +50,46 @@ impl Diagnostic for RuntimeError {
 
 #[derive(Debug, PartialEq, Error)]
 pub enum TypeError {
-	#[error("type does not match")]
-	BinOp { lhs: LabeledSpan, rhs: LabeledSpan },
+	BinOp {
+		op: BinExprKind,
+		lhs: Value,
+		lhs_span: Span,
+		rhs: Value,
+		rhs_span: Span,
+	},
+}
+
+impl Display for TypeError {
+	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+		let m = match self {
+			TypeError::BinOp { op, lhs, rhs, .. } => match op {
+				BinExprKind::Sub => format!(
+					"cannot subtract `{}` from `{}`",
+					rhs.get_type().type_name(),
+					lhs.get_type().type_name()
+				),
+				_ => format!("type error"),
+			},
+		};
+
+		write!(f, "{m}")
+	}
 }
 
 impl Diagnostic for TypeError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
 		Some(Box::new(match self {
-			TypeError::BinOp { lhs, rhs } =>
-				[lhs.clone(), rhs.clone()].into_iter(),
+			TypeError::BinOp {
+				lhs,
+				lhs_span,
+				rhs,
+				rhs_span,
+				..
+			} => [
+				value_to_message(*lhs_span, lhs.clone()),
+				value_to_message(*rhs_span, rhs.clone()),
+			]
+			.into_iter(),
 		}))
 	}
 }
@@ -66,7 +99,7 @@ pub enum ReferenceError {
 	UndefinedIdentifier,
 }
 
-pub fn value_to_message(span: Span, v: Value) -> LabeledSpan {
+fn value_to_message(span: Span, v: Value) -> LabeledSpan {
 	LabeledSpan::at(
 		span,
 		format!(

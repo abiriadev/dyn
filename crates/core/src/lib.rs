@@ -7,9 +7,8 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
-use error::{value_to_message, TypeError};
+use error::TypeError;
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
-use miette::LabeledSpan;
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
@@ -30,7 +29,7 @@ pub trait BuiltinFunction: DynClone {
 clone_trait_object!(BuiltinFunction);
 
 pub enum FunctionValue {
-	Builtin(Box<dyn BuiltinFunction>),
+	Builtin(Box<dyn BuiltinFunction + Send + Sync>),
 	Lambda(Function),
 }
 
@@ -300,9 +299,10 @@ impl Interpreter {
 			)),
 			Tree::Function(_) => todo!(),
 			Tree::BinExpr(bin) => {
-				let span = bin.span();
+				// let span = bin.span();
 				let lhs = bin.lhs;
 				let rhs = bin.rhs;
+				let op = bin.op.clone();
 
 				match bin.op {
 					BinExprKind::Add => {
@@ -322,15 +322,18 @@ impl Interpreter {
 						})
 					},
 					BinExprKind::Sub => {
-						let lspan = lhs.span();
-						let rspan = rhs.span();
+						let lhs_span = lhs.span();
+						let rhs_span = rhs.span();
 						let lhs = self.eval(Tree::Expr(*lhs))?;
 						let rhs = self.eval(Tree::Expr(*rhs))?;
 						let Value::Integer(i) = lhs else {
 							return Err(RuntimeError::TypeError(
 								TypeError::BinOp {
-									lhs: value_to_message(lspan, lhs),
-									rhs: value_to_message(rspan, rhs),
+									op,
+									lhs,
+									lhs_span,
+									rhs,
+									rhs_span,
 								},
 							));
 						};
