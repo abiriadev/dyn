@@ -2,7 +2,7 @@ use std::fmt::{self, Display, Formatter};
 
 use miette::{Diagnostic, LabeledSpan};
 use parser::{ast::BinExprKind, LexError, Token};
-use span::Span;
+use span::{HasSpan, Span};
 use thiserror::Error;
 
 use crate::Value;
@@ -25,7 +25,7 @@ impl Diagnostic for InterpreterError {
 
 #[derive(Debug, PartialEq, Error)]
 #[error("ParseError")]
-pub struct ParseError(pub parser::ParseError<usize, Token, LexError>);
+pub struct ParseError(pub parser::ParseError);
 
 impl Diagnostic for ParseError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
@@ -37,13 +37,15 @@ impl Diagnostic for ParseError {
 			ParseError::UnrecognizedToken { token, expected } => todo!(),
 			ParseError::ExtraToken { token } => todo!(),
 			ParseError::User { error } => {
-				let m = match error {
+				let span = error.span();
+
+				let m = match error.get() {
 					LexError::InvalidIdentifier => "Invalid Identifier",
 					LexError::InvalidToken => "Invalid Token",
 				};
 
 				Some(Box::new(
-					[LabeledSpan::at(Span::DUMMY_SPAN, m)].into_iter(),
+					[LabeledSpan::at(span, m)].into_iter(),
 				))
 			},
 		}
