@@ -4,16 +4,10 @@ use strum::EnumDiscriminants;
 use super::LexError;
 use crate::macros::save_token;
 
-fn lex_string(lex: &mut Lexer<Token>) -> String {
-	lex.extras = Some(TokenKind::String);
-	let sl = lex.slice();
-	sl[1..sl.len() - 1].to_owned()
-}
-
 fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
 	let res = match lex.extras {
 		Some(
-			// an identifier
+			// identifiers
 			| TokenKind::Identifier
 
 			// literals
@@ -29,6 +23,25 @@ fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
 	};
 	lex.extras = Some(TokenKind::NewLine);
 	res
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum QuotedString {
+	Single(String),
+	Double(String),
+}
+
+fn lex_string_single(lex: &mut Lexer<Token>) -> QuotedString {
+	lex.extras = Some(TokenKind::String);
+	let sl = lex.slice();
+	QuotedString::Single(sl[1..sl.len() - 1].to_owned())
+}
+
+fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
+	lex.extras = Some(TokenKind::String);
+	let sl = lex.slice();
+	sl[1..sl.len() - 1].to_owned();
+	QuotedString::Double(sl[1..sl.len() - 1].to_owned())
 }
 
 #[derive(Debug, Clone, PartialEq, Logos, EnumDiscriminants)]
@@ -205,9 +218,9 @@ pub enum Token {
 	})]
 	Integer(i32),
 
-	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string)]
-	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string)]
-	String(String),
+	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string_single)]
+	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string_double)]
+	String(QuotedString),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
 		lex.extras = Some(TokenKind::Identifier);
@@ -268,10 +281,13 @@ impl Token {
 			Token::Import => "import".to_owned(),
 			Token::Export => "export".to_owned(),
 			Token::NewLine => "\\n".to_owned(), // NOTE: escape backslash
-			Token::LineComment => "//".to_owned(), // TODO: retrieve string
-			Token::BlockComment => "/**/".to_owned(),
+			Token::LineComment => unreachable!(), // NOTE: skipped token
+			Token::BlockComment => unreachable!(), // NOTE: skipped token
 			Token::Integer(v) => format!("{v}"),
-			Token::String(v) => format!("{v}"),
+			Token::String(v) => match v {
+				QuotedString::Single(v) => format!("'{v}'"),
+				QuotedString::Double(v) => format!(r#""{v}""#),
+			},
 			Token::Identifier(v) => format!("{v}"),
 		}
 	}
