@@ -245,16 +245,6 @@ macro_rules! code {
 
 pub(crate) use code;
 
-macro_rules! save_token {
-	($token:expr) => {
-		|lex: &mut Lexer<'s>| {
-			lex.extras = Some($token);
-		}
-	};
-}
-
-pub(crate) use save_token;
-
 macro_rules! call {
 	($func:expr ; $start:literal .. $end:literal ( $($args:expr),* $(,)? )) => {
 		Box::new(

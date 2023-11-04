@@ -1,7 +1,8 @@
 use std::fmt::{self, Display, Formatter};
 
+use lexer::LexError;
 use miette::{Diagnostic, LabeledSpan};
-use parser::{ast::BinExprKind, LexError};
+use parser::ast::BinExprKind;
 use span::{HasSpan, Span};
 use thiserror::Error;
 

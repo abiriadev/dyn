@@ -290,6 +290,7 @@ version = "0.1.0"
 dependencies = [
  "dyn-clone",
  "indoc",
+ "lexer",
  "maplit",
  "miette",
  "parser",
@@ -449,6 +450,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f35c735096c0293d313e8f2a641627472b83d01b937177fe76e5e2708d31e0d"
 dependencies = [
  "regex",
+]
+
+[[package]]
+name = "lexer"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "box-tt",
+ "indoc",
+ "lalrpop-util",
+ "logos",
+ "pretty_assertions",
+ "span",
+ "strum",
+ "tap",
 ]
 
 [[package]]
@@ -621,6 +637,7 @@ dependencies = [
  "indoc",
  "lalrpop",
  "lalrpop-util",
+ "lexer",
  "logos",
  "pretty_assertions",
  "span",

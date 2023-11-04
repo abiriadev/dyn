@@ -1,10 +1,8 @@
 use lalrpop_util::lalrpop_mod;
+use lexer::{LexError, SpannedLexer, Token};
 use span::Spanned;
 
-use crate::{
-	ast::{Code, Expr},
-	lexer::{LexError, SpannedLexer, Token},
-};
+use crate::ast::{Code, Expr};
 
 lalrpop_mod!(pub dynlang);
 

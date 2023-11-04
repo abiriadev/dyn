@@ -1,5 +1,5 @@
 use std::string::String;
-use crate::lexer::{Token, LexError, QuotedString};
+use lexer::{Token, LexError, QuotedString};
 use crate::ast::*;
 use tap::Tap;
 use span::{Span, Spanned};

@@ -641,8 +641,7 @@ fn minus_zero_should_be_valid_integer() {
 mod lex_string {
 	use logos::Logos;
 
-	use super::{assert_eq, LexError, Token};
-	use crate::lexer::QuotedString;
+	use super::{assert_eq, LexError, QuotedString, Token};
 
 	#[test]
 	fn lex_string() {
@@ -864,8 +863,7 @@ mod asi {
 	use indoc::indoc;
 	use logos::Logos;
 
-	use super::{assert_eq, Token};
-	use crate::lexer::token::TokenKind;
+	use super::{assert_eq, token::TokenKind, Token};
 
 	#[test]
 	fn last_token() {

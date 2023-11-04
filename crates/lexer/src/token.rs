@@ -2,7 +2,14 @@ use logos::{Filter, Lexer, Logos, Skip};
 use strum::EnumDiscriminants;
 
 use super::LexError;
-use crate::macros::save_token;
+
+macro_rules! save_token {
+	($token:expr) => {
+		|lex: &mut Lexer<'s>| {
+			lex.extras = Some($token);
+		}
+	};
+}
 
 fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
 	let res = match lex.extras {
