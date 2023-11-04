@@ -85,6 +85,7 @@ impl From<Span> for SourceSpan {
 	fn from(value: Span) -> Self { Self::from(value.range()) }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Spanned<T> {
 	span: Span,
 	value: T,
