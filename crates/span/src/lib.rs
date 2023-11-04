@@ -5,6 +5,8 @@ use std::{
 	ops::{Add, Range},
 };
 
+use miette::SourceSpan;
+
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Span {
 	start: usize,
@@ -75,6 +77,10 @@ impl From<Span> for (usize, usize) {
 
 impl From<Span> for Range<usize> {
 	fn from(value: Span) -> Self { value.start..value.end }
+}
+
+impl From<Span> for SourceSpan {
+	fn from(value: Span) -> Self { Self::from(value.start..value.end) }
 }
 
 #[cfg(test)]

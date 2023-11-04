@@ -226,7 +226,7 @@ dependencies = [
  "clap",
  "dyn-core",
  "maplit",
- "miette",
+ "miette 5.10.0 (git+https://github.com/zkat/miette?rev=d37ada876a5831d3f47622274e334c9a24aa5d2b)",
  "parser",
 ]
 
@@ -291,9 +291,10 @@ dependencies = [
  "dyn-clone",
  "indoc",
  "maplit",
- "miette",
+ "miette 5.10.0 (git+https://github.com/zkat/miette?rev=d37ada876a5831d3f47622274e334c9a24aa5d2b)",
  "parser",
  "pretty_assertions",
+ "span",
  "strum",
  "thiserror",
 ]
@@ -525,12 +526,24 @@ checksum = "f665ee40bc4a3c5590afb1e9677db74a508659dfd71e126420da8274909a0167"
 [[package]]
 name = "miette"
 version = "5.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59bb584eaeeab6bd0226ccf3509a69d7936d148cf3d036ad350abe35e8c6856e"
+dependencies = [
+ "miette-derive 5.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "once_cell",
+ "thiserror",
+ "unicode-width",
+]
+
+[[package]]
+name = "miette"
+version = "5.10.0"
 source = "git+https://github.com/zkat/miette?rev=d37ada876a5831d3f47622274e334c9a24aa5d2b#d37ada876a5831d3f47622274e334c9a24aa5d2b"
 dependencies = [
  "backtrace",
  "backtrace-ext",
  "is-terminal",
- "miette-derive",
+ "miette-derive 5.10.0 (git+https://github.com/zkat/miette?rev=d37ada876a5831d3f47622274e334c9a24aa5d2b)",
  "once_cell",
  "owo-colors",
  "supports-color",
@@ -540,6 +553,17 @@ dependencies = [
  "textwrap",
  "thiserror",
  "unicode-width",
+]
+
+[[package]]
+name = "miette-derive"
+version = "5.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49e7bc1560b95a3c4a25d03de42fe76ca718ab92d1a22a55b9b4cf67b3ae635c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -809,6 +833,7 @@ checksum = "b7c388c1b5e93756d0c740965c41e8822f866621d41acbdf6336a6a168f8840c"
 name = "span"
 version = "0.1.0"
 dependencies = [
+ "miette 5.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pretty_assertions",
 ]
 

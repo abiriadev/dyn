@@ -7,3 +7,6 @@ edition = "2021"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
+
+[dependencies]
+miette = "5.10.0"
