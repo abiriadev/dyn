@@ -35,4 +35,9 @@ repos:
         entry: cargo udep
         files: Cargo\.toml$
         language: system
+      - id: typos
+        name: Typos
+        description: Check typos
+        entry: typos
+        language: system
 fail_fast: true
