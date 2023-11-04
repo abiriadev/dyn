@@ -32,8 +32,18 @@ impl Diagnostic for ParseError {
 		use parser::ParseError;
 
 		match &self.0 {
-			ParseError::InvalidToken { location } => todo!(),
-			ParseError::UnrecognizedEof { location, expected } => todo!(),
+			ParseError::InvalidToken { location } => unreachable!(),
+			ParseError::UnrecognizedEof { location, expected } =>
+				Some(Box::new(
+					[LabeledSpan::at(
+						*location..location + 1,
+						format!(
+							"Expected one of {}",
+							display_vec(expected)
+						),
+					)]
+					.into_iter(),
+				)),
 			ParseError::UnrecognizedToken { token, expected } => todo!(),
 			ParseError::ExtraToken { token } => todo!(),
 			ParseError::User { error } => {
@@ -170,4 +180,12 @@ fn value_to_message(span: Span, v: Value) -> LabeledSpan {
 			v.get_type().type_name()
 		),
 	)
+}
+
+fn display_vec<T>(v: &Vec<T>) -> String
+where T: Display {
+	v.into_iter()
+		.map(|e| e.to_string())
+		.collect::<Vec<_>>()
+		.join(", ")
 }
