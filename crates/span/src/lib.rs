@@ -115,14 +115,6 @@ impl<T> Spanned<T> {
 		}
 	}
 
-	pub fn with_span<S>(self, span: S) -> Self
-	where S: Into<Span> {
-		Self {
-			span: span.into(),
-			..self
-		}
-	}
-
 	pub fn into_inner(self) -> T { self.value }
 }
 
