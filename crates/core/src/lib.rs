@@ -7,8 +7,8 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
-use error::TypeError;
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
+use error::{ParseError, TypeError};
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
@@ -268,7 +268,10 @@ impl Interpreter {
 	pub fn run(&mut self, code: &str) -> Result<Value, InterpreterError> {
 		let ast = match parse_code(code) {
 			Ok(v) => v,
-			Err(e) => return Err(InterpreterError::ParseError(e)),
+			Err(e) =>
+				return Err(InterpreterError::ParseError(
+					ParseError(e),
+				)),
 		};
 
 		let res = self

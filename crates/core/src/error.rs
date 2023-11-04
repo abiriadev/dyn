@@ -1,20 +1,27 @@
 use std::fmt::{self, Display, Formatter};
 
-use miette::{Diagnostic, LabeledSpan, SourceSpan};
-use parser::{ast::BinExprKind, LexError, ParseError, Token};
+use miette::{Diagnostic, LabeledSpan};
+use parser::{ast::BinExprKind, LexError, Token};
 use span::Span;
 use thiserror::Error;
 
 use crate::Value;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Error)]
+#[error("InterpreterError")]
 pub enum InterpreterError {
-	ParseError(ParseError<usize, Token, LexError>),
-	RuntimeError(RuntimeError),
+	ParseError(#[from] ParseError),
+	RuntimeError(#[from] RuntimeError),
 }
 
-impl From<RuntimeError> for InterpreterError {
-	fn from(value: RuntimeError) -> Self { Self::RuntimeError(value) }
+#[derive(Debug, PartialEq, Error)]
+#[error("ParseError")]
+pub struct ParseError(pub parser::ParseError<usize, Token, LexError>);
+
+impl Diagnostic for ParseError {
+	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+		None
+	}
 }
 
 #[derive(Debug, PartialEq, Error)]
