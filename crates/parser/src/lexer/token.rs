@@ -53,7 +53,6 @@ fn lex_string_single(lex: &mut Lexer<Token>) -> QuotedString {
 fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
 	lex.extras = Some(TokenKind::String);
 	let sl = lex.slice();
-	sl[1..sl.len() - 1].to_owned();
 	QuotedString::Double(sl[1..sl.len() - 1].to_owned())
 }
 

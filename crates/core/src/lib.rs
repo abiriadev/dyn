@@ -58,7 +58,7 @@ impl Clone for FunctionValue {
 impl PartialEq for FunctionValue {
 	fn eq(&self, other: &Self) -> bool {
 		match (self, other) {
-			(Self::Builtin(l0), Self::Builtin(r0)) => unimplemented!(),
+			(Self::Builtin(_), Self::Builtin(_)) => unimplemented!(),
 			(Self::Lambda(l0), Self::Lambda(r0)) => l0 == r0,
 			_ => false,
 		}
@@ -79,7 +79,7 @@ pub enum Value {
 impl Value {
 	fn from_literal(ex: Literal) -> Self {
 		match ex {
-			Literal::Nil(Nil) => Self::Nil,
+			Literal::Nil(_) => Self::Nil,
 			Literal::Boolean(Boolean { value, .. }) => Self::Boolean(value),
 			Literal::Integer(Integer { value, .. }) => Self::Integer(value),
 			Literal::String(StringT { value, .. }) => Self::String(value),
