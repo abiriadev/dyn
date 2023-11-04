@@ -456,15 +456,11 @@ dependencies = [
 name = "lexer"
 version = "0.1.0"
 dependencies = [
- "anyhow",
- "box-tt",
  "indoc",
- "lalrpop-util",
  "logos",
  "pretty_assertions",
  "span",
  "strum",
- "tap",
 ]
 
 [[package]]
@@ -632,7 +628,6 @@ dependencies = [
 name = "parser"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "box-tt",
  "indoc",
  "lalrpop",
