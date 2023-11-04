@@ -2,7 +2,6 @@
 name = "dyn-core"
 version = "0.1.0"
 edition = "2021"
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -15,6 +14,6 @@ strum = { version = "0.25.0", features = ["derive"] }
 thiserror = "1.0.50"
 
 [dev-dependencies]
-pretty_assertions = "1.4.0"
-maplit = "1.0.2"
 indoc = "2.0.4"
+maplit = "1.0.2"
+pretty_assertions = "1.4.0"
