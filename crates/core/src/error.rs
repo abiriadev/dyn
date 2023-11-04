@@ -7,11 +7,20 @@ use thiserror::Error;
 
 use crate::Value;
 
-#[derive(Debug, PartialEq, Error, Diagnostic)]
+#[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]
 pub enum InterpreterError {
 	ParseError(#[from] ParseError),
 	RuntimeError(#[from] RuntimeError),
+}
+
+impl Diagnostic for InterpreterError {
+	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+		match self {
+			Self::ParseError(t) => t.labels(),
+			Self::RuntimeError(t) => t.labels(),
+		}
+	}
 }
 
 #[derive(Debug, PartialEq, Error)]
@@ -20,7 +29,24 @@ pub struct ParseError(pub parser::ParseError<usize, Token, LexError>);
 
 impl Diagnostic for ParseError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
-		None
+		use parser::ParseError;
+
+		match &self.0 {
+			ParseError::InvalidToken { location } => todo!(),
+			ParseError::UnrecognizedEof { location, expected } => todo!(),
+			ParseError::UnrecognizedToken { token, expected } => todo!(),
+			ParseError::ExtraToken { token } => todo!(),
+			ParseError::User { error } => {
+				let m = match error {
+					LexError::InvalidIdentifier => "Invalid Identifier",
+					LexError::InvalidToken => "Invalid Token",
+				};
+
+				Some(Box::new(
+					[LabeledSpan::at(Span::DUMMY_SPAN, m)].into_iter(),
+				))
+			},
+		}
 	}
 }
 
