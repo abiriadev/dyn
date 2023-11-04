@@ -99,7 +99,7 @@ impl Value {
 			Value::String(v) => format!(r#""{}""#, v),
 			Value::Array(v) => format!(
 				"[{}]",
-				v.into_iter()
+				v.iter()
 					.map(|e| e.to_debug())
 					.collect::<Vec<_>>()
 					.join(", ")

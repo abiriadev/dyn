@@ -300,7 +300,7 @@ impl Token {
 				QuotedString::Single(v) => format!("'{v}'"),
 				QuotedString::Double(v) => format!(r#""{v}""#),
 			},
-			Token::Identifier(v) => format!("{v}"),
+			Token::Identifier(v) => v.to_string(),
 		}
 	}
 }

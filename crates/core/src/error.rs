@@ -193,9 +193,9 @@ fn value_to_message(span: Span, v: Value) -> LabeledSpan {
 	)
 }
 
-fn display_vec<T>(v: &Vec<T>) -> String
+fn display_vec<T>(v: &[T]) -> String
 where T: Display {
-	v.into_iter()
+	v.iter()
 		.map(|e| e.to_string())
 		.collect::<Vec<_>>()
 		.join(", ")

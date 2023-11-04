@@ -42,8 +42,8 @@ pub trait Visit {
 	}
 
 	fn visit_binexpr(&mut self, i: &BinExpr) {
-		self.visit_expr(&*i.lhs);
-		self.visit_expr(&*i.rhs);
+		self.visit_expr(&i.lhs);
+		self.visit_expr(&i.rhs);
 	}
 
 	fn visit_expr(&mut self, i: &Expr) {
@@ -173,8 +173,8 @@ pub trait VisitMut {
 	}
 
 	fn visit_mut_binexpr(&mut self, i: &mut BinExpr) {
-		self.visit_mut_expr(&mut *i.lhs);
-		self.visit_mut_expr(&mut *i.rhs);
+		self.visit_mut_expr(&mut i.lhs);
+		self.visit_mut_expr(&mut i.rhs);
 	}
 
 	fn visit_mut_expr(&mut self, i: &mut Expr) {
