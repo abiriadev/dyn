@@ -2,7 +2,7 @@ use std::string::String;
 use crate::lexer::{Token, LexError};
 use crate::ast::*;
 use tap::Tap;
-use span::Span;
+use span::{Span, Spanned};
 
 grammar;
 
@@ -165,7 +165,7 @@ Block = "{" <Code> "}";
 
 extern {
 	type Location = usize;
-	type Error = LexError;
+	type Error = Spanned<LexError>;
 
 	enum Token {
 		"+" => Token::Plus,

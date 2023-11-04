@@ -1,4 +1,5 @@
 use lalrpop_util::{lalrpop_mod, ParseError};
+use span::Spanned;
 
 use crate::{
 	ast::{Code, Expr},
@@ -7,13 +8,15 @@ use crate::{
 
 lalrpop_mod!(pub dynlang);
 
-pub fn parse(code: &str) -> Result<Expr, ParseError<usize, Token, LexError>> {
+pub fn parse(
+	code: &str,
+) -> Result<Expr, ParseError<usize, Token, Spanned<LexError>>> {
 	dynlang::ExprParser::new().parse(SpannedLexer::new(code))
 }
 
 pub fn parse_code(
 	code: &str,
-) -> Result<Code, ParseError<usize, Token, LexError>> {
+) -> Result<Code, ParseError<usize, Token, Spanned<LexError>>> {
 	dynlang::CodeParser::new().parse(SpannedLexer::new(code))
 }
 
