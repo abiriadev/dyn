@@ -11,6 +11,7 @@ indoc = "2.0.4"
 maplit = "1.0.2"
 miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b" }
 parser = { version = "0.1.0", path = "../parser" }
+span = { version = "0.1.0", path = "../span" }
 strum = { version = "0.25.0", features = ["derive"] }
 thiserror = "1.0.50"
 

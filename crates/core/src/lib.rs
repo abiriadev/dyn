@@ -7,6 +7,7 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
+use error::{value_to_message, TypeError};
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use miette::LabeledSpan;
 use parser::{
@@ -321,31 +322,17 @@ impl Interpreter {
 						})
 					},
 					BinExprKind::Sub => {
-						let lrng = lhs.span().range();
-						let rrng = rhs.span().range();
+						let lspan = lhs.span();
+						let rspan = rhs.span();
 						let lhs = self.eval(Tree::Expr(*lhs))?;
 						let rhs = self.eval(Tree::Expr(*rhs))?;
 						let Value::Integer(i) = lhs else {
-							let lhs_type = lhs.get_type().type_name();
-							let rhs_type = rhs.get_type().type_name();
-							return Err(RuntimeError::TypeError {
-								lhs: LabeledSpan::at(
-									lrng,
-									format!(
-										"{} is of type {}",
-										lhs.to_debug(),
-										lhs_type
-									),
-								),
-								rhs: LabeledSpan::at(
-									rrng,
-									format!(
-										"{} is of type {}",
-										rhs.to_debug(),
-										rhs_type
-									),
-								),
-							});
+							return Err(RuntimeError::TypeError(
+								TypeError::BinOp {
+									lhs: value_to_message(lspan, lhs),
+									rhs: value_to_message(rspan, rhs),
+								},
+							));
 						};
 						let Value::Integer(j) = rhs else { panic!() };
 						Ok(Value::Integer(i - j))
