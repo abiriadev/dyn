@@ -90,6 +90,21 @@ pub struct Spanned<T> {
 	value: T,
 }
 
+pub trait HasSpan {
+	fn span(&self) -> Span;
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span>;
+
+	fn with_span<S>(mut self, span: S) -> Self
+	where
+		S: Into<Span>,
+		Self: Sized, {
+		self.set_span(span);
+		self
+	}
+}
+
 impl<T> Spanned<T> {
 	pub fn new<S>(span: S, value: T) -> Self
 	where S: Into<Span> {
@@ -108,6 +123,15 @@ impl<T> Spanned<T> {
 	}
 
 	pub fn into_inner(self) -> T { self.value }
+}
+
+impl<T> HasSpan for Spanned<T> {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into()
+	}
 }
 
 impl<T, S> From<(S, T)> for Spanned<T>

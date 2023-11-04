@@ -1,22 +1,7 @@
 #![allow(unused)]
 use box_tt::BoxNew;
-use span::Span;
+use span::{HasSpan, Span};
 use strum::AsRefStr;
-
-pub trait HasSpan {
-	fn span(&self) -> Span;
-
-	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span>;
-
-	fn with_span<S>(mut self, span: S) -> Self
-	where
-		S: Into<Span>,
-		Self: Sized, {
-		self.set_span(span);
-		self
-	}
-}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Nil {

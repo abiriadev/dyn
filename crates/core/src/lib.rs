@@ -12,10 +12,11 @@ use error::{ParseError, TypeError};
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
-		HasSpan, Ident, Integer, Literal, Nil, StringT,
+		Ident, Integer, Literal, Nil, StringT,
 	},
 	parse_code,
 };
+use span::HasSpan;
 use strum::EnumDiscriminants;
 
 pub mod error;
