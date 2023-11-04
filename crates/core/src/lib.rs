@@ -321,30 +321,26 @@ impl Interpreter {
 							Value::String(format!("{s}{i}")),
 						(Value::String(s), Value::String(s2)) =>
 							Value::String(format!("{s}{s2}")),
-						(i, j) =>
-							return Err(RuntimeError::TypeError(
-								TypeError::BinOp {
-									op,
-									lhs: i,
-									lhs_span,
-									rhs: j,
-									rhs_span,
-								},
-							)),
+						(i, j) => Err(TypeError::BinOp {
+							op,
+							lhs: i,
+							lhs_span,
+							rhs: j,
+							rhs_span,
+						})?,
 					},
 					BinExprKind::Sub => match (i, j) {
 						(Value::Integer(i), Value::Integer(j)) =>
-							(Value::Integer(i - j)),
-						(i, j) =>
-							return Err(RuntimeError::TypeError(
-								TypeError::BinOp {
-									op,
-									lhs: i,
-									lhs_span,
-									rhs: j,
-									rhs_span,
-								},
-							)),
+							Value::Integer(i - j),
+						(i, j) => Err(RuntimeError::TypeError(
+							TypeError::BinOp {
+								op,
+								lhs: i,
+								lhs_span,
+								rhs: j,
+								rhs_span,
+							},
+						))?,
 					},
 					BinExprKind::Mul => {
 						let Value::Integer(i) = i else { panic!() };
