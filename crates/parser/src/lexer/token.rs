@@ -216,3 +216,63 @@ pub enum Token {
 	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
 	Identifier(String),
 }
+
+impl Token {
+	pub fn to_source(&self) -> String {
+		match self {
+			Token::Plus => "+".to_owned(),
+			Token::Minus => "-".to_owned(),
+			Token::Asterisk => "*".to_owned(),
+			Token::Slash => "/".to_owned(),
+			Token::Percent => "%".to_owned(),
+			Token::Assign => "=".to_owned(),
+			Token::PlusAssign => "+=".to_owned(),
+			Token::MinusAssign => "-=".to_owned(),
+			Token::AsteriskAssign => "*=".to_owned(),
+			Token::SlashAssign => "/=".to_owned(),
+			Token::PercentAssign => "%=".to_owned(),
+			Token::Equal => "==".to_owned(),
+			Token::NotEqual => "!=".to_owned(),
+			Token::LeftAngledBracket => "<".to_owned(),
+			Token::RightAngledBracket => ">".to_owned(),
+			Token::LessThanEqual => "<=".to_owned(),
+			Token::GreaterThanEqual => ">=".to_owned(),
+			Token::DoubleAnd => "&&".to_owned(),
+			Token::DoublePipe => "||".to_owned(),
+			Token::LeftParenthesis => "(".to_owned(),
+			Token::RightParenthesis => ")".to_owned(),
+			Token::LeftBrace => "{".to_owned(),
+			Token::RightBrace => "}".to_owned(),
+			Token::LeftBracket => "[".to_owned(),
+			Token::RightBracket => "]".to_owned(),
+			Token::Bang => "!".to_owned(),
+			Token::Dot => ".".to_owned(),
+			Token::Comma => ".".to_owned(),
+			Token::Pipe => "|".to_owned(),
+			Token::At => "@".to_owned(),
+			Token::Arrow => "<-".to_owned(),
+			Token::Nil => "nil".to_owned(),
+			Token::True => "true".to_owned(),
+			Token::False => "false".to_owned(),
+			Token::Panic => "panic".to_owned(),
+			Token::Assert => "assert".to_owned(),
+			Token::Let => "let".to_owned(),
+			Token::LetMut => "let!".to_owned(),
+			Token::If => "if".to_owned(),
+			Token::Else => "else".to_owned(),
+			Token::Iter => "iter".to_owned(),
+			Token::Of => "of".to_owned(),
+			Token::Return => "return".to_owned(),
+			Token::Break => "break".to_owned(),
+			Token::Continue => "continue".to_owned(),
+			Token::Import => "import".to_owned(),
+			Token::Export => "export".to_owned(),
+			Token::NewLine => "\\n".to_owned(), // NOTE: escape backslash
+			Token::LineComment => "//".to_owned(), // TODO: retrieve string
+			Token::BlockComment => "/**/".to_owned(),
+			Token::Integer(v) => format!("{v}"),
+			Token::String(v) => format!("{v}"),
+			Token::Identifier(v) => format!("{v}"),
+		}
+	}
+}

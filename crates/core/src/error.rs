@@ -56,7 +56,7 @@ impl Diagnostic for ParseError {
 					)]
 					.into_iter(),
 				)),
-			ParseError::ExtraToken { token } => todo!(),
+			ParseError::ExtraToken { .. } => unimplemented!(),
 			ParseError::User { error } => {
 				let span = error.span();
 
