@@ -311,8 +311,8 @@ impl Interpreter {
 				let i = self.eval(Tree::Expr(lhs))?;
 				let j = self.eval(Tree::Expr(rhs))?;
 
-				match bin.op {
-					BinExprKind::Add => Ok(match (i, j) {
+				Ok(match bin.op {
+					BinExprKind::Add => match (i, j) {
 						(Value::Integer(i), Value::Integer(i2)) =>
 							Value::Integer(i + i2),
 						(Value::Integer(i), Value::String(s)) =>
@@ -321,11 +321,20 @@ impl Interpreter {
 							Value::String(format!("{s}{i}")),
 						(Value::String(s), Value::String(s2)) =>
 							Value::String(format!("{s}{s2}")),
-						(_, _) => panic!(),
-					}),
+						(i, j) =>
+							return Err(RuntimeError::TypeError(
+								TypeError::BinOp {
+									op,
+									lhs: i,
+									lhs_span,
+									rhs: j,
+									rhs_span,
+								},
+							)),
+					},
 					BinExprKind::Sub => match (i, j) {
 						(Value::Integer(i), Value::Integer(j)) =>
-							Ok(Value::Integer(i - j)),
+							(Value::Integer(i - j)),
 						(i, j) =>
 							return Err(RuntimeError::TypeError(
 								TypeError::BinOp {
@@ -340,51 +349,51 @@ impl Interpreter {
 					BinExprKind::Mul => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Integer(i * j))
+						Value::Integer(i * j)
 					},
 					BinExprKind::Div => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Integer(i / j))
+						Value::Integer(i / j)
 					},
 					BinExprKind::Mod => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Integer(i % j))
+						Value::Integer(i % j)
 					},
-					BinExprKind::Equal => Ok(Value::Boolean(i == j)),
-					BinExprKind::NotEqual => Ok(Value::Boolean(i != j)),
+					BinExprKind::Equal => Value::Boolean(i == j),
+					BinExprKind::NotEqual => Value::Boolean(i != j),
 					BinExprKind::LessThan => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Boolean(i < j))
+						Value::Boolean(i < j)
 					},
 					BinExprKind::GreaterThan => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Boolean(i > j))
+						Value::Boolean(i > j)
 					},
 					BinExprKind::LessThanEqual => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Boolean(i <= j))
+						Value::Boolean(i <= j)
 					},
 					BinExprKind::GreaterThanEqual => {
 						let Value::Integer(i) = i else { panic!() };
 						let Value::Integer(j) = j else { panic!() };
-						Ok(Value::Boolean(i >= j))
+						Value::Boolean(i >= j)
 					},
 					BinExprKind::And => {
 						let Value::Boolean(i) = i else { panic!() };
 						let Value::Boolean(j) = j else { panic!() };
-						Ok(Value::Boolean(i && j))
+						Value::Boolean(i && j)
 					},
 					BinExprKind::Or => {
 						let Value::Boolean(i) = i else { panic!() };
 						let Value::Boolean(j) = j else { panic!() };
-						Ok(Value::Boolean(i || j))
+						Value::Boolean(i || j)
 					},
-				}
+				})
 			},
 			Tree::Expr(i) => match i.kind {
 				ExprKind::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
