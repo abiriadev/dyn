@@ -26,6 +26,8 @@ impl Span {
 	pub const fn end(&self) -> usize { self.end }
 
 	pub const fn range(&self) -> Range<usize> { self.start..self.end }
+
+	pub const fn tuple(&self) -> (usize, usize) { (self.start, self.end) }
 }
 
 impl From<Range<usize>> for Span {
@@ -72,15 +74,15 @@ impl Add for Span {
 }
 
 impl From<Span> for (usize, usize) {
-	fn from(value: Span) -> Self { (value.start, value.end) }
+	fn from(value: Span) -> Self { value.tuple() }
 }
 
 impl From<Span> for Range<usize> {
-	fn from(value: Span) -> Self { value.start..value.end }
+	fn from(value: Span) -> Self { value.range() }
 }
 
 impl From<Span> for SourceSpan {
-	fn from(value: Span) -> Self { Self::from(value.start..value.end) }
+	fn from(value: Span) -> Self { Self::from(value.range()) }
 }
 
 #[cfg(test)]
