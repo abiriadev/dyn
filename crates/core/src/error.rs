@@ -88,37 +88,14 @@ impl Display for TypeError {
 					rhs.get_type().type_name(),
 					lhs.get_type().type_name()
 				),
-				BinExprKind::LessThan => format!(
-					"`<` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				BinExprKind::GreaterThan => format!(
-					"`>` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				BinExprKind::LessThanEqual => format!(
-					"`<=` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				BinExprKind::GreaterThanEqual => format!(
-					"`>=` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				BinExprKind::And => format!(
-					"`&&` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				BinExprKind::Or => format!(
-					"`||` cannot be applied to `{}` and `{}`",
-					rhs.get_type().type_name(),
-					lhs.get_type().type_name()
-				),
-				_ => format!("type error"),
+				op => {
+					format!(
+						"`{}` cannot be applied to `{}` and `{}`",
+						op.as_ref(),
+						rhs.get_type().type_name(),
+						lhs.get_type().type_name()
+					)
+				},
 			},
 		};
 
