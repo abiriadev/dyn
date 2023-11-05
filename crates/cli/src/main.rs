@@ -1,4 +1,8 @@
-use std::{fs::read_to_string, path::PathBuf};
+use std::{
+	fs::read_to_string,
+	io::{stdin, stdout, Write},
+	path::PathBuf,
+};
 
 use clap::Parser;
 use dyn_core::{
@@ -10,7 +14,7 @@ use miette::Report;
 
 #[derive(Debug, Parser)]
 struct Args {
-	source_path: PathBuf,
+	source_path: Option<PathBuf>,
 }
 
 #[derive(Debug, Clone)]
@@ -31,7 +35,13 @@ impl BuiltinFunction for Printer {
 fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
 
-	let source = read_to_string(args.source_path).unwrap();
+	let source = if let Some(f) = args.source_path {
+		read_to_string(f).unwrap()
+	} else {
+		print!("> ");
+		stdout().flush().unwrap();
+		stdin().lines().next().unwrap().unwrap()
+	};
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
 		ResolvedIdent::new("print") => Value::Function(
