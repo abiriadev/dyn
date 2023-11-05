@@ -77,6 +77,7 @@ pub enum Value {
 }
 
 impl Value {
+	#[allow(unused)]
 	fn from_literal(ex: Literal) -> Self {
 		match ex {
 			Literal::Nil(_) => Self::Nil,
@@ -237,6 +238,7 @@ enum Tree {
 	Literal(Literal),
 	Ident(Ident),
 	Array(Array),
+	#[allow(unused)]
 	Function(Function),
 	BinExpr(BinExpr),
 	Expr(Expr),

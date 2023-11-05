@@ -4,7 +4,7 @@ use span::Spanned;
 
 use crate::ast::{Code, Expr};
 
-lalrpop_mod!(pub dynlang);
+lalrpop_mod!(#[allow(clippy::type_complexity)] pub dynlang);
 
 pub type ParseError = lalrpop_util::ParseError<usize, Token, Spanned<LexError>>;
 

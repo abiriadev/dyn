@@ -9,7 +9,7 @@ repos:
       - id: rustfmt
         name: Rust formatting
         description: format all rust files
-        entry: cargo +nightly fmt
+        entry: cargo +nightly fmt --
         files: \.rs$
         language: system
       - id: taplo-fmt
