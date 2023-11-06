@@ -74,14 +74,13 @@ impl Interpreter {
 		Ok(Self { mem })
 	}
 
+	fn parse_code(&mut self, code: &str) -> Result<Code, InterpreterError> {
+		parse_code(code)
+			.map_err(|e| InterpreterError::ParseError(ParseError(e)))
+	}
+
 	pub fn run(&mut self, code: &str) -> Result<Value, InterpreterError> {
-		let ast = match parse_code(code) {
-			Ok(v) => v,
-			Err(e) =>
-				return Err(InterpreterError::ParseError(
-					ParseError(e),
-				)),
-		};
+		let ast = self.parse_code(code)?;
 
 		let res = self
 			.eval(Tree::Code(ast))
