@@ -1,8 +1,4 @@
-use std::{
-	fs::read_to_string,
-	io::{stdin, stdout, Write},
-	path::PathBuf,
-};
+use std::{fs::read_to_string, io::stdin, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
@@ -35,29 +31,41 @@ impl BuiltinFunction for Printer {
 fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
 
-	let source = if let Some(f) = args.source_path {
-		read_to_string(f).unwrap()
-	} else {
-		print!("> ");
-		stdout().flush().unwrap();
-		stdin().lines().next().unwrap().unwrap()
-	};
-
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
 		ResolvedIdent::new("print") => Value::Function(
 			FunctionValue::Builtin(Printer::new())
 		),
 	})
 	.unwrap();
-	let res = intpr.run(&source);
 
-	if let Err(diag) = res {
-		let rep: Report = diag.into();
-		let rep = rep.with_source_code(source);
+	if let Some(p) = args.source_path {
+		let source = read_to_string(p).unwrap();
 
-		println!("{rep:?}");
+		let res = intpr.run(&source);
+
+		if let Err(diag) = res {
+			let rep: Report = diag.into();
+			let rep = rep.with_source_code(source);
+
+			println!("{rep:?}");
+		} else {
+			println!("final result: {:?}", res);
+		}
 	} else {
-		println!("final result: {:?}", res);
+		for l in stdin().lines() {
+			let l = l.unwrap();
+
+			let res = intpr.run(&l);
+
+			if let Err(diag) = res {
+				let rep: Report = diag.into();
+				let rep = rep.with_source_code(l);
+
+				println!("{rep:?}");
+			} else {
+				println!("final result: {:?}", res);
+			}
+		}
 	}
 
 	Ok(())
