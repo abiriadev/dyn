@@ -29,10 +29,10 @@ repos:
           - '--workspace'
         files: Cargo\.toml$
         language: system
-      - id: cargo-udep
-        name: Cargo udep
+      - id: cargo-udeps
+        name: Cargo udeps
         description: Prune unused dependencies
-        entry: cargo udep
+        entry: cargo udeps
         files: Cargo\.toml$
         language: system
       - id: typos
