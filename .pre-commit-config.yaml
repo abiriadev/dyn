@@ -12,6 +12,7 @@ repos:
         entry: cargo +nightly fmt --
         files: \.rs$
         language: system
+        pass_filenames: false
       - id: taplo-fmt
         name: Taplo formatting
         description: format all toml files
@@ -21,6 +22,7 @@ repos:
           - '--diff'
         files: \.toml$
         language: system
+        pass_filenames: false
       - id: cargo-sort
         name: Cargo sort
         description: sort cargo dependencies
@@ -29,15 +31,18 @@ repos:
           - '--workspace'
         files: Cargo\.toml$
         language: system
+        pass_filenames: false
       - id: cargo-udeps
         name: Cargo udeps
         description: Prune unused dependencies
-        entry: cargo udeps
+        entry: cargo +nightly udeps --
         files: Cargo\.toml$
         language: system
+        pass_filenames: false
       - id: typos
         name: Typos
         description: Check typos
         entry: typos
         language: system
+        pass_filenames: false
 fail_fast: true
