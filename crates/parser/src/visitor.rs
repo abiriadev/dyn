@@ -1,6 +1,6 @@
 use crate::ast::{
 	Array, BinExpr, Boolean, Code, Expr, ExprKind, Function, Ident, Integer,
-	Literal, Nil, StringT,
+	Literal, Nil, StringT, UnaryExpr,
 };
 
 pub trait Visit {
@@ -41,6 +41,8 @@ pub trait Visit {
 		self.visit_code(&i.body);
 	}
 
+	fn visit_unaryexpr(&mut self, i: &UnaryExpr) { self.visit_expr(&i.expr); }
+
 	fn visit_binexpr(&mut self, i: &BinExpr) {
 		self.visit_expr(&i.lhs);
 		self.visit_expr(&i.rhs);
@@ -50,8 +52,7 @@ pub trait Visit {
 		match &i.kind {
 			ExprKind::Literal(i) => self.visit_literal(i),
 			ExprKind::Ident(i) => self.visit_ident(i),
-			ExprKind::UnaryMinus(i) => self.visit_expr(i),
-			ExprKind::UnaryNot(i) => self.visit_expr(i),
+			ExprKind::UnaryExpr(i) => self.visit_unaryexpr(i),
 			ExprKind::Array(i) => self.visit_array(i),
 			ExprKind::Function(i) => self.visit_function(i),
 			ExprKind::Call(i, j) => {
@@ -172,6 +173,10 @@ pub trait VisitMut {
 		self.visit_mut_code(&mut i.body);
 	}
 
+	fn visit_mut_unaryexpr(&mut self, i: &mut UnaryExpr) {
+		self.visit_mut_expr(&mut i.expr);
+	}
+
 	fn visit_mut_binexpr(&mut self, i: &mut BinExpr) {
 		self.visit_mut_expr(&mut i.lhs);
 		self.visit_mut_expr(&mut i.rhs);
@@ -181,8 +186,7 @@ pub trait VisitMut {
 		match &mut i.kind {
 			ExprKind::Literal(i) => self.visit_mut_literal(i),
 			ExprKind::Ident(i) => self.visit_mut_ident(i),
-			ExprKind::UnaryMinus(i) => self.visit_mut_expr(i),
-			ExprKind::UnaryNot(i) => self.visit_mut_expr(i),
+			ExprKind::UnaryExpr(i) => self.visit_mut_unaryexpr(i),
 			ExprKind::Array(i) => self.visit_mut_array(i),
 			ExprKind::Function(i) => self.visit_mut_function(i),
 			ExprKind::Call(i, j) => {
