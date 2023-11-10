@@ -117,12 +117,16 @@ impl Interpreter {
 
 				let i = self.eval(Tree::Expr(expr))?;
 
-				Ok(match (op, i) {
+				Ok(match (op, i.clone()) {
 					(UnaryExprKind::Minus, Value::Integer(i)) =>
 						Value::Integer(-i),
 					(UnaryExprKind::Not, Value::Boolean(i)) =>
 						Value::Boolean(!i),
-					_ => panic!(),
+					_ => Err(TypeError::UnaryOp {
+						op,
+						expr: i,
+						expr_span: span,
+					})?,
 				})
 			},
 			Tree::BinExpr(bin) => {

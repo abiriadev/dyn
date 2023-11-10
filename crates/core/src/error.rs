@@ -2,7 +2,7 @@ use std::fmt::{self, Display, Formatter};
 
 use lexer::LexError;
 use miette::{Diagnostic, LabeledSpan};
-use parser::ast::BinExprKind;
+use parser::ast::{BinExprKind, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
@@ -107,6 +107,11 @@ impl Diagnostic for RuntimeError {
 
 #[derive(Debug, PartialEq, Error)]
 pub enum TypeError {
+	UnaryOp {
+		op: UnaryExprKind,
+		expr: Value,
+		expr_span: Span,
+	},
 	BinOp {
 		op: BinExprKind,
 		lhs: Value,
@@ -119,6 +124,15 @@ pub enum TypeError {
 impl Display for TypeError {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		let m = match self {
+			TypeError::UnaryOp { op, expr, .. } => match op {
+				UnaryExprKind::Minus =>
+					format!("{} is not a number", expr.to_debug()),
+				_ => format!(
+					"cannot apply unary operator `{}` to type `{}`",
+					op.as_ref(),
+					expr.get_type().type_name()
+				),
+			},
 			TypeError::BinOp { op, lhs, rhs, .. } => match op {
 				BinExprKind::Add => format!(
 					"cannot add `{}` to `{}`",
@@ -162,19 +176,26 @@ impl Display for TypeError {
 
 impl Diagnostic for TypeError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
-		Some(Box::new(match self {
+		match self {
+			TypeError::UnaryOp {
+				expr, expr_span, ..
+			} => Some(Box::new(
+				[value_to_message(*expr_span, expr.clone())].into_iter(),
+			)),
 			TypeError::BinOp {
 				lhs,
 				lhs_span,
 				rhs,
 				rhs_span,
 				..
-			} => [
-				value_to_message(*lhs_span, lhs.clone()),
-				value_to_message(*rhs_span, rhs.clone()),
-			]
-			.into_iter(),
-		}))
+			} => Some(Box::new(
+				[
+					value_to_message(*lhs_span, lhs.clone()),
+					value_to_message(*rhs_span, rhs.clone()),
+				]
+				.into_iter(),
+			)),
+		}
 	}
 }
 
