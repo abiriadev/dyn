@@ -6,7 +6,7 @@ use error::{ParseError, TypeError};
 use parser::{
 	ast::{
 		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
-		Ident, Integer, Literal, Nil, StringT,
+		Ident, Integer, Literal, Nil, StringT, UnaryExpr, UnaryExprKind,
 	},
 	parse_code,
 };
@@ -46,6 +46,7 @@ enum Tree {
 	Array(Array),
 	#[allow(unused)]
 	Function(Function),
+	UnaryExpr(UnaryExpr),
 	BinExpr(BinExpr),
 	Expr(Expr),
 	Code(Code),
@@ -109,6 +110,21 @@ impl Interpreter {
 					.collect::<Result<Vec<_>, RuntimeError>>()?,
 			)),
 			Tree::Function(_) => todo!(),
+			Tree::UnaryExpr(un) => {
+				let span = un.span();
+				let op = un.op;
+				let expr = *un.expr;
+
+				let i = self.eval(Tree::Expr(expr))?;
+
+				Ok(match (op, i) {
+					(UnaryExprKind::Minus, Value::Integer(i)) =>
+						Value::Integer(-i),
+					(UnaryExprKind::Not, Value::Boolean(i)) =>
+						Value::Boolean(!i),
+					_ => panic!(),
+				})
+			},
 			Tree::BinExpr(bin) => {
 				// let span = bin.span();
 				let lhs = *bin.lhs;
@@ -195,18 +211,7 @@ impl Interpreter {
 			Tree::Expr(i) => match i.kind {
 				ExprKind::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
 				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
-				ExprKind::UnaryMinus(i) => {
-					let Value::Integer(i) = self.eval(Tree::Expr(*i))? else {
-						panic!();
-					};
-					Ok(Value::Integer(-i))
-				},
-				ExprKind::UnaryNot(i) => {
-					let Value::Boolean(i) = self.eval(Tree::Expr(*i))? else {
-						panic!();
-					};
-					Ok(Value::Boolean(!i))
-				},
+				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
 				ExprKind::Function(_) => todo!(),
 				ExprKind::Call(i, j) => {
