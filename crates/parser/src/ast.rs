@@ -224,6 +224,31 @@ pub struct Function {
 	pub body: Code,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, AsRefStr)]
+pub enum UnaryExprKind {
+	#[strum(serialize = "-")]
+	UnaryMinus,
+
+	#[strum(serialize = "!")]
+	UnaryNot,
+}
+
+#[derive(Debug, Clone, PartialEq, BoxNew)]
+pub struct UnaryExpr {
+	span: Span,
+	pub op: UnaryExprKind,
+	pub expr: Box<Expr>,
+}
+
+impl HasSpan for UnaryExpr {
+	fn span(&self) -> Span { self.span() }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
+	}
+}
+
 #[derive(Debug, Clone, PartialEq, AsRefStr)]
 pub enum BinExprKind {
 	#[strum(serialize = "+")]
@@ -299,13 +324,12 @@ impl HasSpan for BinExpr {
 pub enum ExprKind {
 	Literal(Literal),
 	Ident(Ident),
-	UnaryMinus(Box<Expr>),
-	UnaryNot(Box<Expr>),
 	Array(Array),
 	Function(Function),
 	Call(Box<Expr>, Arguments),
 	Prop(Box<Expr>, Ident),
 	Index(Box<Expr>, Box<Expr>),
+	UnaryExpr(UnaryExpr),
 	BinExpr(BinExpr),
 	Assign(Ident, Box<Expr>),
 	AddAssign(Ident, Box<Expr>),
@@ -372,6 +396,19 @@ impl Expr {
 				op,
 				lhs: Box::new(lhs),
 				rhs: Box::new(rhs),
+			}),
+		}
+	}
+
+	pub fn new_lalr_unaryexpr(
+		(start, (op, expr), end): (usize, (UnaryExprKind, Expr), usize),
+	) -> Self {
+		Self {
+			span: (start..end).into(),
+			kind: ExprKind::UnaryExpr(UnaryExpr {
+				span: (start..end).into(),
+				op,
+				expr: Box::new(expr),
 			}),
 		}
 	}
