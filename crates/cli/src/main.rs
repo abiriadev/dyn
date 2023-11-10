@@ -1,4 +1,4 @@
-use std::{fs::read_to_string, io::stdin, path::PathBuf};
+use std::{fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
@@ -7,6 +7,7 @@ use dyn_core::{
 };
 use maplit::hashmap;
 use miette::Report;
+use rustyline::DefaultEditor;
 
 #[derive(Debug, Parser)]
 struct Args {
@@ -52,18 +53,31 @@ fn main() -> anyhow::Result<()> {
 			println!("final result: {:?}", res);
 		}
 	} else {
-		for l in stdin().lines() {
-			let l = l.unwrap();
+		let mut rl = DefaultEditor::new().unwrap();
 
-			let res = intpr.run(&l);
+		loop {
+			let readline = rl.readline("> ");
+			match readline {
+				Ok(line) => {
+					rl.add_history_entry(line.as_str())
+						.unwrap();
 
-			if let Err(diag) = res {
-				let rep: Report = diag.into();
-				let rep = rep.with_source_code(l);
+					let res = intpr.run(&line);
 
-				println!("{rep:?}");
-			} else {
-				println!("final result: {:?}", res);
+					match res {
+						Ok(v) => println!("{}", v.to_debug()),
+						Err(e) => {
+							let rep: Report = e.into();
+							let rep = rep.with_source_code(line);
+
+							println!("{rep:?}");
+						},
+					};
+				},
+				Err(_) => {
+					println!("exit!");
+					break;
+				},
 			}
 		}
 	}

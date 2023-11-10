@@ -13,3 +13,4 @@ miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622
 	"fancy",
 ] }
 parser = { version = "0.1.0", path = "../parser" }
+rustyline = "12.0.0"
