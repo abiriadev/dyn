@@ -18,6 +18,11 @@ Punctuated<T, U>: Vec<T> = {
 
 Spanned<T> = @L T @R;
 
+LevelUnaryExpr<L, O> = {
+	Spanned<(O LevelUnaryExpr<L, O>)> => Expr::new_lalr_unaryexpr(<>),
+	L,
+}
+
 LevelBinExpr<L, O> = {
 	Spanned<(LevelBinExpr<L, O> O L)> => Expr::new_lalr_binexpr(<>),
 	L,
@@ -71,11 +76,12 @@ L1 = {
 	L0,
 }
 
-L2 = {
-	<l:@L> "-" <i:L2> <r:@R> => Expr::new(ExprKind::unary_minus_box(i), l..r),
-	<l:@L> "!" <i:L2> <r:@R> => Expr::new(ExprKind::unary_not_box(i), l..r),
-	L1,
+L2Op: UnaryExprKind = {
+	"-" => UnaryExprKind::Minus,
+	"!" => UnaryExprKind::Not,
 }
+
+L2 = LevelUnaryExpr<L1, L2Op>;
 
 L3Op: BinExprKind = {
 	"*" => BinExprKind::Mul,

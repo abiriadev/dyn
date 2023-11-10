@@ -227,10 +227,10 @@ pub struct Function {
 #[derive(Debug, Clone, Copy, PartialEq, AsRefStr)]
 pub enum UnaryExprKind {
 	#[strum(serialize = "-")]
-	UnaryMinus,
+	Minus,
 
 	#[strum(serialize = "!")]
-	UnaryNot,
+	Not,
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
