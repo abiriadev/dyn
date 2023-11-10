@@ -241,7 +241,7 @@ pub struct UnaryExpr {
 }
 
 impl HasSpan for UnaryExpr {
-	fn span(&self) -> Span { self.span() }
+	fn span(&self) -> Span { self.span }
 
 	fn set_span<S>(&mut self, span: S)
 	where S: Into<Span> {
