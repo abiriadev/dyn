@@ -1,4 +1,5 @@
 use std::{
+	cell::RefCell,
 	collections::{
 		hash_map::{Entry, OccupiedEntry, VacantEntry},
 		HashMap,
@@ -9,7 +10,7 @@ use std::{
 use crate::{ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
-	head: Rc<Frame>,
+	head: Rc<RefCell<Frame>>,
 }
 
 impl Environment {
@@ -22,22 +23,22 @@ impl Environment {
 
 pub struct Frame {
 	table: HashMap<ResolvedIdent, SymbolInfo>,
-	parent: Option<Rc<Self>>,
+	parent: Option<Rc<RefCell<Self>>>,
 }
 
 impl Frame {
-	pub fn root() -> Rc<Self> {
-		Rc::new(Self {
+	pub fn root() -> Rc<RefCell<Self>> {
+		Rc::new(RefCell::new(Self {
 			table: HashMap::new(),
 			parent: None,
-		})
+		}))
 	}
 
-	pub fn new(parent: Rc<Self>) -> Rc<Self> {
-		Rc::new(Self {
+	pub fn new(parent: Rc<RefCell<Self>>) -> Rc<RefCell<Self>> {
+		Rc::new(RefCell::new(Self {
 			table: HashMap::new(),
 			parent: Some(parent),
-		})
+		}))
 	}
 
 	fn entry(
