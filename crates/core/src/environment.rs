@@ -1,26 +1,50 @@
-use std::collections::{
-	hash_map::{Entry, OccupiedEntry, VacantEntry},
-	HashMap,
+use std::{
+	collections::{
+		hash_map::{Entry, OccupiedEntry, VacantEntry},
+		HashMap,
+	},
+	rc::Rc,
 };
 
 use crate::{ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
-	store: HashMap<ResolvedIdent, SymbolInfo>,
+	head: Rc<Frame>,
 }
 
 impl Environment {
 	pub fn new() -> Self {
 		Self {
-			store: HashMap::new(),
+			head: Frame::root(),
 		}
+	}
+}
+
+pub struct Frame {
+	table: HashMap<ResolvedIdent, SymbolInfo>,
+	parent: Option<Rc<Self>>,
+}
+
+impl Frame {
+	pub fn root() -> Rc<Self> {
+		Rc::new(Self {
+			table: HashMap::new(),
+			parent: None,
+		})
+	}
+
+	pub fn new(parent: Rc<Self>) -> Rc<Self> {
+		Rc::new(Self {
+			table: HashMap::new(),
+			parent: Some(parent),
+		})
 	}
 
 	fn entry(
 		&mut self,
 		ident: ResolvedIdent,
 	) -> Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.store.entry(ident) {
+		match self.table.entry(ident) {
 			Entry::Occupied(o) => Ok(o),
 			Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier,
@@ -32,7 +56,7 @@ impl Environment {
 		&mut self,
 		ident: ResolvedIdent,
 	) -> Result<VacantEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.store.entry(ident) {
+		match self.table.entry(ident) {
 			Entry::Occupied(_) => Err(RuntimeError::AlreadyDeclared),
 			Entry::Vacant(v) => Ok(v),
 		}
