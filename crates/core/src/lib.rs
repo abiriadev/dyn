@@ -217,7 +217,9 @@ impl Interpreter {
 				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
 				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
-				ExprKind::Function(_) => todo!(),
+				ExprKind::Function(f) => Ok(Value::Function(
+					FunctionValue::Lambda(f),
+				)),
 				ExprKind::Call(i, j) => {
 					let j = ArgumentValues(
 						j.0.into_iter()
@@ -230,7 +232,10 @@ impl Interpreter {
 
 					match i {
 						FunctionValue::Builtin(mut i) => Ok(i.call(j)),
-						FunctionValue::Lambda(_) => unimplemented!(),
+						FunctionValue::Lambda(Function {
+							parameters,
+							body,
+						}) => self.eval(Tree::Code(body)),
 					}
 				},
 				ExprKind::Prop(_, _) => todo!(),
