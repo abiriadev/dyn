@@ -6,7 +6,7 @@ use parser::ast::{BinExprKind, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
-use crate::{value::FlatValue, Value};
+use crate::{value::FlatValue};
 
 #[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]

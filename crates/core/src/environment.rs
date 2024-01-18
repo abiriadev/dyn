@@ -1,11 +1,10 @@
 use std::{
 	borrow::Borrow,
-	cell::{Ref, RefCell},
+	cell::{RefCell},
 	collections::{
-		hash_map::{Entry, OccupiedEntry, VacantEntry},
+		hash_map::{Entry},
 		HashMap,
 	},
-	ops::Deref,
 	rc::Rc,
 };
 
