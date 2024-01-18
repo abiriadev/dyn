@@ -23,24 +23,11 @@ impl Environment {
 
 pub struct Frame(RefCell<FrameInner>);
 
-pub struct FrameInner {
-	table: HashMap<ResolvedIdent, SymbolInfo>,
-	parent: Option<Rc<RefCell<Self>>>,
-}
-
 impl Frame {
-	pub fn root() -> Rc<RefCell<Self>> {
-		Rc::new(RefCell::new(Self {
-			table: HashMap::new(),
-			parent: None,
-		}))
-	}
+	pub fn root() -> Rc<Self> { Rc::new(FrameInner::root()) }
 
-	pub fn new(parent: Rc<RefCell<Self>>) -> Rc<RefCell<Self>> {
-		Rc::new(RefCell::new(Self {
-			table: HashMap::new(),
-			parent: Some(parent),
-		}))
+	pub fn new(parent: Rc<Self>) -> Rc<Self> {
+		Rc::new(FrameInner::new(parent))
 	}
 
 	fn entry(
@@ -93,7 +80,7 @@ impl Frame {
 	}
 
 	pub fn read_value(
-		self: Rc<RefCell<Self>>,
+		self: Rc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
 		Ok(self.entry(ident)?.get().value.clone())
@@ -102,5 +89,26 @@ impl Frame {
 	pub fn free(&mut self, ident: ResolvedIdent) -> Result<(), RuntimeError> {
 		self.entry(ident)?.remove();
 		Ok(())
+	}
+}
+
+pub struct FrameInner {
+	table: HashMap<ResolvedIdent, SymbolInfo>,
+	parent: Option<Rc<Frame>>,
+}
+
+impl FrameInner {
+	fn root() -> RefCell<Self> {
+		RefCell::new(Self {
+			table: HashMap::new(),
+			parent: None,
+		})
+	}
+
+	fn new(parent: Rc<Frame>) -> RefCell<Self> {
+		RefCell::new(Self {
+			table: HashMap::new(),
+			parent: Some(parent),
+		})
 	}
 }
