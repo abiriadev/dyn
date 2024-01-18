@@ -86,54 +86,44 @@ impl Frame {
 		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		fn r(
-			frame: Rc<Frame>,
-			ident: ResolvedIdent,
-		) -> Result<
-			OccupiedEntry<'static, ResolvedIdent, SymbolInfo>,
-			RuntimeError,
-		> {
-			let inner = frame.deref().0.borrow_mut();
-			match inner.table.entry(ident) {
-				Entry::Occupied(o) => Ok(o),
-				Entry::Vacant(_) => {
-					let Some(p) = inner.parent else {
-						return Err(RuntimeError::ReferenceError(
-							ReferenceError::UndefinedIdentifier,
-						))
-					};
+		let mut inner = self.0.borrow_mut();
 
-					return r(p, ident);
-				},
-			}
+		match inner.table.entry(ident.clone()) {
+			Entry::Occupied(mut o) => {
+				let ptr = o.get_mut();
+
+				if !ptr.mutable {
+					return Err(RuntimeError::AssignmentToImmutableVariable);
+				}
+
+				ptr.value = value;
+
+				Ok(())
+			},
+			Entry::Vacant(_) => {
+				let Some(ref p) = inner.parent else {
+					return Err(RuntimeError::ReferenceError(
+						ReferenceError::UndefinedIdentifier,
+					))
+				};
+
+				Rc::clone(p).assign(ident, value)
+			},
 		}
-
-		let entry = r(self, ident)?.get_mut();
-
-		if !entry.mutable {
-			return Err(RuntimeError::AssignmentToImmutableVariable)
-		}
-
-		entry.value = value;
-
-		Ok(())
 	}
 
 	pub fn read_value(
 		self: Rc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
-		match self
-			.0
-			.borrow()
+		let inner = self.0.borrow();
+		match inner
 			.table
 			.get(&ident)
-			.map(|i| i.value)
+			.map(|i| i.value.clone())
 		{
 			Some(v) => Ok(v),
-			None => self
-				.0
-				.borrow()
+			None => inner
 				.parent
 				.ok_or(RuntimeError::ReferenceError(
 					ReferenceError::UndefinedIdentifier,
