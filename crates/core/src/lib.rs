@@ -218,7 +218,10 @@ impl Interpreter {
 				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
 				ExprKind::Function(f) => Ok(Value::Function(
-					FunctionValue::Closure(f),
+					FunctionValue::Closure {
+						body: f,
+						capture: self.mem.top_frame(),
+					},
 				)),
 				ExprKind::Call(i, j) => {
 					let j = ArgumentValues(
@@ -232,10 +235,10 @@ impl Interpreter {
 
 					match i {
 						FunctionValue::Builtin(mut i) => Ok(i.call(j)),
-						FunctionValue::Closure(Function {
-							parameters,
-							body,
-						}) => self.eval(Tree::Code(body)),
+						FunctionValue::Closure {
+							body: Function { parameters, body },
+							capture,
+						} => self.eval(Tree::Code(body)),
 					}
 				},
 				ExprKind::Prop(_, _) => todo!(),
