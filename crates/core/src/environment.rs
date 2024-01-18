@@ -10,7 +10,7 @@ use std::{
 use crate::{ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
-	call_stack: Vec<Rc<RefCell<FrameInner>>>,
+	call_stack: Vec<Rc<Frame>>,
 }
 
 impl Environment {
