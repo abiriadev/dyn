@@ -49,15 +49,6 @@ impl Frame {
 		Rc::new(Self(FrameInner::new(parent)))
 	}
 
-	// Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>,
-	// RuntimeError> match self.0.borrow().table.entry(ident) {
-	// 	Entry::Occupied(o) => Ok(o),
-	// 	Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
-	// 		ReferenceError::UndefinedIdentifier,
-	// 	)),
-	// }
-	// todo!()
-
 	pub fn declare(
 		self: Rc<Self>,
 		ident: ResolvedIdent,
