@@ -5,6 +5,7 @@ use std::{
 		hash_map::{Entry, OccupiedEntry, VacantEntry},
 		HashMap,
 	},
+	ops::Deref,
 	rc::Rc,
 };
 
@@ -77,14 +78,36 @@ impl Frame {
 		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		let mut e = self.entry(ident)?;
-		let sym = e.get_mut();
+		fn r(
+			frame: Rc<Frame>,
+			ident: ResolvedIdent,
+		) -> Result<
+			OccupiedEntry<'static, ResolvedIdent, SymbolInfo>,
+			RuntimeError,
+		> {
+			let inner = frame.deref().0.borrow_mut();
+			match inner.table.entry(ident) {
+				Entry::Occupied(o) => Ok(o),
+				Entry::Vacant(_) => {
+					let Some(p) = inner.parent else {
+						return Err(RuntimeError::ReferenceError(
+							ReferenceError::UndefinedIdentifier,
+						))
+					};
 
-		if !sym.mutable {
-			return Err(RuntimeError::AssignmentToImmutableVariable);
+					return r(p, ident);
+				},
+			}
 		}
 
-		sym.value = value;
+		let entry = r(self, ident)?.get_mut();
+
+		if !entry.mutable {
+			return Err(RuntimeError::AssignmentToImmutableVariable)
+		}
+
+		entry.value = value;
+
 		Ok(())
 	}
 
