@@ -24,10 +24,10 @@ impl Environment {
 pub struct Frame(RefCell<FrameInner>);
 
 impl Frame {
-	pub fn root() -> Rc<Self> { Rc::new(FrameInner::root()) }
+	pub fn root() -> Rc<Self> { Rc::new(Self(FrameInner::root())) }
 
 	pub fn new(parent: Rc<Self>) -> Rc<Self> {
-		Rc::new(FrameInner::new(parent))
+		Rc::new(Self(FrameInner::new(parent)))
 	}
 
 	fn entry(
