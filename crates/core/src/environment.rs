@@ -57,6 +57,14 @@ impl Environment {
 		Ok(())
 	}
 
+	pub fn drop(&mut self) -> Result<(), RuntimeError> {
+		if !self.call_stack.pop().is_some() {
+			Err(RuntimeError::AlreadyDeclared)
+		} else {
+			Ok(())
+		}
+	}
+
 	pub fn declare(
 		&mut self,
 		ident: ResolvedIdent,
