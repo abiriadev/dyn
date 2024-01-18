@@ -71,7 +71,8 @@ impl Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		let Entry::Vacant(v) = self.0.borrow_mut().table.entry(ident) else {
+		let mut inner = self.0.borrow_mut();
+		let Entry::Vacant(v) = inner.table.entry(ident) else {
 			return Err(RuntimeError::AlreadyDeclared)
 		};
 
