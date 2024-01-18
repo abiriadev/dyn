@@ -92,7 +92,23 @@ impl Frame {
 		self: Rc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
-		Ok(self.entry(ident)?.get().value.clone())
+		match self
+			.0
+			.borrow()
+			.table
+			.get(&ident)
+			.map(|i| i.value)
+		{
+			Some(v) => Ok(v),
+			None => self
+				.0
+				.borrow()
+				.parent
+				.ok_or(RuntimeError::ReferenceError(
+					ReferenceError::UndefinedIdentifier,
+				))?
+				.read_value(ident),
+		}
 	}
 }
 
