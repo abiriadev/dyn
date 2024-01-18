@@ -6,7 +6,7 @@ use parser::ast::{BinExprKind, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
-use crate::Value;
+use crate::{value::FlatValue, Value};
 
 #[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]
@@ -109,14 +109,14 @@ impl Diagnostic for RuntimeError {
 pub enum TypeError {
 	UnaryOp {
 		op: UnaryExprKind,
-		expr: Value,
+		expr: FlatValue,
 		expr_span: Span,
 	},
 	BinOp {
 		op: BinExprKind,
-		lhs: Value,
+		lhs: FlatValue,
 		lhs_span: Span,
-		rhs: Value,
+		rhs: FlatValue,
 		rhs_span: Span,
 	},
 }
@@ -204,7 +204,7 @@ pub enum ReferenceError {
 	UndefinedIdentifier,
 }
 
-fn value_to_message(span: Span, v: Value) -> LabeledSpan {
+fn value_to_message(span: Span, v: FlatValue) -> LabeledSpan {
 	LabeledSpan::at(
 		span,
 		format!(

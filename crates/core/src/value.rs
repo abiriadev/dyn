@@ -181,3 +181,16 @@ impl From<Value> for FlatValue {
 		}
 	}
 }
+
+impl FlatValueType {
+	pub fn type_name(&self) -> &'static str {
+		match self {
+			FlatValueType::Nil => "nil",
+			FlatValueType::Boolean => "bool",
+			FlatValueType::Integer => "number",
+			FlatValueType::String => "string",
+			FlatValueType::Array => "array",
+			FlatValueType::Function => "function",
+		}
+	}
+}
