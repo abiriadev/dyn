@@ -139,7 +139,7 @@ pub enum FlatValue {
 	Boolean(bool),
 	Integer(i32),
 	String(String),
-	Array(Vec<Value>),
+	Array(Vec<FlatValue>),
 	Function,
 }
 
