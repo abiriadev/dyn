@@ -38,6 +38,21 @@ impl Environment {
 		self.top_frame()
 			.declare(ident, value, mutable)
 	}
+
+	pub fn assign(
+		&mut self,
+		ident: ResolvedIdent,
+		value: Value,
+	) -> Result<(), RuntimeError> {
+		self.top_frame().assign(ident, value)
+	}
+
+	pub fn read_value(
+		&mut self,
+		ident: ResolvedIdent,
+	) -> Result<Value, RuntimeError> {
+		self.top_frame().read_value(ident)
+	}
 }
 
 pub struct Frame(RefCell<FrameInner>);
