@@ -125,6 +125,7 @@ impl Frame {
 			Some(v) => Ok(v),
 			None => inner
 				.parent
+				.clone()
 				.ok_or(RuntimeError::ReferenceError(
 					ReferenceError::UndefinedIdentifier,
 				))?
