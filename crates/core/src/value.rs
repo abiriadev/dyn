@@ -176,8 +176,12 @@ impl From<Value> for FlatValue {
 			Value::Boolean(v) => Self::Boolean(v),
 			Value::Integer(v) => Self::Integer(v),
 			Value::String(v) => Self::String(v),
-			Value::Array(v) => Self::Array(v),
-			Value::Function(v) => Self::Function,
+			Value::Array(v) => Self::Array(
+				v.into_iter()
+					.map(|vv| vv.into())
+					.collect::<Vec<_>>(),
+			),
+			Value::Function(_) => Self::Function,
 		}
 	}
 }
