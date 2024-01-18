@@ -124,7 +124,7 @@ impl Interpreter {
 						Value::Boolean(!i),
 					_ => Err(TypeError::UnaryOp {
 						op,
-						expr: i,
+						expr: i.into(),
 						expr_span: span,
 					})?,
 				})
@@ -205,9 +205,9 @@ impl Interpreter {
 						Value::Boolean(i || j),
 					(i, op, j) => Err(TypeError::BinOp {
 						op,
-						lhs: i,
+						lhs: i.into(),
 						lhs_span,
-						rhs: j,
+						rhs: j.into(),
 						rhs_span,
 					})?,
 				})
