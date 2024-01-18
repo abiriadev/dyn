@@ -5,6 +5,8 @@ use std::{
 	rc::Rc,
 };
 
+use parser::ast::{Function, Parameters};
+
 use crate::{
 	ArgumentValues, FunctionValue, ReferenceError, ResolvedIdent, RuntimeError,
 	SymbolInfo, Value,
@@ -31,28 +33,21 @@ impl Environment {
 
 	pub fn call(
 		&mut self,
-		func: FunctionValue,
+		capture: Rc<Frame>,
+		parameters: Parameters,
 		args: ArgumentValues,
 	) -> Result<(), RuntimeError> {
-		match func {
-			FunctionValue::Builtin(_) => self
-				.call_stack
-				.push(Frame::new(self.top_frame())),
-			FunctionValue::Closure { body, capture } => {
-				let frame = Frame::new(capture);
+		let frame = Frame::new(capture);
 
-				for (k, v) in body
-					.parameters
-					.0
-					.into_iter()
-					.zip(args.0.into_iter())
-				{
-					self.declare(k.into(), v, false)?;
-				}
-
-				self.call_stack.push(frame);
-			},
+		for (k, v) in parameters
+			.0
+			.into_iter()
+			.zip(args.0.into_iter())
+		{
+			self.declare(k.into(), v, false)?;
 		}
+
+		self.call_stack.push(frame);
 
 		Ok(())
 	}

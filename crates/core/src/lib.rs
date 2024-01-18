@@ -238,7 +238,12 @@ impl Interpreter {
 						FunctionValue::Closure {
 							body: Function { parameters, body },
 							capture,
-						} => self.eval(Tree::Code(body)),
+						} => {
+							self.mem.call(capture, parameters, j)?;
+							let v = self.eval(Tree::Code(body));
+							self.mem.drop()?;
+							v
+						},
 					}
 				},
 				ExprKind::Prop(_, _) => todo!(),
