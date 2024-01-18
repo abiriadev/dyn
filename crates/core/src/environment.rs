@@ -1,5 +1,6 @@
 use std::{
-	cell::RefCell,
+	borrow::Borrow,
+	cell::{Ref, RefCell},
 	collections::{
 		hash_map::{Entry, OccupiedEntry, VacantEntry},
 		HashMap,
@@ -33,10 +34,8 @@ impl Environment {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		// self.top_frame().
-		// self.entry_vacant(ident)?
-		// 	.insert(SymbolInfo { mutable, value });
-		// Ok(())
+		self.top_frame()
+			.declare(ident, value, mutable)
 	}
 }
 
@@ -49,27 +48,14 @@ impl Frame {
 		Rc::new(Self(FrameInner::new(parent)))
 	}
 
-	fn entry(
-		self: Rc<Self>,
-		ident: ResolvedIdent,
-	) -> Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.0.borrow().table.entry(ident) {
-			Entry::Occupied(o) => Ok(o),
-			Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
-				ReferenceError::UndefinedIdentifier,
-			)),
-		}
-	}
-
-	fn entry_vacant(
-		self: Rc<Self>,
-		ident: ResolvedIdent,
-	) -> Result<VacantEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.0.borrow().table.entry(ident) {
-			Entry::Occupied(_) => Err(RuntimeError::AlreadyDeclared),
-			Entry::Vacant(v) => Ok(v),
-		}
-	}
+	// Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>,
+	// RuntimeError> match self.0.borrow().table.entry(ident) {
+	// 	Entry::Occupied(o) => Ok(o),
+	// 	Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
+	// 		ReferenceError::UndefinedIdentifier,
+	// 	)),
+	// }
+	// todo!()
 
 	pub fn declare(
 		self: Rc<Self>,
@@ -77,8 +63,12 @@ impl Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		self.entry_vacant(ident)?
-			.insert(SymbolInfo { mutable, value });
+		let Entry::Vacant(v) = self.0.borrow_mut().table.entry(ident) else {
+			return Err(RuntimeError::AlreadyDeclared)
+		};
+
+		v.insert(SymbolInfo { mutable, value });
+
 		Ok(())
 	}
 
@@ -103,14 +93,6 @@ impl Frame {
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
 		Ok(self.entry(ident)?.get().value.clone())
-	}
-
-	pub fn free(
-		self: Rc<Self>,
-		ident: ResolvedIdent,
-	) -> Result<(), RuntimeError> {
-		self.entry(ident)?.remove();
-		Ok(())
 	}
 }
 
