@@ -23,10 +23,11 @@ impl Environment {
 	}
 
 	pub fn top_frame(&self) -> Rc<Frame> {
-		*self
-			.call_stack
-			.last()
-			.expect("there must be at least one stack frame")
+		Rc::clone(
+			self.call_stack
+				.last()
+				.expect("there must be at least one stack frame"),
+		)
 	}
 
 	pub fn declare(
