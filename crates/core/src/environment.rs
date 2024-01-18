@@ -19,6 +19,25 @@ impl Environment {
 			call_stack: vec![Frame::root()],
 		}
 	}
+
+	pub fn top_frame(&self) -> Rc<Frame> {
+		*self
+			.call_stack
+			.last()
+			.expect("there must be at least one stack frame")
+	}
+
+	pub fn declare(
+		&mut self,
+		ident: ResolvedIdent,
+		value: Value,
+		mutable: bool,
+	) -> Result<(), RuntimeError> {
+		// self.top_frame().
+		// self.entry_vacant(ident)?
+		// 	.insert(SymbolInfo { mutable, value });
+		// Ok(())
+	}
 }
 
 pub struct Frame(RefCell<FrameInner>);
@@ -31,10 +50,10 @@ impl Frame {
 	}
 
 	fn entry(
-		&mut self,
+		self: Rc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<OccupiedEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.table.entry(ident) {
+		match self.0.borrow().table.entry(ident) {
 			Entry::Occupied(o) => Ok(o),
 			Entry::Vacant(_) => Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier,
@@ -43,17 +62,17 @@ impl Frame {
 	}
 
 	fn entry_vacant(
-		&mut self,
+		self: Rc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<VacantEntry<'_, ResolvedIdent, SymbolInfo>, RuntimeError> {
-		match self.table.entry(ident) {
+		match self.0.borrow().table.entry(ident) {
 			Entry::Occupied(_) => Err(RuntimeError::AlreadyDeclared),
 			Entry::Vacant(v) => Ok(v),
 		}
 	}
 
 	pub fn declare(
-		&mut self,
+		self: Rc<Self>,
 		ident: ResolvedIdent,
 		value: Value,
 		mutable: bool,
@@ -64,7 +83,7 @@ impl Frame {
 	}
 
 	pub fn assign(
-		&mut self,
+		self: Rc<Self>,
 		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
@@ -86,7 +105,10 @@ impl Frame {
 		Ok(self.entry(ident)?.get().value.clone())
 	}
 
-	pub fn free(&mut self, ident: ResolvedIdent) -> Result<(), RuntimeError> {
+	pub fn free(
+		self: Rc<Self>,
+		ident: ResolvedIdent,
+	) -> Result<(), RuntimeError> {
 		self.entry(ident)?.remove();
 		Ok(())
 	}
