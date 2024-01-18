@@ -1,8 +1,13 @@
-use std::fmt::{self, Debug, Display, Formatter};
+use std::{
+	fmt::{self, Debug, Display, Formatter},
+	rc::Rc,
+};
 
 use dyn_clone::{clone_trait_object, DynClone};
 use parser::ast::{Boolean, Function, Integer, Literal, StringT};
 use strum::EnumDiscriminants;
+
+use crate::environment::Frame;
 
 pub struct ArgumentValues(pub Vec<Value>);
 
@@ -14,16 +19,16 @@ clone_trait_object!(BuiltinFunction);
 
 pub enum FunctionValue {
 	Builtin(Box<dyn BuiltinFunction + Send + Sync>),
-	Lambda(Function),
+	Closure { body: Function, capture: Rc<Frame> },
 }
 
 impl Debug for FunctionValue {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		match self {
 			Self::Builtin(_) => write!(f, "[BUILTIN FUNCTION]"),
-			Self::Lambda(arg0) => f
+			Self::Closure { body, capture } => f
 				.debug_tuple("Lambda")
-				.field(arg0)
+				.field(body)
 				.finish(),
 		}
 	}
@@ -33,7 +38,10 @@ impl Clone for FunctionValue {
 	fn clone(&self) -> Self {
 		match self {
 			Self::Builtin(arg0) => Self::Builtin(arg0.clone()),
-			Self::Lambda(arg0) => Self::Lambda(arg0.clone()),
+			Self::Closure { body, capture } => Self::Closure {
+				body: body.clone(),
+				capture: Rc::clone(&capture),
+			},
 		}
 	}
 }
@@ -42,7 +50,10 @@ impl PartialEq for FunctionValue {
 	fn eq(&self, other: &Self) -> bool {
 		match (self, other) {
 			(Self::Builtin(_), Self::Builtin(_)) => unimplemented!(),
-			(Self::Lambda(l0), Self::Lambda(r0)) => l0 == r0,
+			(
+				Self::Closure { body: b1, .. },
+				Self::Closure { body: b2, .. },
+			) => b1 == b2,
 			_ => false,
 		}
 	}
