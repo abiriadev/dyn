@@ -10,13 +10,13 @@ use std::{
 use crate::{ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
-	head: Rc<RefCell<Frame>>,
+	call_stack: Vec<Rc<RefCell<Frame>>>,
 }
 
 impl Environment {
 	pub fn new() -> Self {
 		Self {
-			head: Frame::root(),
+			call_stack: Frame::root(),
 		}
 	}
 }
@@ -91,7 +91,7 @@ impl Frame {
 	}
 
 	pub fn read_value(
-		&mut self,
+		self: Rc<RefCell<Self>>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
 		Ok(self.entry(ident)?.get().value.clone())
