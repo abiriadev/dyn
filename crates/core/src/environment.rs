@@ -10,18 +10,20 @@ use std::{
 use crate::{ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
-	call_stack: Vec<Rc<RefCell<Frame>>>,
+	call_stack: Vec<Rc<RefCell<FrameInner>>>,
 }
 
 impl Environment {
 	pub fn new() -> Self {
 		Self {
-			call_stack: Frame::root(),
+			call_stack: vec![Frame::root()],
 		}
 	}
 }
 
-pub struct Frame {
+pub struct Frame(RefCell<FrameInner>);
+
+pub struct FrameInner {
 	table: HashMap<ResolvedIdent, SymbolInfo>,
 	parent: Option<Rc<RefCell<Self>>>,
 }
