@@ -236,8 +236,8 @@ impl Interpreter {
 					match i {
 						FunctionValue::Builtin(mut i) => Ok(i.call(j)),
 						FunctionValue::Closure {
-							body: Function { parameters: _, body },
-							capture: _,
+							body: Function { parameters, body },
+							capture,
 						} => self.eval(Tree::Code(body)),
 					}
 				},

@@ -26,7 +26,7 @@ impl Debug for FunctionValue {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		match self {
 			Self::Builtin(_) => write!(f, "[BUILTIN FUNCTION]"),
-			Self::Closure { body, capture: _ } => f
+			Self::Closure { body, capture } => f
 				.debug_tuple("Lambda")
 				.field(body)
 				.finish(),
@@ -40,7 +40,7 @@ impl Clone for FunctionValue {
 			Self::Builtin(arg0) => Self::Builtin(arg0.clone()),
 			Self::Closure { body, capture } => Self::Closure {
 				body: body.clone(),
-				capture: Rc::clone(capture),
+				capture: Rc::clone(&capture),
 			},
 		}
 	}
