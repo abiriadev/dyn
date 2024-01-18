@@ -131,3 +131,53 @@ impl ValueType {
 		}
 	}
 }
+
+#[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
+#[strum_discriminants(name(FlatValueType))]
+pub enum FlatValue {
+	Nil,
+	Boolean(bool),
+	Integer(i32),
+	String(String),
+	Array(Vec<Value>),
+	Function,
+}
+
+impl FlatValue {
+	pub fn to_debug(&self) -> String {
+		match self {
+			FlatValue::Nil => "nil".to_owned(),
+			FlatValue::Boolean(v) =>
+				if *v {
+					"true".to_owned()
+				} else {
+					"false".to_owned()
+				},
+			FlatValue::Integer(v) => format!("{v}"),
+			FlatValue::String(v) => format!(r#""{}""#, v),
+			FlatValue::Array(v) => format!(
+				"[{}]",
+				v.iter()
+					.map(|e| e.to_debug())
+					.collect::<Vec<_>>()
+					.join(", ")
+			),
+			FlatValue::Function => "[FUNCTION]".to_owned(),
+		}
+	}
+
+	pub fn get_type(&self) -> FlatValueType { self.into() }
+}
+
+impl From<Value> for FlatValue {
+	fn from(value: Value) -> Self {
+		match value {
+			Value::Nil => Self::Nil,
+			Value::Boolean(v) => Self::Boolean(v),
+			Value::Integer(v) => Self::Integer(v),
+			Value::String(v) => Self::String(v),
+			Value::Array(v) => Self::Array(v),
+			Value::Function(v) => Self::Function,
+		}
+	}
+}
