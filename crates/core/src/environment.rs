@@ -1,7 +1,6 @@
 use std::{
-	cell::RefCell,
 	collections::{hash_map::Entry, HashMap},
-	sync::Arc,
+	sync::{Arc, RwLock},
 };
 
 use parser::ast::Parameters;
@@ -85,7 +84,7 @@ impl Environment {
 	}
 }
 
-pub struct Frame(RefCell<FrameInner>);
+pub struct Frame(RwLock<FrameInner>);
 
 impl Frame {
 	pub fn root() -> Arc<Self> { Arc::new(Self(FrameInner::root())) }
@@ -100,7 +99,7 @@ impl Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		let mut inner = self.0.borrow_mut();
+		let mut inner = self.0.write().unwrap();
 		let Entry::Vacant(v) = inner.table.entry(ident) else {
 			return Err(RuntimeError::AlreadyDeclared)
 		};
@@ -115,7 +114,7 @@ impl Frame {
 		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		let mut inner = self.0.borrow_mut();
+		let mut inner = self.0.write().unwrap();
 
 		match inner.table.entry(ident.clone()) {
 			Entry::Occupied(mut o) => {
@@ -145,7 +144,7 @@ impl Frame {
 		self: Arc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
-		let inner = self.0.borrow();
+		let inner = self.0.read().unwrap();
 		match inner
 			.table
 			.get(&ident)
@@ -169,15 +168,15 @@ pub struct FrameInner {
 }
 
 impl FrameInner {
-	fn root() -> RefCell<Self> {
-		RefCell::new(Self {
+	fn root() -> RwLock<Self> {
+		RwLock::new(Self {
 			table: HashMap::new(),
 			parent: None,
 		})
 	}
 
-	fn new(parent: Arc<Frame>) -> RefCell<Self> {
-		RefCell::new(Self {
+	fn new(parent: Arc<Frame>) -> RwLock<Self> {
+		RwLock::new(Self {
 			table: HashMap::new(),
 			parent: Some(parent),
 		})
