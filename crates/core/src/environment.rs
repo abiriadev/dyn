@@ -1,15 +1,14 @@
 use std::{
-	borrow::Borrow,
 	cell::RefCell,
 	collections::{hash_map::Entry, HashMap},
 	rc::Rc,
 };
 
-use parser::ast::{Function, Parameters};
+use parser::ast::Parameters;
 
 use crate::{
-	ArgumentValues, FunctionValue, ReferenceError, ResolvedIdent, RuntimeError,
-	SymbolInfo, Value,
+	ArgumentValues, ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo,
+	Value,
 };
 
 pub struct Environment {
@@ -53,7 +52,7 @@ impl Environment {
 	}
 
 	pub fn drop(&mut self) -> Result<(), RuntimeError> {
-		if !self.call_stack.pop().is_some() {
+		if self.call_stack.pop().is_none() {
 			Err(RuntimeError::AlreadyDeclared)
 		} else {
 			Ok(())
