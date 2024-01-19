@@ -48,18 +48,19 @@ impl Debug for Span {
 
 impl PartialOrd for Span {
 	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-		// usize implements Ord
-		Some(match self.start.cmp(&other.start) {
-			Ordering::Equal => other.end.cmp(&self.end),
-			o => o,
-		})
+		Some(self.cmp(other))
 	}
 }
 
 // TODO: handle DUMMY_SPAN properly
 impl Ord for Span {
 	// usize implements Ord
-	fn cmp(&self, other: &Self) -> Ordering { self.partial_cmp(other).unwrap() }
+	fn cmp(&self, other: &Self) -> Ordering {
+		match self.start.cmp(&other.start) {
+			Ordering::Equal => other.end.cmp(&self.end),
+			o => o,
+		}
+	}
 }
 
 impl Add for Span {
