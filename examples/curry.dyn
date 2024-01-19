@@ -1,0 +1,9 @@
+let add = |a, b| -> a + b
+
+let curry = |f, x| -> |y| -> f(x, y)
+
+let add5 = curry(add, 5)
+
+let t = 2
+
+print(t + " + 5 = " + add5(t))
