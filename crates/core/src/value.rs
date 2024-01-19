@@ -1,6 +1,6 @@
 use std::{
 	fmt::{self, Debug, Display, Formatter},
-	rc::Rc,
+	sync::Arc,
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
@@ -19,7 +19,7 @@ clone_trait_object!(BuiltinFunction);
 
 pub enum FunctionValue {
 	Builtin(Box<dyn BuiltinFunction + Send + Sync>),
-	Closure { body: Function, capture: Rc<Frame> },
+	Closure { body: Function, capture: Arc<Frame> },
 }
 
 impl Debug for FunctionValue {
@@ -40,7 +40,7 @@ impl Clone for FunctionValue {
 			Self::Builtin(arg0) => Self::Builtin(arg0.clone()),
 			Self::Closure { body, capture } => Self::Closure {
 				body: body.clone(),
-				capture: Rc::clone(capture),
+				capture: Arc::clone(capture),
 			},
 		}
 	}

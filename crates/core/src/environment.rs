@@ -1,7 +1,7 @@
 use std::{
 	cell::RefCell,
 	collections::{hash_map::Entry, HashMap},
-	rc::Rc,
+	sync::Arc,
 };
 
 use parser::ast::Parameters;
@@ -12,7 +12,7 @@ use crate::{
 };
 
 pub struct Environment {
-	call_stack: Vec<Rc<Frame>>,
+	call_stack: Vec<Arc<Frame>>,
 }
 
 impl Environment {
@@ -22,8 +22,8 @@ impl Environment {
 		}
 	}
 
-	pub fn top_frame(&self) -> Rc<Frame> {
-		Rc::clone(
+	pub fn top_frame(&self) -> Arc<Frame> {
+		Arc::clone(
 			self.call_stack
 				.last()
 				.expect("there must be at least one stack frame"),
@@ -32,7 +32,7 @@ impl Environment {
 
 	pub fn call(
 		&mut self,
-		capture: Rc<Frame>,
+		capture: Arc<Frame>,
 		parameters: Parameters,
 		args: ArgumentValues,
 	) -> Result<(), RuntimeError> {
@@ -88,14 +88,14 @@ impl Environment {
 pub struct Frame(RefCell<FrameInner>);
 
 impl Frame {
-	pub fn root() -> Rc<Self> { Rc::new(Self(FrameInner::root())) }
+	pub fn root() -> Arc<Self> { Arc::new(Self(FrameInner::root())) }
 
-	pub fn new(parent: Rc<Self>) -> Rc<Self> {
-		Rc::new(Self(FrameInner::new(parent)))
+	pub fn new(parent: Arc<Self>) -> Arc<Self> {
+		Arc::new(Self(FrameInner::new(parent)))
 	}
 
 	pub fn declare(
-		self: Rc<Self>,
+		self: Arc<Self>,
 		ident: ResolvedIdent,
 		value: Value,
 		mutable: bool,
@@ -111,7 +111,7 @@ impl Frame {
 	}
 
 	pub fn assign(
-		self: Rc<Self>,
+		self: Arc<Self>,
 		ident: ResolvedIdent,
 		value: Value,
 	) -> Result<(), RuntimeError> {
@@ -136,13 +136,13 @@ impl Frame {
 					))
 				};
 
-				Rc::clone(p).assign(ident, value)
+				Arc::clone(p).assign(ident, value)
 			},
 		}
 	}
 
 	pub fn read_value(
-		self: Rc<Self>,
+		self: Arc<Self>,
 		ident: ResolvedIdent,
 	) -> Result<Value, RuntimeError> {
 		let inner = self.0.borrow();
@@ -165,7 +165,7 @@ impl Frame {
 
 pub struct FrameInner {
 	table: HashMap<ResolvedIdent, SymbolInfo>,
-	parent: Option<Rc<Frame>>,
+	parent: Option<Arc<Frame>>,
 }
 
 impl FrameInner {
@@ -176,7 +176,7 @@ impl FrameInner {
 		})
 	}
 
-	fn new(parent: Rc<Frame>) -> RefCell<Self> {
+	fn new(parent: Arc<Frame>) -> RefCell<Self> {
 		RefCell::new(Self {
 			table: HashMap::new(),
 			parent: Some(parent),
