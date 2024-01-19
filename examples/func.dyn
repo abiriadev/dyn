@@ -1,0 +1,6 @@
+let add = |x, y| -> x + y
+
+let a = 2
+let b = 6
+
+print(a + " + " + b + " = " + add(a, b))
