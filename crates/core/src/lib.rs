@@ -23,17 +23,18 @@ struct SymbolInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ResolvedIdent(String);
-
-impl ResolvedIdent {
-	pub fn new<T>(symbol: T) -> Self
-	where T: Into<String> {
-		Self(symbol.into())
-	}
+pub struct ResolvedIdent {
+	pub full_name: String,
+	pub ident: Ident,
 }
 
 impl From<Ident> for ResolvedIdent {
-	fn from(value: Ident) -> Self { Self(value.into_symbol()) }
+	fn from(ident: Ident) -> Self {
+		Self {
+			full_name: ident.clone().into_symbol(),
+			ident,
+		}
+	}
 }
 
 enum Tree {
@@ -446,7 +447,7 @@ mod tests {
 	#[ignore]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
-			ResolvedIdent::new("print") => Value::Function(
+			Ident::new_dummy("print").into() => Value::Function(
 				FunctionValue::Builtin(Print::new())
 			)
 		})
