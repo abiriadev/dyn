@@ -6,7 +6,7 @@ use parser::ast::{BinExprKind, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
-use crate::value::FlatValue;
+use crate::{value::FlatValue, ResolvedIdent};
 
 #[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]
@@ -202,7 +202,7 @@ impl Diagnostic for TypeError {
 #[derive(Debug, PartialEq, Error, Diagnostic)]
 pub enum ReferenceError {
 	#[error("UndefinedIdentifier")]
-	UndefinedIdentifier,
+	UndefinedIdentifier { ident: ResolvedIdent },
 }
 
 fn value_to_message(span: Span, v: FlatValue) -> LabeledSpan {

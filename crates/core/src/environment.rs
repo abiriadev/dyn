@@ -131,7 +131,9 @@ impl Frame {
 			Entry::Vacant(_) => {
 				let Some(ref p) = inner.parent else {
 					return Err(RuntimeError::ReferenceError(
-						ReferenceError::UndefinedIdentifier,
+						ReferenceError::UndefinedIdentifier {
+							ident: ident.clone(),
+						},
 					))
 				};
 
@@ -155,7 +157,9 @@ impl Frame {
 				.parent
 				.clone()
 				.ok_or(RuntimeError::ReferenceError(
-					ReferenceError::UndefinedIdentifier,
+					ReferenceError::UndefinedIdentifier {
+						ident: ident.clone(),
+					},
 				))?
 				.read_value(ident),
 		}
