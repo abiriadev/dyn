@@ -93,6 +93,7 @@ impl Diagnostic for RuntimeError {
 	fn diagnostic_source(&self) -> Option<&dyn Diagnostic> {
 		match self {
 			Self::TypeError(t) => Some(t),
+			Self::ReferenceError(t) => Some(t),
 			_ => None,
 		}
 	}
@@ -100,6 +101,7 @@ impl Diagnostic for RuntimeError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
 		match self {
 			RuntimeError::TypeError(t) => t.labels(),
+			Self::ReferenceError(t) => t.labels(),
 			_ => None,
 		}
 	}
