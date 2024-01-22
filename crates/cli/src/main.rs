@@ -2,11 +2,11 @@ use std::{fs::read_to_string, path::PathBuf};
 
 use clap::Parser;
 use dyn_core::{
-	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, ResolvedIdent,
-	Value,
+	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
 use maplit::hashmap;
 use miette::Report;
+use parser::ast::Ident;
 use rustyline::DefaultEditor;
 
 #[derive(Debug, Parser)]
@@ -33,7 +33,7 @@ fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
-		ResolvedIdent::new("print") => Value::Function(
+		Ident::new_dummy("print").into() => Value::Function(
 			FunctionValue::Builtin(Printer::new())
 		),
 	})

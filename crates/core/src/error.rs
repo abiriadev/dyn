@@ -199,10 +199,20 @@ impl Diagnostic for TypeError {
 	}
 }
 
-#[derive(Debug, PartialEq, Error, Diagnostic)]
+#[derive(Debug, PartialEq, Error)]
 pub enum ReferenceError {
 	#[error("UndefinedIdentifier")]
 	UndefinedIdentifier { ident: ResolvedIdent },
+}
+
+impl Diagnostic for ReferenceError {
+	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+		match self {
+			ReferenceError::UndefinedIdentifier { ident } => Some(Box::new(
+				[LabeledSpan::at(ident.ident.span(), "this")].into_iter(),
+			)),
+		}
+	}
 }
 
 fn value_to_message(span: Span, v: FlatValue) -> LabeledSpan {
