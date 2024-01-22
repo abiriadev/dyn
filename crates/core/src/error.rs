@@ -211,7 +211,14 @@ impl Diagnostic for ReferenceError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
 		match self {
 			ReferenceError::UndefinedIdentifier { ident } => Some(Box::new(
-				[LabeledSpan::at(ident.ident.span(), "this")].into_iter(),
+				[LabeledSpan::at(
+					ident.ident.span(),
+					format!(
+						"can't find `{}` in this scope",
+						ident.ident.symbol()
+					),
+				)]
+				.into_iter(),
 			)),
 		}
 	}
