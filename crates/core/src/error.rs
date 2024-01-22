@@ -6,7 +6,7 @@ use parser::ast::{BinExprKind, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
-use crate::{value::FlatValue};
+use crate::value::FlatValue;
 
 #[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]
@@ -77,7 +77,7 @@ impl Diagnostic for ParseError {
 #[derive(Debug, PartialEq, Error)]
 pub enum RuntimeError {
 	#[error("Reference Error")]
-	ReferenceError(ReferenceError),
+	ReferenceError(#[from] ReferenceError),
 
 	#[error("Assignment to immutable variable")]
 	AssignmentToImmutableVariable,
@@ -199,8 +199,9 @@ impl Diagnostic for TypeError {
 	}
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Error, Diagnostic)]
 pub enum ReferenceError {
+	#[error("UndefinedIdentifier")]
 	UndefinedIdentifier,
 }
 
