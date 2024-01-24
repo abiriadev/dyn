@@ -102,3 +102,9 @@ $ dyn
 # if you want to execute a script, pass the file path as an argument
 $ dyn ./examples/hello.dyn
 ```
+
+## TODO
+
+-   [x] REPL
+-   [x] Closure
+-   [ ] LSP
