@@ -217,7 +217,7 @@ impl HasSpan for Array {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Record {
 	span: Span,
-	pub fields: HashMap<Ident, Expr>,
+	pub fields: Vec<(Ident, Expr)>,
 }
 
 impl HasSpan for Record {
@@ -342,6 +342,7 @@ pub enum ExprKind {
 	Literal(Literal),
 	Ident(Ident),
 	Array(Array),
+	Record(Record),
 	Function(Function),
 	Call(Box<Expr>, Arguments),
 	Prop(Box<Expr>, Ident),
