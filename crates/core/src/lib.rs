@@ -5,8 +5,9 @@ pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use error::{ParseError, TypeError};
 use parser::{
 	ast::{
-		Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind, Function,
-		Ident, Integer, Literal, Nil, StringT, UnaryExpr, UnaryExprKind,
+		self, Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind,
+		Function, Ident, Integer, Literal, Nil, StringT, UnaryExpr,
+		UnaryExprKind,
 	},
 	parse_code,
 };
@@ -45,6 +46,7 @@ enum Tree {
 	Literal(Literal),
 	Ident(Ident),
 	Array(Array),
+	Record(ast::Record),
 	#[allow(unused)]
 	Function(Function),
 	UnaryExpr(UnaryExpr),
