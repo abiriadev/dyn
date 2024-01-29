@@ -1,4 +1,6 @@
 #![allow(unused)]
+use std::collections::HashMap;
+
 use box_tt::BoxNew;
 use span::{HasSpan, Span};
 use strum::AsRefStr;
@@ -204,6 +206,21 @@ impl Array {
 }
 
 impl HasSpan for Array {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
+	}
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Record {
+	span: Span,
+	pub fields: HashMap<Ident, Expr>,
+}
+
+impl HasSpan for Record {
 	fn span(&self) -> Span { self.span }
 
 	fn set_span<S>(&mut self, span: S)
