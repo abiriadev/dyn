@@ -1,7 +1,10 @@
+use std::{future::Future, pin::Pin};
+
 use tower_lsp::{
 	jsonrpc,
 	lsp_types::{
-		InitializeParams, InitializeResult, InitializedParams, MessageType,
+		CompletionParams, CompletionResponse, InitializeParams,
+		InitializeResult, InitializedParams, MessageType,
 	},
 	Client, LanguageServer, LspService, Server,
 };
@@ -27,6 +30,13 @@ impl LanguageServer for Backend {
 	}
 
 	async fn shutdown(&self) -> jsonrpc::Result<()> { Ok(()) }
+
+	async fn completion(
+		&self,
+		params: CompletionParams,
+	) -> jsonrpc::Result<Option<CompletionResponse>> {
+		todo!()
+	}
 }
 
 #[tokio::main]
