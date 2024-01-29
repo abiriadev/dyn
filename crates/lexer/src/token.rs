@@ -283,6 +283,7 @@ impl Token {
 			Token::Bang => "!".to_owned(),
 			Token::Dot => ".".to_owned(),
 			Token::Comma => ".".to_owned(),
+			Token::Colon => ":".to_owned(),
 			Token::Pipe => "|".to_owned(),
 			Token::At => "@".to_owned(),
 			Token::Arrow => "<-".to_owned(),
