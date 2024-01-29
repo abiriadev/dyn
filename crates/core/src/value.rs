@@ -1,13 +1,19 @@
 use std::{
+	collections::HashMap,
 	fmt::{self, Debug, Display, Formatter},
 	sync::Arc,
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
-use parser::ast::{Boolean, Function, Integer, Literal, StringT};
+use parser::ast::{Boolean, Function, Ident, Integer, Literal, StringT};
 use strum::EnumDiscriminants;
 
 use crate::environment::Frame;
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Record {
+	fields: HashMap<Ident, Value>,
+}
 
 pub struct ArgumentValues(pub Vec<Value>);
 
@@ -67,6 +73,7 @@ pub enum Value {
 	Integer(i32),
 	String(String),
 	Array(Vec<Value>),
+	Record(Record),
 	Function(FunctionValue),
 }
 
@@ -99,6 +106,14 @@ impl Value {
 					.collect::<Vec<_>>()
 					.join(", ")
 			),
+			Value::Record(v) => format!(
+				"({})",
+				v.fields
+					.iter()
+					.map(|(k, v)| format!("{k:?}: {v:?}"))
+					.collect::<Vec<_>>()
+					.join(", ")
+			),
 			Value::Function(_) => "[FUNCTION]".to_owned(),
 		}
 	}
@@ -114,6 +129,7 @@ impl Display for Value {
 			Value::Integer(i) => i.to_string(),
 			Value::String(i) => i.to_string(),
 			Value::Array(i) => format!("{i:?}"),
+			Value::Record(i) => "[RECORD]".to_owned(),
 			Value::Function(_) => "FUNCTION".to_owned(),
 		})
 	}
@@ -127,6 +143,7 @@ impl ValueType {
 			ValueType::Integer => "number",
 			ValueType::String => "string",
 			ValueType::Array => "array",
+			ValueType::Record => "record",
 			ValueType::Function => "function",
 		}
 	}
