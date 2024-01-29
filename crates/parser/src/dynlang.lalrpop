@@ -60,6 +60,10 @@ L0: Expr = {
 	<l:@L> <i:Ident> <r:@R> => Expr::new(ExprKind::Ident(i), l..r),
 	"(" <Expr> ")",
 	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr::new(ExprKind::Array(Array::new(e, l..r)), l..r),
+	<l:@L> "(" <fields:Punctuated<(<Ident> ":" <Expr>), ElementSeparator>> ")" <r:@R> => Expr::new(ExprKind::Record(Record {
+		span: (l..r).intO(),
+		fields,
+	}), l..r),
 	<l:@L> "|" <parameters:Parameters> "|" "->" <body:Block> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters,
 		body,
@@ -202,6 +206,7 @@ extern {
 		"!" => Token::Bang,
 		"." => Token::Dot,
 		"," => Token::Comma,
+		":" => Token::Colon,
 		"|" => Token::Pipe,
 		"@" => Token::At,
 		"->" => Token::Arrow,

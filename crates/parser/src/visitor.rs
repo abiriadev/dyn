@@ -1,6 +1,6 @@
 use crate::ast::{
 	Array, BinExpr, Boolean, Code, Expr, ExprKind, Function, Ident, Integer,
-	Literal, Nil, StringT, UnaryExpr,
+	Literal, Nil, Record, StringT, UnaryExpr,
 };
 
 pub trait Visit {
@@ -34,6 +34,13 @@ pub trait Visit {
 		}
 	}
 
+	fn visit_record(&mut self, i: &Record) {
+		for (i, j) in &i.fields {
+			self.visit_ident(i);
+			self.visit_expr(j);
+		}
+	}
+
 	fn visit_function(&mut self, i: &Function) {
 		for i in &i.parameters.0 {
 			self.visit_ident(i);
@@ -54,6 +61,7 @@ pub trait Visit {
 			ExprKind::Ident(i) => self.visit_ident(i),
 			ExprKind::UnaryExpr(i) => self.visit_unaryexpr(i),
 			ExprKind::Array(i) => self.visit_array(i),
+			ExprKind::Record(i) => self.visit_record(i),
 			ExprKind::Function(i) => self.visit_function(i),
 			ExprKind::Call(i, j) => {
 				for j in &j.0 {
@@ -166,6 +174,13 @@ pub trait VisitMut {
 		}
 	}
 
+	fn visit_mut_record(&mut self, i: &mut Record) {
+		for (i, j) in &mut i.fields {
+			self.visit_mut_ident(i);
+			self.visit_mut_expr(j);
+		}
+	}
+
 	fn visit_mut_function(&mut self, i: &mut Function) {
 		for i in &mut i.parameters.0 {
 			self.visit_mut_ident(i);
@@ -188,6 +203,7 @@ pub trait VisitMut {
 			ExprKind::Ident(i) => self.visit_mut_ident(i),
 			ExprKind::UnaryExpr(i) => self.visit_mut_unaryexpr(i),
 			ExprKind::Array(i) => self.visit_mut_array(i),
+			ExprKind::Record(i) => self.visit_mut_record(i),
 			ExprKind::Function(i) => self.visit_mut_function(i),
 			ExprKind::Call(i, j) => {
 				for j in &mut j.0 {
