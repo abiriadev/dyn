@@ -3,7 +3,7 @@ use std::{future::Future, pin::Pin};
 use tower_lsp::{
 	jsonrpc,
 	lsp_types::{
-		CompletionParams, CompletionResponse, InitializeParams,
+		CompletionItem, CompletionParams, CompletionResponse, InitializeParams,
 		InitializeResult, InitializedParams, MessageType,
 	},
 	Client, LanguageServer, LspService, Server,
@@ -33,9 +33,11 @@ impl LanguageServer for Backend {
 
 	async fn completion(
 		&self,
-		params: CompletionParams,
+		_params: CompletionParams,
 	) -> jsonrpc::Result<Option<CompletionResponse>> {
-		todo!()
+		Ok(Some(CompletionResponse::Array(vec![
+			CompletionItem::new_simple("ki-ta!".to_owned(), "www".to_owned()),
+		])))
 	}
 }
 
