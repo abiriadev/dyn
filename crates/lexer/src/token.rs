@@ -161,6 +161,9 @@ pub enum Token {
 	#[token(",", save_token!(TokenKind::Comma))]
 	Comma,
 
+	#[token(":", save_token!(TokenKind::Colon))]
+	Colon,
+
 	#[token("|", save_token!(TokenKind::Pipe))]
 	Pipe,
 
