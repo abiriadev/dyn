@@ -216,7 +216,7 @@ impl HasSpan for Array {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Record {
-	span: Span,
+	pub span: Span,
 	pub fields: Vec<(Ident, Expr)>,
 }
 
