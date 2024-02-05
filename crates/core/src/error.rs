@@ -2,11 +2,11 @@ use std::fmt::{self, Display, Formatter};
 
 use lexer::LexError;
 use miette::{Diagnostic, LabeledSpan};
-use parser::ast::{BinExprKind, UnaryExprKind};
+use parser::ast::{BinExprKind, Ident, UnaryExprKind};
 use span::{HasSpan, Span};
 use thiserror::Error;
 
-use crate::{ResolvedIdent, Value};
+use crate::Value;
 
 #[derive(Debug, PartialEq, Error)]
 #[error("InterpreterError")]
@@ -204,7 +204,7 @@ impl Diagnostic for TypeError {
 #[derive(Debug, PartialEq, Error)]
 pub enum ReferenceError {
 	#[error("UndefinedIdentifier")]
-	UndefinedIdentifier { ident: ResolvedIdent },
+	UndefinedIdentifier { ident: Ident },
 }
 
 impl Diagnostic for ReferenceError {
@@ -212,10 +212,10 @@ impl Diagnostic for ReferenceError {
 		match self {
 			ReferenceError::UndefinedIdentifier { ident } => Some(Box::new(
 				[LabeledSpan::at(
-					ident.ident.span(),
+					ident.span(),
 					format!(
 						"can't find `{}` in this scope",
-						ident.ident.symbol()
+						ident.symbol()
 					),
 				)]
 				.into_iter(),

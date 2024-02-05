@@ -3,12 +3,9 @@ use std::{
 	sync::{Arc, RwLock},
 };
 
-use parser::ast::Parameters;
+use parser::ast::{Ident, Parameters};
 
-use crate::{
-	ArgumentValues, ReferenceError, ResolvedIdent, RuntimeError, SymbolInfo,
-	Value,
-};
+use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
 pub struct Environment {
 	call_stack: Vec<Arc<Frame>>,
@@ -60,7 +57,7 @@ impl Environment {
 
 	pub fn declare(
 		&mut self,
-		ident: ResolvedIdent,
+		ident: Ident,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
@@ -70,16 +67,13 @@ impl Environment {
 
 	pub fn assign(
 		&mut self,
-		ident: ResolvedIdent,
+		ident: Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
 		self.top_frame().assign(ident, value)
 	}
 
-	pub fn read_value(
-		&mut self,
-		ident: ResolvedIdent,
-	) -> Result<Value, RuntimeError> {
+	pub fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
 		self.top_frame().read_value(ident)
 	}
 }
@@ -95,7 +89,7 @@ impl Frame {
 
 	pub fn declare(
 		self: Arc<Self>,
-		ident: ResolvedIdent,
+		ident: Ident,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
@@ -111,7 +105,7 @@ impl Frame {
 
 	pub fn assign(
 		self: Arc<Self>,
-		ident: ResolvedIdent,
+		ident: Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
 		let mut inner = self.0.write().unwrap();
@@ -144,7 +138,7 @@ impl Frame {
 
 	pub fn read_value(
 		self: Arc<Self>,
-		ident: ResolvedIdent,
+		ident: Ident,
 	) -> Result<Value, RuntimeError> {
 		let inner = self.0.read().unwrap();
 		match inner
@@ -167,7 +161,7 @@ impl Frame {
 }
 
 pub struct FrameInner {
-	table: HashMap<ResolvedIdent, SymbolInfo>,
+	table: HashMap<Ident, SymbolInfo>,
 	parent: Option<Arc<Frame>>,
 }
 

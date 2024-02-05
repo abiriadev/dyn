@@ -24,21 +24,6 @@ struct SymbolInfo {
 	value: Value,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ResolvedIdent {
-	pub full_name: String,
-	pub ident: Ident,
-}
-
-impl From<Ident> for ResolvedIdent {
-	fn from(ident: Ident) -> Self {
-		Self {
-			full_name: ident.clone().into_symbol(),
-			ident,
-		}
-	}
-}
-
 enum Tree {
 	Nil(Nil),
 	Boolean(Boolean),
@@ -68,7 +53,7 @@ impl Interpreter {
 	}
 
 	pub fn init_with_builtins(
-		builtin: HashMap<ResolvedIdent, Value>,
+		builtin: HashMap<Ident, Value>,
 	) -> Result<Self, RuntimeError> {
 		let mut mem = Environment::new();
 
