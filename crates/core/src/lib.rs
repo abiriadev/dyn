@@ -137,7 +137,7 @@ impl Interpreter {
 						Value::Boolean(!i),
 					_ => Err(TypeError::UnaryOp {
 						op,
-						expr: i.into(),
+						expr: i,
 						expr_span: span,
 					})?,
 				})
@@ -230,6 +230,7 @@ impl Interpreter {
 				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
 				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
+				ExprKind::Record(i) => self.eval(Tree::Record(i)),
 				ExprKind::Function(f) => Ok(Value::Function(
 					FunctionValue::Closure {
 						body: f,
