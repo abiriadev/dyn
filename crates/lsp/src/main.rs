@@ -1,5 +1,3 @@
-use std::{future::Future, pin::Pin};
-
 use tower_lsp::{
 	jsonrpc,
 	lsp_types::{
