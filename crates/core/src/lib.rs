@@ -218,9 +218,9 @@ impl Interpreter {
 						Value::Boolean(i || j),
 					(i, op, j) => Err(TypeError::BinOp {
 						op,
-						lhs: i.into(),
+						lhs: i,
 						lhs_span,
-						rhs: j.into(),
+						rhs: j,
 						rhs_span,
 					})?,
 				})
