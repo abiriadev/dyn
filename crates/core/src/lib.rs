@@ -260,7 +260,16 @@ impl Interpreter {
 						},
 					}
 				},
-				ExprKind::Prop(_, _) => todo!(),
+				ExprKind::Prop(i, j) => {
+					let Value::Record(i) = self.eval(Tree::Expr(*i))? else {
+						panic!()
+					};
+
+					Ok(i.fields
+						.get(&j)
+						.unwrap_or(&Value::Nil)
+						.clone())
+				},
 				ExprKind::Index(i, j) => {
 					let Value::Array(i) = self.eval(Tree::Expr(*i))? else {
 						panic!()
