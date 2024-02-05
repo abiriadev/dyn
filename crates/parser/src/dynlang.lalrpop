@@ -75,6 +75,7 @@ L0: Expr = {
 };
 
 L1 = {
+	<l:@L> <i:L1> "." <j:Ident> <r:@R> => Expr::new(ExprKind::prop_box(i, j), l..r),
 	<l:@L> <i:L1> "[" <j:Expr> "]" <r:@R> => Expr::new(ExprKind::index_box(i, j), l..r),
 	<l:@L> <i:L1> "(" <j:Arguments> ")" <r:@R> => Expr::new(ExprKind::call_box(i, j), l..r),
 	L0,
