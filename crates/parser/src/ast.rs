@@ -1,5 +1,5 @@
 #![allow(unused)]
-use std::collections::HashMap;
+use std::{collections::HashMap, hash::Hash};
 
 use box_tt::BoxNew;
 use span::{HasSpan, Span};
@@ -143,7 +143,7 @@ pub enum Literal {
 	String(StringT),
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, BoxNew)]
+#[derive(Debug, Clone, Eq, BoxNew)]
 pub struct Ident {
 	span: Span,
 	symbol: String,
@@ -171,6 +171,16 @@ impl Ident {
 	pub fn symbol(&self) -> &str { &self.symbol }
 
 	pub fn into_symbol(self) -> String { self.symbol }
+}
+
+impl PartialEq for Ident {
+	fn eq(&self, other: &Self) -> bool { self.symbol == other.symbol }
+}
+
+impl Hash for Ident {
+	fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+		self.symbol.hash(state);
+	}
 }
 
 impl HasSpan for Ident {
