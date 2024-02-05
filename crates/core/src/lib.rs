@@ -12,6 +12,7 @@ use parser::{
 	parse_code,
 };
 use span::HasSpan;
+use value::Record;
 pub use value::{ArgumentValues, BuiltinFunction, FunctionValue, Value};
 
 mod environment;
@@ -112,6 +113,15 @@ impl Interpreter {
 					.map(|e| self.eval(Tree::Expr(e)))
 					.collect::<Result<Vec<_>, RuntimeError>>()?,
 			)),
+			Tree::Record(i) => Ok(Value::Record(Record {
+				fields: i.fields.into_iter().try_fold(
+					HashMap::<Ident, Value>::new(),
+					|mut h, (k, v)| -> Result<HashMap<_, _>, RuntimeError> {
+						h.insert(k, self.eval(Tree::Expr(v))?);
+						Ok(h)
+					},
+				)?,
+			})),
 			Tree::Function(_) => todo!(),
 			Tree::UnaryExpr(un) => {
 				let span = un.span();

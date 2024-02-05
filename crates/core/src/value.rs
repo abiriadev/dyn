@@ -12,7 +12,7 @@ use crate::environment::Frame;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Record {
-	fields: HashMap<Ident, Value>,
+	pub fields: HashMap<Ident, Value>,
 }
 
 pub struct ArgumentValues(pub Vec<Value>);
