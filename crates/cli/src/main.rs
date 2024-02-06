@@ -1,6 +1,6 @@
 use std::{fs::read_to_string, path::PathBuf};
 
-use clap::Parser;
+use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
@@ -12,6 +12,25 @@ use rustyline::DefaultEditor;
 #[derive(Debug, Parser)]
 struct Args {
 	source_path: Option<PathBuf>,
+
+	#[command(subcommand)]
+	command: Option<Commands>,
+}
+
+#[derive(Debug, Subcommand)]
+enum Commands {
+	Lexer {
+		source_path: Option<PathBuf>,
+
+		#[arg(short, long)]
+		format: LexerFormat,
+	},
+}
+
+#[derive(Debug, Clone, ValueEnum)]
+enum LexerFormat {
+	Json,
+	Tsv,
 }
 
 #[derive(Debug, Clone)]
