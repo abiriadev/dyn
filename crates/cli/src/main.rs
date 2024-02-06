@@ -1,9 +1,14 @@
-use std::{fs::read_to_string, path::PathBuf};
+use std::{
+	fmt::{self, Display, Formatter},
+	fs::read_to_string,
+	path::PathBuf,
+};
 
 use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
+use lexer::SpannedLexer;
 use maplit::hashmap;
 use miette::Report;
 use parser::ast::Ident;
@@ -20,9 +25,9 @@ struct Args {
 #[derive(Debug, Subcommand)]
 enum Commands {
 	Lexer {
-		source_path: Option<PathBuf>,
+		source_path: PathBuf,
 
-		#[arg(short, long)]
+		#[arg(short, long, default_value_t = LexerFormat::Json)]
 		format: LexerFormat,
 	},
 }
@@ -31,6 +36,15 @@ enum Commands {
 enum LexerFormat {
 	Json,
 	Tsv,
+}
+
+impl Display for LexerFormat {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", match self {
+			LexerFormat::Json => "json",
+			LexerFormat::Tsv => "tsv",
+		})
+	}
 }
 
 #[derive(Debug, Clone)]
@@ -48,8 +62,28 @@ impl BuiltinFunction for Printer {
 	}
 }
 
+fn lexer_cmd(source_path: PathBuf, _format: LexerFormat) -> anyhow::Result<()> {
+	for t in SpannedLexer::new(&read_to_string(source_path)?) {
+		let (l, tok, r) = t?;
+		println!("{l}\t{r}\t{}", tok)
+	}
+
+	Ok(())
+}
+
 fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
+
+	if let Some(command) = args.command {
+		match command {
+			Commands::Lexer {
+				source_path,
+				format,
+			} => lexer_cmd(source_path, format)?,
+		}
+
+		return Ok(())
+	}
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
 		Ident::new_dummy("print") => Value::Function(
