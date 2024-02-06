@@ -1,7 +1,7 @@
 use core::fmt;
 use std::{
 	cmp::{max, min, Ordering},
-	fmt::{Debug, Formatter},
+	fmt::{Debug, Display, Formatter},
 	ops::{Add, Range},
 };
 
@@ -43,6 +43,12 @@ impl Debug for Span {
 		f.debug_tuple("Span")
 			.field(&(self.start..self.end))
 			.finish()
+	}
+}
+
+impl Display for Span {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}..{}", self.start, self.end)
 	}
 }
 
