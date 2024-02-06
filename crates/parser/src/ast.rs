@@ -7,7 +7,7 @@ use strum::AsRefStr;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Nil {
-	span: Span,
+	pub span: Span,
 }
 
 impl Nil {
@@ -34,7 +34,7 @@ impl HasSpan for Nil {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Boolean {
-	span: Span,
+	pub span: Span,
 	pub value: bool,
 }
 
@@ -68,7 +68,7 @@ impl HasSpan for Boolean {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Integer {
-	span: Span,
+	pub span: Span,
 	pub value: i32,
 }
 
@@ -100,7 +100,7 @@ impl HasSpan for Integer {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StringT {
-	span: Span,
+	pub span: Span,
 	pub value: String,
 }
 
@@ -145,8 +145,8 @@ pub enum Literal {
 
 #[derive(Debug, Clone, Eq, BoxNew)]
 pub struct Ident {
-	span: Span,
-	symbol: String,
+	pub span: Span,
+	pub symbol: String,
 }
 
 impl Ident {
@@ -194,7 +194,7 @@ impl HasSpan for Ident {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Array {
-	span: Span,
+	pub span: Span,
 	pub elements: Vec<Expr>,
 }
 
@@ -262,7 +262,7 @@ pub enum UnaryExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct UnaryExpr {
-	span: Span,
+	pub span: Span,
 	pub op: UnaryExprKind,
 	pub expr: Box<Expr>,
 }
@@ -320,7 +320,7 @@ pub enum BinExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct BinExpr {
-	span: Span,
+	pub span: Span,
 	pub op: BinExprKind,
 	pub lhs: Box<Expr>,
 	pub rhs: Box<Expr>,
@@ -394,7 +394,7 @@ impl From<BinExpr> for ExprKind {
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
 pub struct Expr {
-	span: Span,
+	pub span: Span,
 	pub kind: ExprKind,
 }
 
@@ -462,7 +462,7 @@ impl From<BinExpr> for Expr {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Code {
-	span: Span,
+	pub span: Span,
 	pub stmts: Vec<Expr>,
 }
 
