@@ -262,7 +262,7 @@ pub enum Token {
 	TemplateStringCentralFragment(String),
 
 	#[regex(
-		r#"\}(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*'"#,
+		r#"\}(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*""#,
 		lex_trailing_template_string
 	)]
 	TemplateStringTrailingFragment(String),
