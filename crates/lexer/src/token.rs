@@ -63,6 +63,12 @@ fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
 }
 
 fn lex_template_string(lex: &mut Lexer<Token>) -> String {
+	lex.extras = false;
+	let sl = lex.slice();
+	sl[1..sl.len() - 1].to_owned()
+}
+
+fn lex_trailing_template_string(lex: &mut Lexer<Token>) -> String {
 	lex.extras = true;
 	let sl = lex.slice();
 	sl[1..sl.len() - 1].to_owned()
@@ -240,7 +246,7 @@ pub enum Token {
 	BlockComment,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| {
-		lex.extras = Some(true);
+		lex.extras = true;
 		lex.slice().parse().ok()
 	})]
 	Integer(i32),
@@ -255,7 +261,7 @@ pub enum Token {
 	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*\{"#, lex_template_string)]
 	TemplateStringCentralFragment(String),
 
-	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*'"#, lex_template_string)]
+	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*'"#, lex_trailing_template_string)]
 	TemplateStringTrailingFragment(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
