@@ -29,6 +29,9 @@ enum Commands {
 
 		#[arg(short, long, default_value_t = LexerFormat::Ndjson)]
 		format: LexerFormat,
+
+		#[arg(short, long, default_value_t = String::from(","))]
+		delimiter: String,
 	},
 }
 
@@ -62,7 +65,11 @@ impl BuiltinFunction for Printer {
 	}
 }
 
-fn lexer_cmd(source_path: PathBuf, _format: LexerFormat) -> anyhow::Result<()> {
+fn lexer_cmd(
+	source_path: PathBuf,
+	_format: LexerFormat,
+	delimiter: String,
+) -> anyhow::Result<()> {
 	for t in SpannedLexer::new(&read_to_string(source_path)?) {
 		let (l, tok, r) = t?;
 
@@ -71,7 +78,7 @@ fn lexer_cmd(source_path: PathBuf, _format: LexerFormat) -> anyhow::Result<()> {
 				r#"{{"token":"{}","span":{{"start":{},"end":{}}}}}"#,
 				tok, l, r
 			),
-			LexerFormat::Csv => println!("{l},{r},{}", tok),
+			LexerFormat::Csv => println!("{l}{delimiter}{r}{delimiter}{tok}"),
 		}
 	}
 
@@ -86,7 +93,8 @@ fn main() -> anyhow::Result<()> {
 			Commands::Lexer {
 				source_path,
 				format,
-			} => lexer_cmd(source_path, format)?,
+				delimiter,
+			} => lexer_cmd(source_path, format, delimiter)?,
 		}
 
 		return Ok(())
