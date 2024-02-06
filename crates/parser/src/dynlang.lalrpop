@@ -228,10 +228,13 @@ extern {
 		"import" => Token::Import,
 		"export" => Token::Export,
 		"\n" => Token::NewLine,
-		// "lcomment" => Token::LineComment,
+		"lcomment" => Token::LineComment,
 		// "bcomment" => Token::BlockComment,
 		"int" => Token::Integer(<i32>),
 		"string" => Token::String(<QuotedString>),
+		"leading" => Token::TemplateStringLeadingFragment(<String>),
+		"central" => Token::TemplateStringCentralFragment(<String>),
+		"trailing" => Token::TemplateStringTrailingFragment(<String>),
 		"ident" => Token::Identifier(<String>),
 	}
 }
