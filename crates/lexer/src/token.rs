@@ -100,29 +100,29 @@ pub enum Token {
 
 	// Assignment operators
 	#[token("=", skip!())]
-	Assign,
+	Equal,
 
 	#[token("+=", skip!())]
-	PlusAssign,
+	PlusEqual,
 
 	#[token("-=", skip!())]
-	MinusAssign,
+	MinusEqual,
 
 	#[token("*=", skip!())]
-	AsteriskAssign,
+	AsteriskEqual,
 
 	#[token("/=", skip!())]
-	SlashAssign,
+	SlashEqual,
 
 	#[token("%=", skip!())]
-	PercentAssign,
+	PercentEqual,
 
 	// Comparison operators
 	#[token("==", skip!())]
-	Equal,
+	EqualEqual,
 
 	#[token("!=", skip!())]
-	NotEqual,
+	BangEqual,
 
 	#[token("<", skip!())]
 	LeftAngledBracket,
@@ -131,17 +131,17 @@ pub enum Token {
 	RightAngledBracket,
 
 	#[token("<=", skip!())]
-	LessThanEqual,
+	LeftAngledBracketEqual,
 
 	#[token(">=", skip!())]
-	GreaterThanEqual,
+	RightAngledBracketEqual,
 
 	// Boolean operators
 	#[token("&&", skip!())]
-	DoubleAnd,
+	AndAnd,
 
 	#[token("||", skip!())]
-	DoublePipe,
+	PipePipe,
 
 	// Parentheses
 	#[token("(", skip!())]
@@ -195,12 +195,6 @@ pub enum Token {
 	False,
 
 	// keywords
-	#[token("panic", skip!())]
-	Panic,
-
-	#[token("assert", skip!())]
-	Assert,
-
 	#[token("let", skip!())]
 	Let,
 
@@ -228,8 +222,8 @@ pub enum Token {
 	#[token("continue", skip!())]
 	Continue,
 
-	#[token("import", skip!())]
-	Import,
+	#[token("use", skip!())]
+	Use,
 
 	#[token("export", skip!())]
 	Export,
@@ -280,20 +274,20 @@ impl Token {
 			Token::Asterisk => "*".to_owned(),
 			Token::Slash => "/".to_owned(),
 			Token::Percent => "%".to_owned(),
-			Token::Assign => "=".to_owned(),
-			Token::PlusAssign => "+=".to_owned(),
-			Token::MinusAssign => "-=".to_owned(),
-			Token::AsteriskAssign => "*=".to_owned(),
-			Token::SlashAssign => "/=".to_owned(),
-			Token::PercentAssign => "%=".to_owned(),
-			Token::Equal => "==".to_owned(),
-			Token::NotEqual => "!=".to_owned(),
+			Token::Equal => "=".to_owned(),
+			Token::PlusEqual => "+=".to_owned(),
+			Token::MinusEqual => "-=".to_owned(),
+			Token::AsteriskEqual => "*=".to_owned(),
+			Token::SlashEqual => "/=".to_owned(),
+			Token::PercentEqual => "%=".to_owned(),
+			Token::EqualEqual => "==".to_owned(),
+			Token::BangEqual => "!=".to_owned(),
 			Token::LeftAngledBracket => "<".to_owned(),
 			Token::RightAngledBracket => ">".to_owned(),
-			Token::LessThanEqual => "<=".to_owned(),
-			Token::GreaterThanEqual => ">=".to_owned(),
-			Token::DoubleAnd => "&&".to_owned(),
-			Token::DoublePipe => "||".to_owned(),
+			Token::LeftAngledBracketEqual => "<=".to_owned(),
+			Token::RightAngledBracketEqual => ">=".to_owned(),
+			Token::AndAnd => "&&".to_owned(),
+			Token::PipePipe => "||".to_owned(),
 			Token::LeftParenthesis => "(".to_owned(),
 			Token::RightParenthesis => ")".to_owned(),
 			Token::LeftBrace => "{".to_owned(),
@@ -310,8 +304,6 @@ impl Token {
 			Token::Nil => "nil".to_owned(),
 			Token::True => "true".to_owned(),
 			Token::False => "false".to_owned(),
-			Token::Panic => "panic".to_owned(),
-			Token::Assert => "assert".to_owned(),
 			Token::Let => "let".to_owned(),
 			Token::LetMut => "let!".to_owned(),
 			Token::If => "if".to_owned(),
@@ -321,7 +313,7 @@ impl Token {
 			Token::Return => "return".to_owned(),
 			Token::Break => "break".to_owned(),
 			Token::Continue => "continue".to_owned(),
-			Token::Import => "import".to_owned(),
+			Token::Use => "use".to_owned(),
 			Token::Export => "export".to_owned(),
 			Token::NewLine => "\\n".to_owned(), // NOTE: escape backslash
 			Token::LineComment => unreachable!(), // NOTE: skipped token
