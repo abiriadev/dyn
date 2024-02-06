@@ -1,6 +1,7 @@
 use core::fmt;
 use std::{
 	cmp::{max, min, Ordering},
+	error::Error,
 	fmt::{Debug, Display, Formatter},
 	io::Write,
 	ops::{Add, Range},
@@ -106,6 +107,8 @@ where T: Display
 		write!(f, "{}({})", self.value, self.span)
 	}
 }
+
+impl<T> Error for Spanned<T> where T: Error {}
 
 pub trait HasSpan {
 	fn span(&self) -> Span;
