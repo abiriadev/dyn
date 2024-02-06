@@ -4,5 +4,5 @@ iter [
 	"kangjun"
 	"ensuta"
 ] of person {
-	print("Hello, " + person + "!")
+	print("Hello, {person}!")
 }
