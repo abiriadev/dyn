@@ -346,7 +346,7 @@ fn unary_minus_followed_by_multiplication() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryExpr(UnaryExpr {
-				span: (1..4).into(),
+				span: (0..3).into(),
 				op: UnaryExprKind::Minus,
 				expr: ident!(a 2..3)
 			}),
@@ -363,8 +363,8 @@ fn parse_unary_not() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryExpr(UnaryExpr {
-				span: (1..5).into(),
-				op: UnaryExprKind::Minus,
+				span: (0..5).into(),
+				op: UnaryExprKind::Not,
 				expr: tru!(1)
 			}),
 			0..5
@@ -380,7 +380,7 @@ fn parse_nested_unary_not() {
 		res,
 		Ok(Expr::new(
 			ExprKind::UnaryExpr(UnaryExpr {
-				span: (1..4).into(),
+				span: (0..3).into(),
 				op: UnaryExprKind::Not,
 				expr: Box::new(Expr::new(
 					ExprKind::UnaryExpr(UnaryExpr {
@@ -388,7 +388,7 @@ fn parse_nested_unary_not() {
 						op: UnaryExprKind::Not,
 						expr: ident!(a 2..3)
 					}),
-					1..4
+					1..3
 				),)
 			}),
 			0..3
@@ -655,7 +655,7 @@ fn parse_nested_assign2() {
 				var!(a 0..1),
 				Expr::new(
 					ExprKind::unary_expr_box(UnaryExpr {
-						span: (1..5).into(),
+						span: (4..16).into(),
 						op: UnaryExprKind::Not,
 						expr: Box::new(Expr::new(
 							ExprKind::assign_box(
