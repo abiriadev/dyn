@@ -39,7 +39,7 @@ impl Environment {
 			.into_iter()
 			.zip(args.0.into_iter())
 		{
-			self.declare(k.into(), v, false)?;
+			self.declare(k, v, false)?;
 		}
 
 		self.call_stack.push(frame);

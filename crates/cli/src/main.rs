@@ -33,7 +33,7 @@ fn main() -> anyhow::Result<()> {
 	let args = Args::parse();
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {
-		Ident::new_dummy("print").into() => Value::Function(
+		Ident::new_dummy("print") => Value::Function(
 			FunctionValue::Builtin(Printer::new())
 		),
 	})

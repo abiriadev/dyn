@@ -91,7 +91,7 @@ impl Interpreter {
 				Literal::Integer(i) => self.eval(Tree::Integer(i)),
 				Literal::String(i) => self.eval(Tree::StringT(i)),
 			},
-			Tree::Ident(ident) => Ok(self.mem.read_value(ident.into())?),
+			Tree::Ident(ident) => Ok(self.mem.read_value(ident)?),
 			Tree::Array(i) => Ok(Value::Array(
 				i.elements
 					.into_iter()
@@ -276,13 +276,13 @@ impl Interpreter {
 					};
 					let v = Value::Integer(j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::AddAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
-						.read_value(ident.clone().into())?
+						.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -291,13 +291,13 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i + j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::SubAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
-						.read_value(ident.clone().into())?
+						.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -306,13 +306,13 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i - j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::MulAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
-						.read_value(ident.clone().into())?
+						.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -321,13 +321,13 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i * j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::DivAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
-						.read_value(ident.clone().into())?
+						.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -336,13 +336,13 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i / j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::ModAssign(ident, j) => {
 					let Value::Integer(i) = self
 						.mem
-						.read_value(ident.clone().into())?
+						.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -351,19 +351,19 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i % j);
 					self.mem
-						.assign(ident.into(), v.clone())?;
+						.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::Declare(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident.into(), value.clone(), false)?;
+						.declare(ident, value.clone(), false)?;
 					Ok(value)
 				},
 				ExprKind::DeclareMut(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident.into(), value.clone(), true)?;
+						.declare(ident, value.clone(), true)?;
 					Ok(value)
 				},
 				ExprKind::If { condition, yes } => {
@@ -401,10 +401,10 @@ impl Interpreter {
 						panic!()
 					};
 					self.mem
-						.declare(item.clone().into(), Value::Nil, true)?;
+						.declare(item.clone(), Value::Nil, true)?;
 					for i in collection {
 						self.mem
-							.assign(item.clone().into(), i)?;
+							.assign(item.clone(), i)?;
 						self.eval(Tree::Code(body.clone()))?;
 					}
 					Ok(Value::Nil)
@@ -454,7 +454,7 @@ mod tests {
 	#[ignore]
 	fn run_interpreter() {
 		let mut interpreter = Interpreter::init_with_builtins(hashmap! {
-			Ident::new_dummy("print").into() => Value::Function(
+			Ident::new_dummy("print") => Value::Function(
 				FunctionValue::Builtin(Print::new())
 			)
 		})
