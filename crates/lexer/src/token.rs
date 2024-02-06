@@ -1,3 +1,5 @@
+use std::fmt::{self, Display, Formatter};
+
 use logos::{Filter, Lexer, Logos, Skip};
 use strum::EnumDiscriminants;
 
@@ -313,5 +315,11 @@ impl Token {
 			},
 			Token::Identifier(v) => v.to_string(),
 		}
+	}
+}
+
+impl Display for Token {
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}", self.to_source())
 	}
 }
