@@ -3,7 +3,10 @@ use pretty_assertions::assert_eq;
 
 use super::*;
 use crate::{
-	ast::{BinExpr, BinExprKind, ExprKind, Function, Parameters},
+	ast::{
+		BinExpr, BinExprKind, ExprKind, Function, Parameters, UnaryExpr,
+		UnaryExprKind,
+	},
 	macros::{arr, call, call_ident, code, fal, ident, n, nil, str, tru, var},
 };
 
@@ -301,7 +304,11 @@ fn parse_unary_minus() {
 	assert_eq!(
 		res,
 		Ok(Expr::new(
-			ExprKind::UnaryMinus(n!(123 2)),
+			ExprKind::UnaryExpr(UnaryExpr::new_box(
+				(0..5).into(),
+				UnaryExprKind::Minus,
+				*n!(123 2)
+			)),
 			0..5
 		))
 	);
@@ -314,10 +321,18 @@ fn does_not_support_decrement_operator() {
 	assert_eq!(
 		res,
 		Ok(Expr::new(
-			ExprKind::unary_minus_box(Expr::new(
-				ExprKind::UnaryMinus(ident!(a 2..3)),
-				1..3
-			)),
+			ExprKind::UnaryExpr(UnaryExpr {
+				span: (0..3).into(),
+				op: UnaryExprKind::Minus,
+				expr: Box::new(Expr::new(
+					ExprKind::UnaryExpr(UnaryExpr {
+						span: (1..3).into(),
+						op: UnaryExprKind::Minus,
+						expr: ident!(a 2..3)
+					}),
+					1..3
+				))
+			}),
 			0..3
 		))
 	);
@@ -330,7 +345,11 @@ fn unary_minus_followed_by_multiplication() {
 	assert_eq!(
 		res,
 		Ok(Expr::new(
-			ExprKind::UnaryMinus(ident!(a 2..3)),
+			ExprKind::UnaryExpr(UnaryExpr {
+				span: (1..4).into(),
+				op: UnaryExprKind::Minus,
+				expr: ident!(a 2..3)
+			}),
 			0..3
 		) * *ident!(b 4..5))
 	);
@@ -343,7 +362,11 @@ fn parse_unary_not() {
 	assert_eq!(
 		res,
 		Ok(Expr::new(
-			ExprKind::UnaryNot(tru!(1)),
+			ExprKind::UnaryExpr(UnaryExpr {
+				span: (1..5).into(),
+				op: UnaryExprKind::Minus,
+				expr: tru!(1)
+			}),
 			0..5
 		))
 	);
@@ -356,10 +379,18 @@ fn parse_nested_unary_not() {
 	assert_eq!(
 		res,
 		Ok(Expr::new(
-			ExprKind::unary_not_box(Expr::new(
-				ExprKind::UnaryNot(ident!(a 2..3)),
-				1..3
-			)),
+			ExprKind::UnaryExpr(UnaryExpr {
+				span: (1..4).into(),
+				op: UnaryExprKind::Not,
+				expr: Box::new(Expr::new(
+					ExprKind::UnaryExpr(UnaryExpr {
+						span: (1..3).into(),
+						op: UnaryExprKind::Not,
+						expr: ident!(a 2..3)
+					}),
+					1..4
+				),)
+			}),
 			0..3
 		))
 	);
@@ -623,13 +654,17 @@ fn parse_nested_assign2() {
 			ExprKind::assign_box(
 				var!(a 0..1),
 				Expr::new(
-					ExprKind::unary_not_box(Expr::new(
-						ExprKind::assign_box(
-							var!(b 6..7),
-							*ident!(c 10..11) + *n!(2 14)
-						),
-						6..15
-					)),
+					ExprKind::unary_expr_box(UnaryExpr {
+						span: (1..5).into(),
+						op: UnaryExprKind::Not,
+						expr: Box::new(Expr::new(
+							ExprKind::assign_box(
+								var!(b 6..7),
+								*ident!(c 10..11) + *n!(2 14)
+							),
+							6..15
+						))
+					}),
 					4..16
 				)
 			),
