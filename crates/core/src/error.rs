@@ -26,7 +26,7 @@ impl Diagnostic for InterpreterError {
 
 #[derive(Debug, PartialEq, Error)]
 #[error("ParseError")]
-pub struct ParseError(pub parser::ParseError);
+pub struct ParseError(#[from] pub parser::ParseError);
 
 impl Diagnostic for ParseError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
