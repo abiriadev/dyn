@@ -6,8 +6,8 @@ use error::{ParseError, TypeError};
 use parser::{
 	ast::{
 		self, Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind,
-		Function, Ident, Integer, Literal, Nil, StringT, UnaryExpr,
-		UnaryExprKind,
+		Function, Ident, Integer, Literal, Nil, StringT, TemplateString,
+		UnaryExpr, UnaryExprKind,
 	},
 	parse_code,
 };
@@ -31,6 +31,7 @@ enum Tree {
 	StringT(StringT),
 	Literal(Literal),
 	Ident(Ident),
+	TemplateString(TemplateString),
 	Array(Array),
 	Record(ast::Record),
 	#[allow(unused)]
@@ -92,6 +93,24 @@ impl Interpreter {
 				Literal::String(i) => self.eval(Tree::StringT(i)),
 			},
 			Tree::Ident(ident) => Ok(self.mem.read_value(ident)?),
+			Tree::TemplateString(TemplateString {
+				fragments, values, ..
+			}) => {
+				let mut buf = String::new();
+
+				let mut fragments_iter = fragments.iter();
+
+				for value in values {
+					buf.push_str(fragments_iter.next().unwrap());
+
+					let value = self.eval(Tree::Expr(value))?;
+					buf.push_str(&value.to_string());
+				}
+
+				buf.push_str(fragments_iter.next().unwrap());
+
+				Ok(Value::String(buf))
+			},
 			Tree::Array(i) => Ok(Value::Array(
 				i.elements
 					.into_iter()
