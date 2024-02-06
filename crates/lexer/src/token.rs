@@ -65,6 +65,12 @@ fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
 	QuotedString::Double(sl[1..sl.len() - 1].to_owned())
 }
 
+fn lex_template_string(lex: &mut Lexer<Token>) -> String {
+	lex.extras = Some(TokenKind::TemplateStringLeadingFragment);
+	let sl = lex.slice();
+	sl[1..sl.len() - 1].to_owned()
+}
+
 #[derive(Debug, Clone, PartialEq, Logos, EnumDiscriminants)]
 #[strum_discriminants(name(TokenKind))]
 #[logos(
@@ -233,7 +239,7 @@ pub enum Token {
 	#[regex(r"//[^\n]*", |_| Skip)]
 	LineComment,
 
-	#[regex(r"/\*([^*]|\*[^/])*\*/", |_| Skip)]
+	#[regex(r"/\*([^*]|\*[^/])*\*/")]
 	BlockComment,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| {
@@ -245,6 +251,15 @@ pub enum Token {
 	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string_single)]
 	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string_double)]
 	String(QuotedString),
+
+	#[regex(r#""(?:[^']|\\'|\\n|\\t)*\{"#, lex_template_string)]
+	TemplateStringLeadingFragment(String),
+
+	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*\{"#, lex_template_string)]
+	TemplateStringCentralFragment(String),
+
+	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*'"#, lex_template_string)]
+	TemplateStringTrailingFragment(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
 		lex.extras = Some(TokenKind::Identifier);
@@ -313,6 +328,9 @@ impl Token {
 				QuotedString::Single(v) => format!("'{v}'"),
 				QuotedString::Double(v) => format!(r#""{v}""#),
 			},
+			Token::TemplateStringLeadingFragment(v) => format!(r#""{v}{{"#),
+			Token::TemplateStringCentralFragment(v) => format!(r#"}}{v}{{"#),
+			Token::TemplateStringTrailingFragment(v) => format!(r#"}}{v}""#),
 			Token::Identifier(v) => v.to_string(),
 		}
 	}
