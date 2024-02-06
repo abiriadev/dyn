@@ -251,17 +251,20 @@ pub enum Token {
 	})]
 	Integer(i32),
 
-	#[regex(r#"'(?:[^']|\\'|\\n|\\t)*'"#, lex_string_single)]
-	#[regex(r#""(?:[^"]|\\"|\\n|\\t)*""#, lex_string_double)]
+	#[regex(r#"'(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*'"#, lex_string_single)]
+	#[regex(r#""(?:[^"{}]|\\"|\\n|\\t|\\\{|\\\})*""#, lex_string_double)]
 	String(QuotedString),
 
-	#[regex(r#""(?:[^']|\\'|\\n|\\t)*\{"#, lex_template_string)]
+	#[regex(r#""(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*\{"#, lex_template_string)]
 	TemplateStringLeadingFragment(String),
 
-	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*\{"#, lex_template_string)]
+	#[regex(r#"\}(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*\{"#, lex_template_string)]
 	TemplateStringCentralFragment(String),
 
-	#[regex(r#"\}(?:[^']|\\'|\\n|\\t)*'"#, lex_trailing_template_string)]
+	#[regex(
+		r#"\}(?:[^'{}]|\\'|\\n|\\t|\\\{|\\\})*'"#,
+		lex_trailing_template_string
+	)]
 	TemplateStringTrailingFragment(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
