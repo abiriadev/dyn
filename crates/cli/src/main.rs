@@ -27,22 +27,22 @@ enum Commands {
 	Lexer {
 		source_path: PathBuf,
 
-		#[arg(short, long, default_value_t = LexerFormat::Json)]
+		#[arg(short, long, default_value_t = LexerFormat::Ndjson)]
 		format: LexerFormat,
 	},
 }
 
 #[derive(Debug, Clone, ValueEnum)]
 enum LexerFormat {
-	Json,
-	Tsv,
+	Ndjson,
+	Csv,
 }
 
 impl Display for LexerFormat {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		write!(f, "{}", match self {
-			LexerFormat::Json => "json",
-			LexerFormat::Tsv => "tsv",
+			LexerFormat::Ndjson => "ndjson",
+			LexerFormat::Csv => "csv",
 		})
 	}
 }
@@ -65,7 +65,14 @@ impl BuiltinFunction for Printer {
 fn lexer_cmd(source_path: PathBuf, _format: LexerFormat) -> anyhow::Result<()> {
 	for t in SpannedLexer::new(&read_to_string(source_path)?) {
 		let (l, tok, r) = t?;
-		println!("{l}\t{r}\t{}", tok)
+
+		match _format {
+			LexerFormat::Ndjson => println!(
+				r#"{{"token":"{}","span":{{"start":{},"end":{}}}}}"#,
+				tok, l, r
+			),
+			LexerFormat::Csv => println!("{l},{r},{}", tok),
+		}
 	}
 
 	Ok(())
