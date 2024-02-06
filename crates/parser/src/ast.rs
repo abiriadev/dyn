@@ -358,6 +358,7 @@ impl HasSpan for BinExpr {
 pub enum ExprKind {
 	Literal(Literal),
 	Ident(Ident),
+	TemplateString(TemplateString),
 	Array(Array),
 	Record(Record),
 	Function(Function),
@@ -444,6 +445,34 @@ impl Expr {
 				span: (start..end).into(),
 				op,
 				expr: Box::new(expr),
+			}),
+		}
+	}
+
+	pub fn new_lalr_template_string(
+		start: usize,
+		leading: String,
+		leading_expr: Expr,
+		central_vec: Vec<(String, Expr)>,
+		trailing: String,
+		end: usize,
+	) -> Self {
+		let mut fragments = vec![leading];
+		let mut values = vec![leading_expr];
+
+		for (central, central_expr) in central_vec.into_iter() {
+			fragments.push(central);
+			values.push(central_expr);
+		}
+
+		fragments.push(trailing);
+
+		Self {
+			span: (start..end).into(),
+			kind: ExprKind::TemplateString(TemplateString {
+				span: (start..end).into(),
+				fragments,
+				values,
 			}),
 		}
 	}
