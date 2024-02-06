@@ -59,6 +59,7 @@ L0: Expr = {
 	<l:@L> <i:Literal> <r:@R> => Expr::new(ExprKind::Literal(i), l..r),
 	<l:@L> <i:Ident> <r:@R> => Expr::new(ExprKind::Ident(i), l..r),
 	"(" <Expr> ")",
+	@L "leading" Expr ("central" Expr)* "trailing" @R => Expr::new_lalr_template_string(<>),
 	<l:@L> "[" <e:Elements> "]" <r:@R> => Expr::new(ExprKind::Array(Array::new(e, l..r)), l..r),
 	<l:@L> "(" <fields:Punctuated<(<Ident> ":" <Expr>), ElementSeparator>> ")" <r:@R> => Expr::new(ExprKind::Record(Record {
 		span: (l..r).into(),
