@@ -1,6 +1,6 @@
 use crate::ast::{
 	Array, BinExpr, Boolean, Code, Expr, ExprKind, Function, Ident, Integer,
-	Literal, Nil, Record, StringT, UnaryExpr,
+	Literal, Nil, Record, StringT, TemplateString, UnaryExpr,
 };
 
 pub trait Visit {
@@ -27,6 +27,12 @@ pub trait Visit {
 
 	#[allow(unused)]
 	fn visit_ident(&mut self, i: &Ident) {}
+
+	fn visit_template_string(&mut self, i: &TemplateString) {
+		for i in &i.values {
+			self.visit_expr(i);
+		}
+	}
 
 	fn visit_array(&mut self, i: &Array) {
 		for i in &i.elements {
@@ -167,6 +173,12 @@ pub trait VisitMut {
 
 	#[allow(unused)]
 	fn visit_mut_ident(&mut self, i: &mut Ident) {}
+
+	fn visit_mut_template_string(&mut self, i: &mut TemplateString) {
+		for i in &mut i.values {
+			self.visit_mut_expr(i);
+		}
+	}
 
 	fn visit_mut_array(&mut self, i: &mut Array) {
 		for i in &mut i.elements {
