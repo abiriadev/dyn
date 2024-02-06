@@ -233,6 +233,8 @@ impl Interpreter {
 				ExprKind::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
 				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
 				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
+				ExprKind::TemplateString(i) =>
+					self.eval(Tree::TemplateString(i)),
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
 				ExprKind::Record(i) => self.eval(Tree::Record(i)),
 				ExprKind::Function(f) => Ok(Value::Function(
