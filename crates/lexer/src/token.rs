@@ -5,32 +5,29 @@ use strum::EnumDiscriminants;
 
 use super::LexError;
 
-macro_rules! save_token {
-	($token:expr) => {
-		|lex: &mut Lexer<'s>| {
-			lex.extras = Some($token);
+macro_rules! skip {
+	() => {
+		|lex: &mut Lexer<'_>| {
+			lex.extras = false;
+		}
+	};
+}
+
+macro_rules! asi {
+	() => {
+		|lex: &mut Lexer<'_>| {
+			lex.extras = true;
 		}
 	};
 }
 
 fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
-	let res = match lex.extras {
-		Some(
-			// identifiers
-			| TokenKind::Identifier
-
-			// literals
-			| TokenKind::Integer | TokenKind::String
-
-			// operators and delimiters
-			| TokenKind::RightAngledBracket
-			| TokenKind::RightParenthesis
-			| TokenKind::RightBrace
-			| TokenKind::RightBracket,
-		) => Filter::Emit(()),
-		_ => Filter::Skip,
+	let res = if lex.extras {
+		Filter::Emit(())
+	} else {
+		Filter::Skip
 	};
-	lex.extras = Some(TokenKind::NewLine);
+	lex.extras = false;
 	res
 }
 
@@ -54,19 +51,19 @@ impl From<QuotedString> for String {
 }
 
 fn lex_string_single(lex: &mut Lexer<Token>) -> QuotedString {
-	lex.extras = Some(TokenKind::String);
+	lex.extras = true;
 	let sl = lex.slice();
 	QuotedString::Single(sl[1..sl.len() - 1].to_owned())
 }
 
 fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
-	lex.extras = Some(TokenKind::String);
+	lex.extras = true;
 	let sl = lex.slice();
 	QuotedString::Double(sl[1..sl.len() - 1].to_owned())
 }
 
 fn lex_template_string(lex: &mut Lexer<Token>) -> String {
-	lex.extras = Some(TokenKind::TemplateStringLeadingFragment);
+	lex.extras = true;
 	let sl = lex.slice();
 	sl[1..sl.len() - 1].to_owned()
 }
@@ -76,159 +73,159 @@ fn lex_template_string(lex: &mut Lexer<Token>) -> String {
 #[logos(
 	skip r"[ \t]+",
 	error = LexError,
-	extras = Option<TokenKind>
+	extras = bool
 )]
 pub enum Token {
 	// Elementary arithmetics
-	#[token("+", save_token!(TokenKind::Plus))]
+	#[token("+", skip!())]
 	Plus,
 
-	#[token("-", save_token!(TokenKind::Minus))]
+	#[token("-", skip!())]
 	Minus,
 
-	#[token("*", save_token!(TokenKind::Asterisk))]
+	#[token("*", skip!())]
 	Asterisk,
 
-	#[token("/", save_token!(TokenKind::Slash))]
+	#[token("/", skip!())]
 	Slash,
 
-	#[token("%", save_token!(TokenKind::Percent))]
+	#[token("%", skip!())]
 	Percent,
 
 	// Assignment operators
-	#[token("=", save_token!(TokenKind::Assign))]
+	#[token("=", skip!())]
 	Assign,
 
-	#[token("+=", save_token!(TokenKind::PlusAssign))]
+	#[token("+=", skip!())]
 	PlusAssign,
 
-	#[token("-=", save_token!(TokenKind::MinusAssign))]
+	#[token("-=", skip!())]
 	MinusAssign,
 
-	#[token("*=", save_token!(TokenKind::AsteriskAssign))]
+	#[token("*=", skip!())]
 	AsteriskAssign,
 
-	#[token("/=", save_token!(TokenKind::SlashAssign))]
+	#[token("/=", skip!())]
 	SlashAssign,
 
-	#[token("%=", save_token!(TokenKind::PercentAssign))]
+	#[token("%=", skip!())]
 	PercentAssign,
 
 	// Comparison operators
-	#[token("==", save_token!(TokenKind::Equal))]
+	#[token("==", skip!())]
 	Equal,
 
-	#[token("!=", save_token!(TokenKind::NotEqual))]
+	#[token("!=", skip!())]
 	NotEqual,
 
-	#[token("<", save_token!(TokenKind::LeftAngledBracket))]
+	#[token("<", skip!())]
 	LeftAngledBracket,
 
-	#[token(">", save_token!(TokenKind::RightAngledBracket))]
+	#[token(">", asi!())]
 	RightAngledBracket,
 
-	#[token("<=", save_token!(TokenKind::LessThanEqual))]
+	#[token("<=", skip!())]
 	LessThanEqual,
 
-	#[token(">=", save_token!(TokenKind::GreaterThanEqual))]
+	#[token(">=", skip!())]
 	GreaterThanEqual,
 
 	// Boolean operators
-	#[token("&&", save_token!(TokenKind::DoubleAnd))]
+	#[token("&&", skip!())]
 	DoubleAnd,
 
-	#[token("||", save_token!(TokenKind::DoublePipe))]
+	#[token("||", skip!())]
 	DoublePipe,
 
 	// Parentheses
-	#[token("(", save_token!(TokenKind::LeftParenthesis))]
+	#[token("(", skip!())]
 	LeftParenthesis,
 
-	#[token(")", save_token!(TokenKind::RightParenthesis))]
+	#[token(")", asi!())]
 	RightParenthesis,
 
-	#[token("{", save_token!(TokenKind::LeftBrace))]
+	#[token("{", skip!())]
 	LeftBrace,
 
-	#[token("}", save_token!(TokenKind::RightBrace))]
+	#[token("}", asi!())]
 	RightBrace,
 
-	#[token("[", save_token!(TokenKind::LeftBracket))]
+	#[token("[", skip!())]
 	LeftBracket,
 
-	#[token("]", save_token!(TokenKind::RightBracket))]
+	#[token("]", asi!())]
 	RightBracket,
 
 	// etc
-	#[token("!", save_token!(TokenKind::Bang))]
+	#[token("!", skip!())]
 	Bang,
 
-	#[token(".", save_token!(TokenKind::Dot))]
+	#[token(".", skip!())]
 	Dot,
 
-	#[token(",", save_token!(TokenKind::Comma))]
+	#[token(",", skip!())]
 	Comma,
 
-	#[token(":", save_token!(TokenKind::Colon))]
+	#[token(":", skip!())]
 	Colon,
 
-	#[token("|", save_token!(TokenKind::Pipe))]
+	#[token("|", skip!())]
 	Pipe,
 
-	#[token("@", save_token!(TokenKind::At))]
+	#[token("@", skip!())]
 	At,
 
-	#[token("->", save_token!(TokenKind::Arrow))]
+	#[token("->", skip!())]
 	Arrow,
 
 	// token literals
-	#[token("nil", save_token!(TokenKind::Nil))]
+	#[token("nil", skip!())]
 	Nil,
 
-	#[token("true", save_token!(TokenKind::True))]
+	#[token("true", skip!())]
 	True,
 
-	#[token("false", save_token!(TokenKind::False))]
+	#[token("false", skip!())]
 	False,
 
 	// keywords
-	#[token("panic", save_token!(TokenKind::Panic))]
+	#[token("panic", skip!())]
 	Panic,
 
-	#[token("assert", save_token!(TokenKind::Assert))]
+	#[token("assert", skip!())]
 	Assert,
 
-	#[token("let", save_token!(TokenKind::Let))]
+	#[token("let", skip!())]
 	Let,
 
-	#[token("let!", save_token!(TokenKind::LetMut))]
+	#[token("let!", skip!())]
 	LetMut,
 
-	#[token("if", save_token!(TokenKind::If))]
+	#[token("if", skip!())]
 	If,
 
-	#[token("else", save_token!(TokenKind::Else))]
+	#[token("else", skip!())]
 	Else,
 
-	#[token("iter", save_token!(TokenKind::Iter))]
+	#[token("iter", skip!())]
 	Iter,
 
-	#[token("of", save_token!(TokenKind::Of))]
+	#[token("of", skip!())]
 	Of,
 
-	#[token("return", save_token!(TokenKind::Return))]
+	#[token("return", skip!())]
 	Return,
 
-	#[token("break", save_token!(TokenKind::Break))]
+	#[token("break", skip!())]
 	Break,
 
-	#[token("continue", save_token!(TokenKind::Continue))]
+	#[token("continue", skip!())]
 	Continue,
 
-	#[token("import", save_token!(TokenKind::Import))]
+	#[token("import", skip!())]
 	Import,
 
-	#[token("export", save_token!(TokenKind::Export))]
+	#[token("export", skip!())]
 	Export,
 
 	// extra
@@ -243,7 +240,7 @@ pub enum Token {
 	BlockComment,
 
 	#[regex("-?(0|[1-9][0-9]*)", |lex| {
-		lex.extras = Some(TokenKind::Integer);
+		lex.extras = Some(true);
 		lex.slice().parse().ok()
 	})]
 	Integer(i32),
@@ -262,7 +259,7 @@ pub enum Token {
 	TemplateStringTrailingFragment(String),
 
 	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
-		lex.extras = Some(TokenKind::Identifier);
+		lex.extras = true;
 		lex.slice().to_owned()
 	})]
 	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
