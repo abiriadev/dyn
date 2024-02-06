@@ -3,7 +3,6 @@ use std::{
 	cmp::{max, min, Ordering},
 	error::Error,
 	fmt::{Debug, Display, Formatter},
-	io::Write,
 	ops::{Add, Range},
 };
 
