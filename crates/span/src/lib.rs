@@ -2,6 +2,7 @@ use core::fmt;
 use std::{
 	cmp::{max, min, Ordering},
 	fmt::{Debug, Display, Formatter},
+	io::Write,
 	ops::{Add, Range},
 };
 
@@ -96,6 +97,14 @@ impl From<Span> for SourceSpan {
 pub struct Spanned<T> {
 	span: Span,
 	value: T,
+}
+
+impl<T> Display for Spanned<T>
+where T: Display
+{
+	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+		write!(f, "{}({})", self.value, self.span)
+	}
 }
 
 pub trait HasSpan {
