@@ -275,14 +275,12 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::AddAssign(ident, j) => {
-					let Value::Integer(i) = self
-						.mem
-						.read_value(ident.clone())?
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -290,14 +288,12 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i + j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::SubAssign(ident, j) => {
-					let Value::Integer(i) = self
-						.mem
-						.read_value(ident.clone())?
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -305,14 +301,12 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i - j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::MulAssign(ident, j) => {
-					let Value::Integer(i) = self
-						.mem
-						.read_value(ident.clone())?
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -320,14 +314,12 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i * j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::DivAssign(ident, j) => {
-					let Value::Integer(i) = self
-						.mem
-						.read_value(ident.clone())?
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -335,14 +327,12 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i / j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::ModAssign(ident, j) => {
-					let Value::Integer(i) = self
-						.mem
-						.read_value(ident.clone())?
+					let Value::Integer(i) =
+						self.mem.read_value(ident.clone())?
 					else {
 						panic!()
 					};
@@ -350,8 +340,7 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(i % j);
-					self.mem
-						.assign(ident, v.clone())?;
+					self.mem.assign(ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::Declare(ident, value) => {
@@ -403,8 +392,7 @@ impl Interpreter {
 					self.mem
 						.declare(item.clone(), Value::Nil, true)?;
 					for i in collection {
-						self.mem
-							.assign(item.clone(), i)?;
+						self.mem.assign(item.clone(), i)?;
 						self.eval(Tree::Code(body.clone()))?;
 					}
 					Ok(Value::Nil)

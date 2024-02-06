@@ -1,4 +1,4 @@
-#![allow(unused)]
+#![allow(unused, clippy::enum_variant_names)]
 use std::path::PathBuf;
 
 use box_tt::BoxNew;

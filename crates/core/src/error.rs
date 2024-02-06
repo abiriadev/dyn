@@ -74,6 +74,7 @@ impl Diagnostic for ParseError {
 	}
 }
 
+#[allow(clippy::enum_variant_names)]
 #[derive(Debug, PartialEq, Error)]
 pub enum RuntimeError {
 	#[error("Reference Error")]
