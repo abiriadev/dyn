@@ -143,6 +143,13 @@ pub enum Literal {
 	String(StringT),
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct TemplateString {
+	pub span: Span,
+	pub fragments: Vec<String>,
+	pub values: Vec<Expr>,
+}
+
 #[derive(Debug, Clone, Eq, BoxNew)]
 pub struct Ident {
 	pub span: Span,
