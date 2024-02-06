@@ -1,4 +1,5 @@
 use logos::{Logos, SpannedIter};
+use thiserror::Error;
 
 mod token;
 
@@ -9,11 +10,13 @@ pub use token::{QuotedString, Token};
 
 pub type SpannedToken<Tok, Loc, E> = Result<(Loc, Tok, Loc), E>;
 
-#[derive(Default, Debug, Clone, PartialEq)]
+#[derive(Default, Debug, Clone, PartialEq, Error)]
 pub enum LexError {
+	#[error("InvalidIdentifier")]
 	InvalidIdentifier,
 
 	#[default]
+	#[error("InvalidToken")]
 	InvalidToken,
 }
 
