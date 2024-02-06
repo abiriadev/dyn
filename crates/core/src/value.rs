@@ -129,7 +129,14 @@ impl Display for Value {
 			Value::Integer(i) => i.to_string(),
 			Value::String(i) => i.to_string(),
 			Value::Array(i) => format!("{i:?}"),
-			Value::Record(i) => "[RECORD]".to_owned(),
+			Value::Record(i) => format!(
+				"({})",
+				i.fields
+					.iter()
+					.map(|(k, v)| format!("{}: {v}", k.symbol()))
+					.collect::<Vec<_>>()
+					.join(", ")
+			),
 			Value::Function(_) => "FUNCTION".to_owned(),
 		})
 	}
