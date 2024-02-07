@@ -59,82 +59,82 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_assign() {
+	fn lex_equal() {
 		assert_eq!(
 			Token::lexer("=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::Assign), 0..1)]
+			[(Ok(Token::Equal), 0..1)]
 		);
 	}
 
 	#[test]
-	fn lex_plus_assign() {
+	fn lex_plus_equal() {
 		assert_eq!(
 			Token::lexer("+=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::PlusAssign), 0..2)]
+			[(Ok(Token::PlusEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_minus_assign() {
+	fn lex_minus_equal() {
 		assert_eq!(
 			Token::lexer("-=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::MinusAssign), 0..2)]
+			[(Ok(Token::MinusEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_asterisk_assign() {
+	fn lex_asterisk_equal() {
 		assert_eq!(
 			Token::lexer("*=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::AsteriskAssign), 0..2)]
+			[(Ok(Token::AsteriskEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_slash_assign() {
+	fn lex_slash_equal() {
 		assert_eq!(
 			Token::lexer("/=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::SlashAssign), 0..2)]
+			[(Ok(Token::SlashEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_percent_assign() {
+	fn lex_percent_equal() {
 		assert_eq!(
 			Token::lexer("%=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::PercentAssign), 0..2)]
+			[(Ok(Token::PercentEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_equal() {
+	fn lex_equal_equal() {
 		assert_eq!(
 			Token::lexer("==")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::Equal), 0..2)]
+			[(Ok(Token::EqualEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_not_equal() {
+	fn lex_bang_equal() {
 		assert_eq!(
 			Token::lexer("!=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::NotEqual), 0..2)]
+			[(Ok(Token::BangEqual), 0..2)]
 		);
 	}
 
@@ -159,42 +159,42 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_less_than_equal() {
+	fn lex_left_angled_bracket_equal() {
 		assert_eq!(
 			Token::lexer("<=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::LessThanEqual), 0..2)]
+			[(Ok(Token::LeftAngledBracketEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_greater_than_equal() {
+	fn lex_right_angled_bracket_equal() {
 		assert_eq!(
 			Token::lexer(">=")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::GreaterThanEqual), 0..2)]
+			[(Ok(Token::RightAngledBracketEqual), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_double_and() {
+	fn lex_and_and() {
 		assert_eq!(
 			Token::lexer("&&")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::DoubleAnd), 0..2)]
+			[(Ok(Token::AndAnd), 0..2)]
 		);
 	}
 
 	#[test]
-	fn lex_double_pipe() {
+	fn lex_pipe_pipe() {
 		assert_eq!(
 			Token::lexer("||")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::DoublePipe), 0..2)]
+			[(Ok(Token::PipePipe), 0..2)]
 		);
 	}
 
@@ -349,26 +349,6 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_panic() {
-		assert_eq!(
-			Token::lexer("panic")
-				.spanned()
-				.collect::<Vec<_>>(),
-			[(Ok(Token::Panic), 0..5)]
-		);
-	}
-
-	#[test]
-	fn lex_assert() {
-		assert_eq!(
-			Token::lexer("assert")
-				.spanned()
-				.collect::<Vec<_>>(),
-			[(Ok(Token::Assert), 0..6)]
-		);
-	}
-
-	#[test]
 	fn lex_let() {
 		assert_eq!(
 			Token::lexer("let")
@@ -459,12 +439,12 @@ mod lex_tag_tokens {
 	}
 
 	#[test]
-	fn lex_import() {
+	fn lex_use() {
 		assert_eq!(
-			Token::lexer("import")
+			Token::lexer("use")
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(Ok(Token::Import), 0..6)]
+			[(Ok(Token::Use), 0..3)]
 		);
 	}
 
@@ -863,40 +843,37 @@ mod asi {
 	use indoc::indoc;
 	use logos::Logos;
 
-	use super::{assert_eq, token::TokenKind, Token};
+	use super::{assert_eq, Token};
 
 	#[test]
 	fn last_token() {
 		let mut lexer = Token::lexer("let a = 1 + 2");
 
-		assert_eq!(lexer.extras, None);
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Let);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Let));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Identifier("a".to_owned()));
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::Identifier)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
-		assert_eq!(tok, Token::Assign);
+		assert_eq!(tok, Token::Equal);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Assign));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(1));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Plus);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Plus));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(2));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next();
 		assert_eq!(tok, None);
 	}
@@ -908,46 +885,43 @@ mod asi {
 			+ 3
 		"});
 
-		assert_eq!(lexer.extras, None);
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Identifier("a".to_owned()));
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::Identifier)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
-		assert_eq!(tok, Token::Assign);
+		assert_eq!(tok, Token::Equal);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Assign));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(1));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Plus);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Plus));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(2));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::NewLine);
 
-		assert_eq!(lexer.extras, Some(TokenKind::NewLine));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Plus);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Plus));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(3));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::NewLine);
 
-		assert_eq!(lexer.extras, Some(TokenKind::NewLine));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next();
 		assert_eq!(tok, None);
 	}
@@ -961,65 +935,50 @@ mod asi {
 			)
 		"});
 
-		assert_eq!(lexer.extras, None);
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(
 			tok,
 			Token::Identifier("print".to_owned())
 		);
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::Identifier)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::LeftParenthesis);
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::LeftParenthesis)
-		);
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Identifier("a".to_owned()));
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::Identifier)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Comma);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Comma));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Identifier("b".to_owned()));
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::Identifier)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Plus);
 
-		assert_eq!(lexer.extras, Some(TokenKind::Plus));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::Integer(10));
 
-		assert_eq!(lexer.extras, Some(TokenKind::Integer));
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::NewLine);
 
-		assert_eq!(lexer.extras, Some(TokenKind::NewLine));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::RightParenthesis);
 
-		assert_eq!(
-			lexer.extras,
-			Some(TokenKind::RightParenthesis)
-		);
+		assert_eq!(lexer.extras, true);
 		let tok = lexer.next().unwrap().unwrap();
 		assert_eq!(tok, Token::NewLine);
 
-		assert_eq!(lexer.extras, Some(TokenKind::NewLine));
+		assert_eq!(lexer.extras, false);
 		let tok = lexer.next();
 		assert_eq!(tok, None);
 	}
