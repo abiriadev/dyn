@@ -9,7 +9,7 @@ logos = "0.13.0"
 span = { version = "0.1.0", path = "../span" }
 strum = { version = "0.25.0", features = ["derive"] }
 thiserror = "1.0.56"
-winnow = "0.5.39"
+winnow = { version = "0.5.39", features = ["debug"] }
 
 [dev-dependencies]
 indoc = "2.0.4"

@@ -9,8 +9,8 @@ mod keyword;
 use identifier::identifier;
 use keyword::keyword;
 
-type I<'a> = Located<&'a str>;
+type Stream<'a> = Located<&'a str>;
 
-pub fn token(i: &mut I<'_>) -> PResult<Token> {
+pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	alt((keyword, identifier)).parse_next(i)
 }

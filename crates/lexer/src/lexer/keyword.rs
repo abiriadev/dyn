@@ -1,9 +1,9 @@
 use winnow::{combinator::alt, PResult, Parser};
 
-use super::I;
+use super::Stream;
 use crate::Token;
 
-pub fn keyword(i: &mut I<'_>) -> PResult<Token> {
+pub fn keyword(i: &mut Stream<'_>) -> PResult<Token> {
 	alt([
 		"+".value(Token::Plus),
 		"-".value(Token::Minus),

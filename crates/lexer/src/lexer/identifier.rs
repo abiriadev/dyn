@@ -3,10 +3,10 @@ use winnow::{
 	PResult, Parser,
 };
 
-use super::I;
+use super::Stream;
 use crate::Token;
 
-pub fn identifier(input: &mut I<'_>) -> PResult<Token> {
+pub fn identifier(input: &mut Stream<'_>) -> PResult<Token> {
 	(
 		one_of(|c: char| c.is_alphabetic() || c == '_'),
 		take_while(0.., |c: char| {
