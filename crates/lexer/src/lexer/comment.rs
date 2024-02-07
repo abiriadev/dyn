@@ -25,3 +25,28 @@ pub fn block_comment(i: &mut I<'_>) -> PResult<Token> {
 	.value(Token::BlockComment)
 	.parse_next(i)
 }
+
+#[cfg(test)]
+mod tests {
+	use indoc::indoc;
+	use winnow::Located;
+
+	use super::*;
+
+	#[test]
+	fn should_allow_nested_block_comment() {
+		let mut code = Located::new(indoc! {"
+            /*
+                Outer comment
+                /*
+                    Inner comment
+                */
+            */
+        "});
+
+		assert_eq!(
+			block_comment.parse_next(&mut code),
+			Ok(Token::BlockComment)
+		);
+	}
+}
