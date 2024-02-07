@@ -1,6 +1,7 @@
 use logos::{Logos, SpannedIter};
 use thiserror::Error;
 
+mod lexer;
 mod token;
 
 use span::Spanned;
