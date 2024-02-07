@@ -2,6 +2,7 @@ use winnow::{combinator::alt, Located, PResult, Parser};
 
 use crate::Token;
 
+mod comment;
 mod identifier;
 mod keyword;
 
@@ -10,6 +11,6 @@ use keyword::keyword;
 
 type I<'a> = Located<&'a str>;
 
-pub fn token<'a>(i: &mut I<'a>) -> PResult<Token> {
+pub fn token(i: &mut I<'_>) -> PResult<Token> {
 	alt((keyword, identifier)).parse_next(i)
 }
