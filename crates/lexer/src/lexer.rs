@@ -5,6 +5,7 @@ use crate::Token;
 mod comment;
 mod identifier;
 mod keyword;
+mod string;
 
 use identifier::identifier;
 use keyword::keyword;
