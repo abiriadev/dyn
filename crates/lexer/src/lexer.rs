@@ -2,6 +2,10 @@ use winnow::{combinator::alt, Located, PResult, Parser};
 
 use crate::Token;
 
+mod identifier;
+
+use identifier::identifier;
+
 type I<'a> = Located<&'a str>;
 
 pub fn token<'a>(i: &mut I<'a>) -> PResult<Token> {
