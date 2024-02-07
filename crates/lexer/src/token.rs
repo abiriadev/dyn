@@ -32,9 +32,9 @@ fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum QuotedString {
-	Single(String),
-	Double(String),
+pub enum QuoteType {
+	Single,
+	Double,
 }
 
 impl QuotedString {
@@ -247,7 +247,7 @@ pub enum Token {
 
 	#[regex(r#"'(?:[^'{}]|\\['nt{}])*'"#, lex_string_single)]
 	#[regex(r#""(?:[^"{}]|\\["nt{}])*""#, lex_string_double)]
-	String(QuotedString),
+	String { content: String, quote: QuoteType },
 
 	#[regex(r#""(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
 	TemplateStringLeadingFragment(String),
