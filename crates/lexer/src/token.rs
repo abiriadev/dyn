@@ -51,6 +51,8 @@ impl From<QuotedString> for String {
 // 	extras = bool
 // )]
 pub enum Token {
+	Whitespace,
+
 	// Elementary arithmetics
 	Plus,
 	Minus,
