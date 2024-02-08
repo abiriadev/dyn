@@ -1,6 +1,6 @@
 use std::fmt::{self, Display, Formatter};
 
-use logos::{Filter, Lexer, Logos, Skip};
+use logos::{Filter, Lexer, Logos};
 use strum::EnumDiscriminants;
 
 use super::LexError;
@@ -324,9 +324,9 @@ impl Token {
 			Token::LineComment => unreachable!(), // NOTE: skipped token
 			Token::BlockComment => unreachable!(), // NOTE: skipped token
 			Token::Integer(v) => format!("{v}"),
-			Token::String(v) => match v {
-				QuotedString::Single(v) => format!("'{v}'"),
-				QuotedString::Double(v) => format!(r#""{v}""#),
+			Token::String { content, quote } => match quote {
+				QuoteKind::Single => format!("'{content}'"),
+				QuoteKind::Double => format!(r#""{content}""#),
 			},
 			Token::TemplateStringLeadingFragment(v) => format!(r#""{v}{{"#),
 			Token::TemplateStringCentralFragment(v) => format!(r#"}}{v}{{"#),
