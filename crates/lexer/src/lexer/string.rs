@@ -1,8 +1,6 @@
 use winnow::{
-	ascii::escaped_transform,
-	combinator::{alt, todo},
-	token::none_of,
-	PResult, Parser,
+	ascii::escaped_transform, combinator::alt, token::take_till, PResult,
+	Parser,
 };
 
 use super::Stream;
@@ -14,14 +12,14 @@ pub fn string(i: &mut Stream<'_>) -> PResult<Token> {
 
 pub fn string_single(i: &mut Stream<'_>) -> PResult<Token> {
 	escaped_transform(
-		none_of(['\'', '\\']),
+		take_till(0.., ['\'', '\\']),
 		'\\',
 		alt((
-			'\\'.value('\\'),
-			'\''.value('\''),
-			'n'.value('\n'),
-			'r'.value('\r'),
-			't'.value('\t'),
+			"\\".value("\\"),
+			"'".value("'"),
+			"n".value("\n"),
+			"r".value("\r"),
+			"t".value("\t"),
 		)),
 	)
 	.parse_next(i)
@@ -29,7 +27,7 @@ pub fn string_single(i: &mut Stream<'_>) -> PResult<Token> {
 
 pub fn string_double(i: &mut Stream<'_>) -> PResult<Token> {
 	escaped_transform(
-		none_of(['"', '\\', '{', '}']),
+		take_till(0.., ['\'', '\\', '{', '}']),
 		'\\',
 		alt((
 			'\\'.value('\\'),
@@ -42,4 +40,19 @@ pub fn string_double(i: &mut Stream<'_>) -> PResult<Token> {
 		)),
 	)
 	.parse_next(i)
+}
+
+#[cfg(test)]
+mod tests {
+	use winnow::Located;
+
+	use super::*;
+
+	#[test]
+	fn should_parse_single_quoted_string() {
+		assert_eq!(
+			string(&mut Located::new("'John Doe'")),
+			Ok(todo!())
+		);
+	}
 }
