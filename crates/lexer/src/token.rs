@@ -79,7 +79,7 @@ fn lex_trailing_template_string(lex: &mut Lexer<Token>) -> String {
 	sl[1..sl.len() - 1].to_owned()
 }
 
-#[derive(Debug, Clone, PartialEq, Logos, EnumDiscriminants)]
+#[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
 #[strum_discriminants(name(TokenKind))]
 #[logos(
 	skip r"[ \t]+",
