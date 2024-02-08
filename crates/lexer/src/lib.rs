@@ -1,4 +1,5 @@
-use logos::{Logos, SpannedIter};
+use std::marker::PhantomData;
+
 use thiserror::Error;
 
 mod lexer;
@@ -21,20 +22,21 @@ pub enum LexError {
 	InvalidToken,
 }
 
-pub struct SpannedLexer<'a>(SpannedIter<'a, Token>);
+pub struct SpannedLexer<'a>(PhantomData<&'a ()>);
 
 impl<'a> SpannedLexer<'a> {
-	pub fn new(code: &'a str) -> Self { Self(Token::lexer(code).spanned()) }
+	pub fn new(code: &'a str) -> Self { todo!() }
 }
 
 impl<'a> Iterator for SpannedLexer<'a> {
 	type Item = SpannedToken<Token, usize, Spanned<LexError>>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		self.0.next().map(|(token, span)| {
-			token
-				.map(|t| (span.start, t, span.end))
-				.map_err(|e| Spanned::new(span, e))
-		})
+		// self.0.next().map(|(token, span)| {
+		// 	token
+		// 		.map(|t| (span.start, t, span.end))
+		// 		.map_err(|e| Spanned::new(span, e))
+		// })
+		todo!()
 	}
 }
