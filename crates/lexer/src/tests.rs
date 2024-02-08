@@ -3,6 +3,24 @@ use pretty_assertions::{assert_eq, assert_ne};
 
 use super::*;
 
+macro_rules! double {
+	($s:literal) => {
+		Token::String {
+			quote: crate::token::QuoteKind::Double,
+			content: $s.to_owned(),
+		}
+	};
+}
+
+macro_rules! single {
+	($s:literal) => {
+		Token::String {
+			quote: crate::token::QuoteKind::Single,
+			content: $s.to_owned(),
+		}
+	};
+}
+
 mod lex_tag_tokens {
 	use logos::Logos;
 
@@ -621,7 +639,8 @@ fn minus_zero_should_be_valid_integer() {
 mod lex_string {
 	use logos::Logos;
 
-	use super::{assert_eq, LexError, QuotedString, Token};
+	use super::{assert_eq, LexError, Token};
+	use crate::token::QuoteKind;
 
 	#[test]
 	fn lex_string() {
@@ -629,37 +648,31 @@ mod lex_string {
 			Token::lexer(r#""""#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(
-				Ok(Token::String(QuotedString::Double(
-					"".to_owned()
-				))),
-				0..2
-			)]
+			[(Ok(double!("")), 0..2)]
 		);
 
 		assert_eq!(
 			Token::lexer(r#"''"#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(
-				Ok(Token::String(QuotedString::Single(
-					"".to_owned()
-				))),
-				0..2
-			)]
+			[(Ok(single!("")), 0..2)]
 		);
 	}
 
 	#[test]
 	fn strings_should_have_same_content_regardless_of_quotes_used() {
-		let Some(Ok(Token::String(QuotedString::Double(qs1)))) =
-			Token::lexer(r#""abc""#).next()
+		let Some(Ok(Token::String {
+			content: qs1,
+			quote: QuoteKind::Double,
+		})) = Token::lexer(r#""abc""#).next()
 		else {
 			panic!()
 		};
 
-		let Some(Ok(Token::String(QuotedString::Single(qs2)))) =
-			Token::lexer(r#"'abc'"#).next()
+		let Some(Ok(Token::String {
+			content: qs2,
+			quote: QuoteKind::Single,
+		})) = Token::lexer(r#"'abc'"#).next()
 		else {
 			panic!()
 		};
@@ -673,24 +686,14 @@ mod lex_string {
 			Token::lexer(r#""\"'""#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(
-				Ok(Token::String(QuotedString::Double(
-					r#"\"'"#.to_owned()
-				))),
-				0..5,
-			)]
+			[(Ok(double!(r#"\"'"#)), 0..5,)]
 		);
 
 		assert_eq!(
 			Token::lexer(r#"'\'"'"#)
 				.spanned()
 				.collect::<Vec<_>>(),
-			[(
-				Ok(Token::String(QuotedString::Single(
-					r#"\'""#.to_owned()
-				))),
-				0..5,
-			)]
+			[(Ok(single!(r#"\'""#)), 0..5,)]
 		);
 	}
 
