@@ -88,186 +88,102 @@ fn lex_trailing_template_string(lex: &mut Lexer<Token>) -> String {
 )]
 pub enum Token {
 	// Elementary arithmetics
-	#[token("+", skip!())]
 	Plus,
-
-	#[token("-", skip!())]
 	Minus,
-
-	#[token("*", skip!())]
 	Asterisk,
-
-	#[token("/", skip!())]
 	Slash,
-
-	#[token("%", skip!())]
 	Percent,
 
 	// Assignment operators
-	#[token("=", skip!())]
 	Equal,
-
-	#[token("+=", skip!())]
 	PlusEqual,
-
-	#[token("-=", skip!())]
 	MinusEqual,
-
-	#[token("*=", skip!())]
 	AsteriskEqual,
-
-	#[token("/=", skip!())]
 	SlashEqual,
-
-	#[token("%=", skip!())]
 	PercentEqual,
 
 	// Comparison operators
-	#[token("==", skip!())]
 	EqualEqual,
-
-	#[token("!=", skip!())]
 	BangEqual,
-
-	#[token("<", skip!())]
 	LeftAngledBracket,
-
-	#[token(">", asi!())]
 	RightAngledBracket,
-
-	#[token("<=", skip!())]
 	LeftAngledBracketEqual,
-
-	#[token(">=", skip!())]
 	RightAngledBracketEqual,
 
 	// Boolean operators
-	#[token("&&", skip!())]
 	AndAnd,
-
-	#[token("||", skip!())]
 	PipePipe,
 
 	// Parentheses
-	#[token("(", skip!())]
 	LeftParenthesis,
-
-	#[token(")", asi!())]
 	RightParenthesis,
-
-	#[token("{", skip!())]
 	LeftBrace,
-
-	#[token("}", asi!())]
 	RightBrace,
-
-	#[token("[", skip!())]
 	LeftBracket,
-
-	#[token("]", asi!())]
 	RightBracket,
 
 	// etc
-	#[token("!", skip!())]
 	Bang,
-
-	#[token(".", skip!())]
 	Dot,
-
-	#[token(",", skip!())]
 	Comma,
-
-	#[token(":", skip!())]
 	Colon,
-
-	#[token("|", skip!())]
 	Pipe,
-
-	#[token("@", skip!())]
 	At,
-
-	#[token("->", skip!())]
 	Arrow,
 
 	// token literals
-	#[token("nil", skip!())]
 	Nil,
-
-	#[token("true", skip!())]
 	True,
-
-	#[token("false", skip!())]
 	False,
 
 	// keywords
-	#[token("let", skip!())]
 	Let,
-
-	#[token("let!", skip!())]
 	LetMut,
-
-	#[token("if", skip!())]
 	If,
-
-	#[token("else", skip!())]
 	Else,
-
-	#[token("iter", skip!())]
 	Iter,
-
-	#[token("of", skip!())]
 	Of,
-
-	#[token("return", skip!())]
 	Return,
-
-	#[token("break", skip!())]
 	Break,
-
-	#[token("continue", skip!())]
 	Continue,
-
-	#[token("use", skip!())]
 	Use,
-
-	#[token("export", skip!())]
 	Export,
 
 	// extra
-	#[regex(r"\n", asi)]
+	// #[regex(r"\n", asi)]
 	NewLine,
 
 	// regexes
-	#[regex(r"//[^\n]*", |_| Skip)]
+	// #[regex(r"//[^\n]*", |_| Skip)]
 	LineComment,
 
-	#[regex(r"/\*([^*]|\*[^/])*\*/")]
+	// #[regex(r"/\*([^*]|\*[^/])*\*/")]
 	BlockComment,
 
-	#[regex("-?(0|[1-9][0-9]*)", |lex| {
-		lex.extras = true;
-		lex.slice().parse().ok()
-	})]
+	// #[regex("-?(0|[1-9][0-9]*)", |lex| {
+	// 	lex.extras = true;
+	// 	lex.slice().parse().ok()
+	// })]
 	Integer(i32),
 
-	#[regex(r#"'(?:[^'{}]|\\['nt{}])*'"#, lex_string_single)]
-	#[regex(r#""(?:[^"{}]|\\["nt{}])*""#, lex_string_double)]
+	// #[regex(r#"'(?:[^'{}]|\\['nt{}])*'"#, lex_string_single)]
+	// #[regex(r#""(?:[^"{}]|\\["nt{}])*""#, lex_string_double)]
 	String { content: String, quote: QuoteKind },
 
-	#[regex(r#""(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
+	// #[regex(r#""(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
 	TemplateStringLeadingFragment(String),
 
-	#[regex(r#"\}(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
+	// #[regex(r#"\}(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
 	TemplateStringCentralFragment(String),
 
-	#[regex(r#"\}(?:[^"{}]|\\["nt{}])*""#, lex_trailing_template_string)]
+	// #[regex(r#"\}(?:[^"{}]|\\["nt{}])*""#, lex_trailing_template_string)]
 	TemplateStringTrailingFragment(String),
 
-	#[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
-		lex.extras = true;
-		lex.slice().to_owned()
-	})]
-	#[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
+	// #[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
+	// 	lex.extras = true;
+	// 	lex.slice().to_owned()
+	// })]
+	// #[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
 	Identifier(String),
 }
 
