@@ -6,6 +6,7 @@ mod comment;
 mod identifier;
 mod keyword;
 mod string;
+mod whitespace;
 
 use identifier::identifier;
 use keyword::keyword;
