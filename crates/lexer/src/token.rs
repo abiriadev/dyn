@@ -1,35 +1,16 @@
 use std::fmt::{self, Display, Formatter};
 
-use logos::{Filter, Lexer, Logos};
 use strum::EnumDiscriminants;
 
-use super::LexError;
-
-macro_rules! skip {
-	() => {
-		|lex: &mut Lexer<'_>| {
-			lex.extras = false;
-		}
-	};
-}
-
-macro_rules! asi {
-	() => {
-		|lex: &mut Lexer<'_>| {
-			lex.extras = true;
-		}
-	};
-}
-
-fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
-	let res = if lex.extras {
-		Filter::Emit(())
-	} else {
-		Filter::Skip
-	};
-	lex.extras = false;
-	res
-}
+// fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
+// 	let res = if lex.extras {
+// 		Filter::Emit(())
+// 	} else {
+// 		Filter::Skip
+// 	};
+// 	lex.extras = false;
+// 	res
+// }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum QuoteKind {
@@ -37,6 +18,7 @@ pub enum QuoteKind {
 	Double,
 }
 
+// WARNING: deprecated
 pub enum QuotedString {
 	Single(String),
 	Double(String),
@@ -55,37 +37,19 @@ impl From<QuotedString> for String {
 	fn from(value: QuotedString) -> Self { value.into_string() }
 }
 
-fn lex_string_single(lex: &mut Lexer<Token>) -> QuotedString {
-	lex.extras = true;
-	let sl = lex.slice();
-	QuotedString::Single(sl[1..sl.len() - 1].to_owned())
-}
-
-fn lex_string_double(lex: &mut Lexer<Token>) -> QuotedString {
-	lex.extras = true;
-	let sl = lex.slice();
-	QuotedString::Double(sl[1..sl.len() - 1].to_owned())
-}
-
-fn lex_template_string(lex: &mut Lexer<Token>) -> String {
-	lex.extras = false;
-	let sl = lex.slice();
-	sl[1..sl.len() - 1].to_owned()
-}
-
-fn lex_trailing_template_string(lex: &mut Lexer<Token>) -> String {
-	lex.extras = true;
-	let sl = lex.slice();
-	sl[1..sl.len() - 1].to_owned()
-}
+// fn lex_template_string(lex: &mut Lexer<Token>) -> String {
+// 	lex.extras = false;
+// 	let sl = lex.slice();
+// 	sl[1..sl.len() - 1].to_owned()
+// }
 
 #[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
 #[strum_discriminants(name(TokenKind))]
-#[logos(
-	skip r"[ \t]+",
-	error = LexError,
-	extras = bool
-)]
+// #[logos(
+// 	skip r"[ \t]+",
+// 	error = LexError,
+// 	extras = bool
+// )]
 pub enum Token {
 	// Elementary arithmetics
 	Plus,
