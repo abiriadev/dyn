@@ -1,6 +1,8 @@
 use winnow::{
-	ascii::escaped_transform, combinator::alt, token::take_till, PResult,
-	Parser,
+	ascii::escaped_transform,
+	combinator::{alt, delimited},
+	token::take_till,
+	PResult, Parser,
 };
 
 use super::Stream;
@@ -11,16 +13,20 @@ pub fn string(i: &mut Stream<'_>) -> PResult<Token> {
 }
 
 pub fn string_single(i: &mut Stream<'_>) -> PResult<Token> {
-	escaped_transform(
-		take_till(0.., ['\'', '\\']),
-		'\\',
-		alt((
-			"\\".value("\\"),
-			"'".value("'"),
-			"n".value("\n"),
-			"r".value("\r"),
-			"t".value("\t"),
-		)),
+	delimited(
+		'\'',
+		escaped_transform(
+			take_till(0.., ['\'', '\\']),
+			'\\',
+			alt((
+				"\\".value("\\"),
+				"'".value("'"),
+				"n".value("\n"),
+				"r".value("\r"),
+				"t".value("\t"),
+			)),
+		),
+		'\'',
 	)
 	.map(|content| Token::String {
 		content,
@@ -30,18 +36,22 @@ pub fn string_single(i: &mut Stream<'_>) -> PResult<Token> {
 }
 
 pub fn string_double(i: &mut Stream<'_>) -> PResult<Token> {
-	escaped_transform(
-		take_till(0.., ['\'', '\\', '{', '}']),
-		'\\',
-		alt((
-			"\\".value("\\"),
-			"\"".value("\""),
-			"{".value("{"),
-			"}".value("}"),
-			"n".value("\n"),
-			"r".value("\r"),
-			"t".value("\t"),
-		)),
+	delimited(
+		'"',
+		escaped_transform(
+			take_till(0.., ['\'', '\\', '{', '}']),
+			'\\',
+			alt((
+				"\\".value("\\"),
+				"\"".value("\""),
+				"{".value("{"),
+				"}".value("}"),
+				"n".value("\n"),
+				"r".value("\r"),
+				"t".value("\t"),
+			)),
+		),
+		'"',
 	)
 	.map(|content| Token::String {
 		content,
