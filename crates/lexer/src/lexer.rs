@@ -67,3 +67,16 @@ impl<'a> Iterator for SpannedLexer<'a> {
 		}
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	#[test]
+	fn count_tokens() {
+		let code = "a + 2";
+		let lexer = SpannedLexer::new(code);
+
+		assert_eq!(lexer.count(), 5);
+	}
+}
