@@ -156,6 +156,7 @@ pub enum Token {
 impl Token {
 	pub fn to_source(&self) -> String {
 		match self {
+			Token::Whitespace => "[WS]".to_owned(),
 			Token::Plus => "+".to_owned(),
 			Token::Minus => "-".to_owned(),
 			Token::Asterisk => "*".to_owned(),
