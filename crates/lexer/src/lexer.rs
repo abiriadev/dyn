@@ -29,9 +29,9 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 		whitespace,
 		line_comment,
 		block_comment,
+		identifier,
 		keyword,
 		integer,
-		identifier,
 		string,
 	))
 	.parse_next(i)
