@@ -79,4 +79,19 @@ mod tests {
 
 		assert_eq!(lexer.count(), 5);
 	}
+
+	#[test]
+	fn match_longer_first() {
+		let code = "usethis";
+		let mut lexer = SpannedLexer::new(code);
+
+		assert_eq!(
+			lexer.next(),
+			Some(Ok((
+				0,
+				Token::Identifier("usethis".to_owned()),
+				7
+			)))
+		);
+	}
 }
