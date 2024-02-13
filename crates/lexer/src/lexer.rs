@@ -3,7 +3,6 @@ use std::ops::Range;
 use span::{Span, Spanned};
 use winnow::{
 	combinator::{alt, cut_err},
-	error::ErrMode,
 	Located, PResult, Parser,
 };
 
@@ -11,12 +10,14 @@ use crate::{LexError, Token};
 
 mod comment;
 mod identifier;
+mod integer;
 mod keyword;
 mod string;
 mod whitespace;
 
 use comment::{block_comment, line_comment};
 use identifier::identifier;
+use integer::integer;
 use keyword::keyword;
 use string::string;
 use whitespace::whitespace;
@@ -29,6 +30,7 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 		line_comment,
 		block_comment,
 		keyword,
+		integer,
 		identifier,
 		string,
 	))
