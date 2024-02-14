@@ -94,4 +94,15 @@ mod tests {
 			)))
 		);
 	}
+
+	#[test]
+	fn match_shorter_first() {
+		let code = "use";
+		let mut lexer = SpannedLexer::new(code);
+
+		assert_eq!(
+			lexer.next(),
+			Some(Ok((0, Token::Use, 7)))
+		);
+	}
 }
