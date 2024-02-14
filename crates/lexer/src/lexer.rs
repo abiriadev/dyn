@@ -1,6 +1,4 @@
-use std::ops::Range;
-
-use span::{HasSpan, Span, Spanned};
+use span::{HasSpan, Span};
 use winnow::{
 	combinator::{alt, eof},
 	Located, PResult, Parser,
@@ -37,6 +35,7 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	.parse_next(i)
 }
 
+#[derive(Debug)]
 pub struct SpannedToken {
 	pub token: Result<Token, LexError>,
 	pub span: Span,
