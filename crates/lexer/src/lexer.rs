@@ -1,6 +1,6 @@
 use std::ops::Range;
 
-use span::{Span, Spanned};
+use span::{HasSpan, Span, Spanned};
 use winnow::{
 	combinator::{alt, eof},
 	Located, PResult, Parser,
@@ -55,6 +55,15 @@ impl SpannedToken {
 			token: Err(error),
 			span,
 		}
+	}
+}
+
+impl HasSpan for SpannedToken {
+	fn span(&self) -> Span { self.span }
+
+	fn set_span<S>(&mut self, span: S)
+	where S: Into<Span> {
+		self.span = span.into();
 	}
 }
 
