@@ -1,6 +1,7 @@
 use span::{HasSpan, Span};
 use winnow::{
 	combinator::{alt, eof},
+	stream::Stream,
 	Located, PResult, Parser,
 };
 
@@ -53,9 +54,12 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	type Item = SpannedToken;
 
 	fn next(&mut self) -> Option<Self::Item> {
+		let i = self.code;
+		let start = i.checkpoint();
+
 		match alt((eof.value(None), token.map(Some)))
 			.with_span()
-			.parse_next(&mut self.code)
+			.parse_next(&mut i)
 		{
 			Ok((Some(tok), span)) => {
 				self.last = Some(TokenKind::from(&tok));
@@ -68,7 +72,7 @@ impl<'a> Iterator for SpannedLexer<'a> {
 				println!("{:?}", err);
 				Some(SpannedToken::new_err(
 					LexError::InvalidToken,
-					Span::DUMMY_SPAN,
+					(start..start + 1).into(),
 				))
 			},
 		}

@@ -1,5 +1,5 @@
 use lalrpop_util::lalrpop_mod;
-use lexer::{LexError, SpannedLexer, Token};
+use lexer::{LexError, Token};
 use span::Spanned;
 
 use crate::ast::{Code, Expr};
