@@ -158,7 +158,7 @@ impl Token {
 			Token::LineComment => unreachable!(), // NOTE: skipped token
 			Token::BlockComment => unreachable!(), // NOTE: skipped token
 			Token::Integer(v) => format!("{v}"),
-			Token::String { content, quote } => match quote {
+			Token::String(QuotedString { content, quote }) => match quote {
 				QuoteKind::Single => format!("'{content}'"),
 				QuoteKind::Double => format!(r#""{content}""#),
 			},
