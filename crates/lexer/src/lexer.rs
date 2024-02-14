@@ -42,6 +42,22 @@ pub struct SpannedToken {
 	pub span: Span,
 }
 
+impl SpannedToken {
+	pub fn new(token: Token, span: Span) -> Self {
+		Self {
+			token: Ok(token),
+			span,
+		}
+	}
+
+	pub fn new_err(error: LexError, span: Span) -> Self {
+		Self {
+			token: Err(error),
+			span,
+		}
+	}
+}
+
 pub struct SpannedLexer<'a> {
 	code: Located<&'a str>,
 	last: Option<TokenKind>,
@@ -64,19 +80,19 @@ impl<'a> Iterator for SpannedLexer<'a> {
 			.with_span()
 			.parse_next(&mut self.code)
 		{
-			Ok((Some(tok), Range { start, end })) => {
+			Ok((Some(tok), span)) => {
 				self.last = Some(TokenKind::from(tok.clone()));
 
-				Some(Ok((start, tok, end)))
+				Some(SpannedToken::new(tok, span.into()))
 			},
 			Ok((None, _)) => None,
 			Err(err) => {
 				let err = err.into_inner();
 				println!("{:?}", err);
-				Some(Err(Spanned::new(
-					Span::DUMMY_SPAN,
+				Some(SpannedToken::new_err(
 					LexError::InvalidToken,
-				)))
+					Span::DUMMY_SPAN,
+				))
 			},
 		}
 	}
