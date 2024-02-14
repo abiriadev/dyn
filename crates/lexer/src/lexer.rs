@@ -1,7 +1,6 @@
-use span::{HasSpan, Span};
+use span::HasSpan;
 use winnow::{
 	combinator::{alt, eof},
-	stream::Stream,
 	Located, PResult, Parser,
 };
 
@@ -54,6 +53,8 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	type Item = SpannedToken;
 
 	fn next(&mut self) -> Option<Self::Item> {
+		use winnow::stream::Stream;
+
 		let i = self.code;
 		let start = i.checkpoint();
 

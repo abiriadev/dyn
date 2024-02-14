@@ -1,6 +1,9 @@
 use std::fmt::{self, Display, Formatter};
 
+use span::{HasSpan, Span};
 use strum::EnumDiscriminants;
+
+use crate::LexError;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum QuoteKind {
