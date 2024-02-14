@@ -14,6 +14,21 @@ pub fn identifier(input: &mut Stream<'_>) -> PResult<Token> {
 		}),
 	)
 		.recognize()
-		.map(|ident: &str| Token::Identifier(ident.to_owned()))
+		.map(|ident: &str| match ident {
+			"nil" => Token::Nil,
+			"true" => Token::True,
+			"false" => Token::False,
+			"let" => Token::Let,
+			"if" => Token::If,
+			"else" => Token::Else,
+			"iter" => Token::Iter,
+			"of" => Token::Of,
+			"return" => Token::Return,
+			"break" => Token::Break,
+			"continue" => Token::Continue,
+			"use" => Token::Use,
+			"export" => Token::Export,
+			_ => Token::Identifier(ident.to_owned()),
+		})
 		.parse_next(input)
 }

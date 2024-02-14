@@ -3,7 +3,7 @@ use winnow::{combinator::alt, PResult, Parser};
 use super::Stream;
 use crate::Token;
 
-pub fn keyword(i: &mut Stream<'_>) -> PResult<Token> {
+pub fn punctuation(i: &mut Stream<'_>) -> PResult<Token> {
 	alt([
 		"+".value(Token::Plus),
 		"-".value(Token::Minus),
@@ -37,20 +37,6 @@ pub fn keyword(i: &mut Stream<'_>) -> PResult<Token> {
 		"|".value(Token::Pipe),
 		"@".value(Token::At),
 		"->".value(Token::Arrow),
-		"nil".value(Token::Nil),
-		"true".value(Token::True),
-		"false".value(Token::False),
-		"let".value(Token::Let),
-		"let!".value(Token::LetMut),
-		"if".value(Token::If),
-		"else".value(Token::Else),
-		"iter".value(Token::Iter),
-		"of".value(Token::Of),
-		"return".value(Token::Return),
-		"break".value(Token::Break),
-		"continue".value(Token::Continue),
-		"use".value(Token::Use),
-		"export".value(Token::Export),
 		r"\n".value(Token::NewLine),
 	])
 	.parse_next(i)
