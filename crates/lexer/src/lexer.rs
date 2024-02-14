@@ -4,7 +4,7 @@ use winnow::{
 	Located, PResult, Parser,
 };
 
-use crate::{token::TokenKind, LexError, Token};
+use crate::{token::TokenKind, LexError, SpannedToken, Token};
 
 mod comment;
 mod identifier;
@@ -22,7 +22,7 @@ use whitespace::whitespace;
 
 type Stream<'a> = Located<&'a str>;
 
-pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
+fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	alt((
 		whitespace,
 		line_comment,
