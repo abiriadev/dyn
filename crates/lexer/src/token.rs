@@ -2,16 +2,6 @@ use std::fmt::{self, Display, Formatter};
 
 use strum::EnumDiscriminants;
 
-// fn asi(lex: &mut Lexer<Token>) -> Filter<()> {
-// 	let res = if lex.extras {
-// 		Filter::Emit(())
-// 	} else {
-// 		Filter::Skip
-// 	};
-// 	lex.extras = false;
-// 	res
-// }
-
 #[derive(Debug, Clone, PartialEq)]
 pub enum QuoteKind {
 	Single,
@@ -37,19 +27,8 @@ impl From<QuotedString> for String {
 	fn from(value: QuotedString) -> Self { value.into_string() }
 }
 
-// fn lex_template_string(lex: &mut Lexer<Token>) -> String {
-// 	lex.extras = false;
-// 	let sl = lex.slice();
-// 	sl[1..sl.len() - 1].to_owned()
-// }
-
 #[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
 #[strum_discriminants(name(TokenKind))]
-// #[logos(
-// 	skip r"[ \t]+",
-// 	error = LexError,
-// 	extras = bool
-// )]
 pub enum Token {
 	Whitespace,
 
@@ -116,40 +95,19 @@ pub enum Token {
 	Export,
 
 	// extra
-	// #[regex(r"\n", asi)]
 	NewLine,
 
-	// regexes
-	// #[regex(r"//[^\n]*", |_| Skip)]
 	LineComment,
-
-	// #[regex(r"/\*([^*]|\*[^/])*\*/")]
 	BlockComment,
 
-	// #[regex("-?(0|[1-9][0-9]*)", |lex| {
-	// 	lex.extras = true;
-	// 	lex.slice().parse().ok()
-	// })]
 	Integer(i32),
 
-	// #[regex(r#"'(?:[^'{}]|\\['nt{}])*'"#, lex_string_single)]
-	// #[regex(r#""(?:[^"{}]|\\["nt{}])*""#, lex_string_double)]
 	String { content: String, quote: QuoteKind },
 
-	// #[regex(r#""(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
 	TemplateStringLeadingFragment(String),
-
-	// #[regex(r#"\}(?:[^"{}]|\\["nt{}])*\{"#, lex_template_string)]
 	TemplateStringCentralFragment(String),
-
-	// #[regex(r#"\}(?:[^"{}]|\\["nt{}])*""#, lex_trailing_template_string)]
 	TemplateStringTrailingFragment(String),
 
-	// #[regex("[_a-zA-Z][_0-9a-zA-Z]*", |lex| {
-	// 	lex.extras = true;
-	// 	lex.slice().to_owned()
-	// })]
-	// #[regex("[0-9]+[_a-zA-Z]+", |_| Err(LexError::InvalidIdentifier))]
 	Identifier(String),
 }
 
