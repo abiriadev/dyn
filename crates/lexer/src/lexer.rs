@@ -1,6 +1,7 @@
 use span::HasSpan;
 use winnow::{
 	combinator::{alt, eof},
+	stream::Offset,
 	Located, PResult, Parser,
 };
 
@@ -55,7 +56,7 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		use winnow::stream::Stream;
 
-		let i = self.code;
+		let mut i = self.code;
 		let start = i.checkpoint();
 
 		match alt((eof.value(None), token.map(Some)))
@@ -68,12 +69,13 @@ impl<'a> Iterator for SpannedLexer<'a> {
 				Some(SpannedToken::new(tok, span.into()))
 			},
 			Ok((None, _)) => None,
-			Err(err) => {
-				let err = err.into_inner();
-				println!("{:?}", err);
+			Err(_) => {
+				// let err = err.into_inner();
+				// println!("{:?}", err);
+				let offset = i.offset_from(&start);
 				Some(SpannedToken::new_err(
 					LexError::InvalidToken,
-					(start..start + 1).into(),
+					(offset..offset + 1).into(),
 				))
 			},
 		}
