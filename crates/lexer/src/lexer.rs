@@ -89,7 +89,7 @@ impl<'a> Iterator for SpannedLexer<'a> {
 			.parse_next(&mut self.code)
 		{
 			Ok((Some(tok), span)) => {
-				self.last = Some(TokenKind::from(tok.clone()));
+				self.last = Some(TokenKind::from(&tok));
 
 				Some(SpannedToken::new(tok, span.into()))
 			},
