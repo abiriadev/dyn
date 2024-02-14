@@ -6,7 +6,7 @@ use winnow::{
 	Located, PResult, Parser,
 };
 
-use crate::{LexError, Token};
+use crate::{token::TokenKind, LexError, Token};
 
 mod comment;
 mod identifier;
@@ -39,10 +39,18 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 
 pub type SpannedToken<Tok, Loc, E> = Result<(Loc, Tok, Loc), E>;
 
-pub struct SpannedLexer<'a>(Located<&'a str>);
+pub struct SpannedLexer<'a> {
+	code: Located<&'a str>,
+	last: Option<TokenKind>,
+}
 
 impl<'a> SpannedLexer<'a> {
-	pub fn new(code: &'a str) -> Self { Self(Located::new(code)) }
+	pub fn new(code: &'a str) -> Self {
+		Self {
+			code: Located::new(code),
+			last: None,
+		}
+	}
 }
 
 impl<'a> Iterator for SpannedLexer<'a> {
@@ -51,7 +59,7 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		match alt((eof.value(None), token.map(Some)))
 			.with_span()
-			.parse_next(&mut self.0)
+			.parse_next(&mut self.code)
 		{
 			Ok((Some(tok), Range { start, end })) =>
 				Some(Ok((start, tok, end))),
