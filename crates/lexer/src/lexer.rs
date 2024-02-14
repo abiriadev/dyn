@@ -1,4 +1,3 @@
-use span::HasSpan;
 use winnow::{
 	combinator::{alt, eof},
 	stream::Offset,
