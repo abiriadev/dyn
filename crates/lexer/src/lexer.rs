@@ -37,7 +37,10 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	.parse_next(i)
 }
 
-pub type SpannedToken<Tok, Loc, E> = Result<(Loc, Tok, Loc), E>;
+pub struct SpannedToken {
+	pub token: Result<Token, LexError>,
+	pub span: Span,
+}
 
 pub struct SpannedLexer<'a> {
 	code: Located<&'a str>,
@@ -54,7 +57,7 @@ impl<'a> SpannedLexer<'a> {
 }
 
 impl<'a> Iterator for SpannedLexer<'a> {
-	type Item = SpannedToken<Token, usize, Spanned<LexError>>;
+	type Item = SpannedToken;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		match alt((eof.value(None), token.map(Some)))
