@@ -61,8 +61,11 @@ impl<'a> Iterator for SpannedLexer<'a> {
 			.with_span()
 			.parse_next(&mut self.code)
 		{
-			Ok((Some(tok), Range { start, end })) =>
-				Some(Ok((start, tok, end))),
+			Ok((Some(tok), Range { start, end })) => {
+				self.last = Some(TokenKind::from(tok.clone()));
+
+				Some(Ok((start, tok, end)))
+			},
 			Ok((None, _)) => None,
 			Err(err) => {
 				let err = err.into_inner();
