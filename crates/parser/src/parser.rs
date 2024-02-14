@@ -1,5 +1,5 @@
 use lalrpop_util::lalrpop_mod;
-use lexer::{LexError, SpannedToken, Token};
+use lexer::{LexError, SpannedLexer, SpannedToken, Token};
 use span::Spanned;
 
 use crate::ast::{Code, Expr};
@@ -8,7 +8,9 @@ lalrpop_mod!(#[allow(clippy::type_complexity)] pub dynlang);
 
 pub type ParseError = lalrpop_util::ParseError<usize, Token, Spanned<LexError>>;
 
-fn lexer_adapter(spanned_token: SpannedToken) -> ! {
+fn lexer_adapter(
+	spanned_token: SpannedToken,
+) -> Result<(usize, Token, usize), Spanned<LexError>> {
 	match spanned_token {
 		SpannedToken {
 			token: Ok(token),
@@ -22,11 +24,11 @@ fn lexer_adapter(spanned_token: SpannedToken) -> ! {
 }
 
 pub fn parse(code: &str) -> Result<Expr, ParseError> {
-	dynlang::ExprParser::new().parse(SpannedLexer::new(code))
+	dynlang::ExprParser::new().parse(SpannedLexer::new(code).map(lexer_adapter))
 }
 
 pub fn parse_code(code: &str) -> Result<Code, ParseError> {
-	dynlang::CodeParser::new().parse(SpannedLexer::new(code))
+	dynlang::CodeParser::new().parse(SpannedLexer::new(code).map(lexer_adapter))
 }
 
 #[cfg(test)] mod tests;
