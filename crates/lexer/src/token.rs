@@ -11,23 +11,13 @@ pub enum QuoteKind {
 	Double,
 }
 
-// WARNING: deprecated
-pub enum QuotedString {
-	Single(String),
-	Double(String),
-}
-
-impl QuotedString {
-	pub fn into_string(self) -> String {
-		match self {
-			QuotedString::Single(v) => v,
-			QuotedString::Double(v) => v,
-		}
-	}
+pub struct QuotedString {
+	content: String,
+	quote: QuoteKind,
 }
 
 impl From<QuotedString> for String {
-	fn from(value: QuotedString) -> Self { value.into_string() }
+	fn from(value: QuotedString) -> Self { value.content }
 }
 
 #[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
@@ -105,7 +95,7 @@ pub enum Token {
 
 	Integer(i32),
 
-	String { content: String, quote: QuoteKind },
+	String(QuotedString),
 
 	TemplateStringLeadingFragment(String),
 	TemplateStringCentralFragment(String),

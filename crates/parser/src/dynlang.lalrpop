@@ -228,7 +228,7 @@ extern {
 		// "lcomment" => Token::LineComment,
 		// "bcomment" => Token::BlockComment,
 		"int" => Token::Integer(<i32>),
-		"string" => Token::String(<QuotedString>),
+		"string" => Token::String{ content: <String>, quote: QuoteKind },
 		"leading" => Token::TemplateStringLeadingFragment(<String>),
 		"central" => Token::TemplateStringCentralFragment(<String>),
 		"trailing" => Token::TemplateStringTrailingFragment(<String>),
