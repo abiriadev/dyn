@@ -102,7 +102,7 @@ mod tests {
 
 		assert_eq!(
 			lexer.next(),
-			Some(Ok((0, Token::Use, 7)))
+			Some(Ok((0, Token::Use, 3)))
 		);
 	}
 }
