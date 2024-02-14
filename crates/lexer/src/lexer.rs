@@ -35,37 +35,6 @@ pub fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	.parse_next(i)
 }
 
-#[derive(Debug)]
-pub struct SpannedToken {
-	pub token: Result<Token, LexError>,
-	pub span: Span,
-}
-
-impl SpannedToken {
-	pub fn new(token: Token, span: Span) -> Self {
-		Self {
-			token: Ok(token),
-			span,
-		}
-	}
-
-	pub fn new_err(error: LexError, span: Span) -> Self {
-		Self {
-			token: Err(error),
-			span,
-		}
-	}
-}
-
-impl HasSpan for SpannedToken {
-	fn span(&self) -> Span { self.span }
-
-	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
-		self.span = span.into();
-	}
-}
-
 pub struct SpannedLexer<'a> {
 	code: Located<&'a str>,
 	last: Option<TokenKind>,
