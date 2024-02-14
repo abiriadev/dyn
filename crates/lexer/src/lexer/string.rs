@@ -6,7 +6,7 @@ use winnow::{
 };
 
 use super::Stream;
-use crate::{token::QuoteKind, Token};
+use crate::{token::QuoteKind, QuotedString, Token};
 
 pub fn string(i: &mut Stream<'_>) -> PResult<Token> {
 	alt((string_single, string_double)).parse_next(i)
@@ -28,9 +28,11 @@ pub fn string_single(i: &mut Stream<'_>) -> PResult<Token> {
 		),
 		'\'',
 	)
-	.map(|content| Token::String {
-		content,
-		quote: QuoteKind::Single,
+	.map(|content| {
+		Token::String(QuotedString {
+			content,
+			quote: QuoteKind::Single,
+		})
 	})
 	.parse_next(i)
 }
@@ -53,9 +55,11 @@ pub fn string_double(i: &mut Stream<'_>) -> PResult<Token> {
 		),
 		'"',
 	)
-	.map(|content| Token::String {
-		content,
-		quote: QuoteKind::Double,
+	.map(|content| {
+		Token::String(QuotedString {
+			content,
+			quote: QuoteKind::Double,
+		})
 	})
 	.parse_next(i)
 }

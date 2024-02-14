@@ -11,9 +11,10 @@ pub enum QuoteKind {
 	Double,
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct QuotedString {
-	content: String,
-	quote: QuoteKind,
+	pub content: String,
+	pub quote: QuoteKind,
 }
 
 impl From<QuotedString> for String {
