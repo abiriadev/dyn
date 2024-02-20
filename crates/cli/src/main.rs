@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
-use lexer::{SpannedLexer, SpannedToken};
+use lexer::{lexer::LexerConfig, SpannedLexer, SpannedToken};
 use maplit::hashmap;
 use miette::Report;
 use parser::ast::Ident;
@@ -35,6 +35,9 @@ enum Commands {
 
 		#[arg(short, long, default_value_t = false)]
 		ignore_whitespace: bool,
+
+		#[arg(short, long, default_value_t = false)]
+		asi: bool,
 	},
 }
 
@@ -73,10 +76,14 @@ fn lexer_cmd(
 	_format: LexerFormat,
 	delimiter: String,
 	ignore_whitespace: bool,
+	asi: bool,
 ) -> anyhow::Result<()> {
 	for SpannedToken { token, span } in SpannedLexer::new(
 		&read_to_string(source_path)?,
-		lexer::lexer::LexerConfig { ignore_whitespace },
+		LexerConfig {
+			ignore_whitespace,
+			asi,
+		},
 	) {
 		let (l, r) = span.into();
 		let tok = token?;
@@ -103,11 +110,13 @@ fn main() -> anyhow::Result<()> {
 				format,
 				delimiter,
 				ignore_whitespace,
+				asi,
 			} => lexer_cmd(
 				source_path,
 				format,
 				delimiter,
 				ignore_whitespace,
+				asi,
 			)?,
 		}
 
