@@ -8,13 +8,20 @@
 
 ```dyn
 /* this is block comment */
+
+/*
+  outer comment
+  /*
+    nested block comments are allowed!
+  */
+*/
 ```
 
 ## Literals
 
 ### Nil
 
-`nil` is like `null` or `None` in other languages.
+`nil` is like `null` or `None` in other languages, representing an empty value.
 
 ```dyn
 nil
@@ -45,6 +52,14 @@ Both quotes are allowed.
 "string"
 ```
 
+You can insert an expression in `#{}` inside a double-quoted string to make template string.
+
+```dyn
+"I am #{age} years old!"
+
+"#{a} times #{b} is #{a * b}"
+```
+
 ### Array Literal
 
 ```dyn
@@ -60,7 +75,7 @@ Arrays are heterogeneous.
 [false, 1234, "string", ['nested!']]
 ```
 
-You can omit `,` if there is newline.
+You can omit `,` if the items are separated by newline.
 
 ```dyn
 // comma-separated form
