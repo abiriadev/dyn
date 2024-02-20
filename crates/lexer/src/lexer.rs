@@ -55,12 +55,11 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		use winnow::stream::Stream;
 
-		let mut i = self.code;
-		let start = i.checkpoint();
+		let start = self.code.checkpoint();
 
 		match alt((eof.value(None), token.map(Some)))
 			.with_span()
-			.parse_next(&mut i)
+			.parse_next(&mut self.code)
 		{
 			Ok((Some(tok), span)) => {
 				self.last = Some(TokenKind::from(&tok));
@@ -71,7 +70,7 @@ impl<'a> Iterator for SpannedLexer<'a> {
 			Err(_) => {
 				// let err = err.into_inner();
 				// println!("{:?}", err);
-				let offset = i.offset_from(&start);
+				let offset = self.code.offset_from(&start);
 				Some(SpannedToken::new_err(
 					LexError::InvalidToken,
 					(offset..offset + 1).into(),
