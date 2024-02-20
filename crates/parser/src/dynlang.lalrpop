@@ -41,7 +41,7 @@ Boolean: Boolean = {
 Integer: Integer = <l:@L> <v:"int"> <r:@R> => Integer::new(v, l..r);
 
 // string
-StringT: StringT = <l:@L> <v:"string"> <r:@R> => StringT::new(v.into_string(), l..r);
+StringT: StringT = <l:@L> <v:"string"> <r:@R> => StringT::new(v.content, l..r);
 
 // literal
 Literal: Literal = {
@@ -228,7 +228,7 @@ extern {
 		// "lcomment" => Token::LineComment,
 		// "bcomment" => Token::BlockComment,
 		"int" => Token::Integer(<i32>),
-		"string" => Token::String{ content: <String>, quote: QuoteKind },
+		"string" => Token::String(<QuotedString>),
 		"leading" => Token::TemplateStringLeadingFragment(<String>),
 		"central" => Token::TemplateStringCentralFragment(<String>),
 		"trailing" => Token::TemplateStringTrailingFragment(<String>),
