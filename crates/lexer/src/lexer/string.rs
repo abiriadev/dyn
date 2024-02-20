@@ -74,10 +74,10 @@ mod tests {
 	fn should_parse_single_quoted_string() {
 		assert_eq!(
 			string(&mut Located::new("'John Doe'")),
-			Ok(Token::String {
+			Ok(Token::String(QuotedString {
 				content: "John Doe".to_owned(),
 				quote: QuoteKind::Single
-			})
+			}))
 		);
 	}
 }
