@@ -18,6 +18,9 @@ use rustyline::DefaultEditor;
 struct Args {
 	source_path: Option<PathBuf>,
 
+	#[arg(short, long, default_value_t = false)]
+	print_last_expression: bool,
+
 	#[command(subcommand)]
 	command: Option<Commands>,
 }
@@ -140,8 +143,11 @@ fn main() -> anyhow::Result<()> {
 			let rep = rep.with_source_code(source);
 
 			println!("{rep:?}");
-		} else {
-			println!("final result: {:?}", res);
+		} else if args.print_last_expression {
+			match res {
+				Ok(v) => println!("{v}"),
+				Err(_) => unimplemented!(),
+			}
 		}
 	} else {
 		let mut rl = DefaultEditor::new().unwrap();
