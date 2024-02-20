@@ -37,6 +37,7 @@ fn token(i: &mut Stream<'_>) -> PResult<Token> {
 
 pub struct LexerConfig {
 	pub ignore_whitespace: bool,
+	pub asi: bool,
 }
 
 pub struct SpannedLexer<'a> {
@@ -69,10 +70,25 @@ impl<'a> Iterator for SpannedLexer<'a> {
 				.parse_next(&mut self.code)
 			{
 				Ok((Some(tok), span)) => {
-					if tok == Token::Whitespace && self.config.ignore_whitespace
+					if self.config.ignore_whitespace && tok == Token::Whitespace
 					{
 						continue;
 					}
+					if self.config.asi
+						&& tok == Token::NewLine && !matches!(
+						self.last,
+						Some(
+							TokenKind::Nil
+								| TokenKind::True | TokenKind::False
+								| TokenKind::Integer | TokenKind::String
+								| TokenKind::Identifier
+								| TokenKind::RightParenthesis
+								| TokenKind::RightBrace | TokenKind::RightBracket
+						)
+					) {
+						continue;
+					}
+
 					self.last = Some(TokenKind::from(&tok));
 
 					Some(SpannedToken::new(tok, span.into()))
