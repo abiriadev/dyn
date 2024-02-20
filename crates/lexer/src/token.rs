@@ -137,6 +137,7 @@ impl Token {
 			Token::RightBracket => "]".to_owned(),
 			Token::Bang => "!".to_owned(),
 			Token::Dot => ".".to_owned(),
+			Token::DotDot => "..".to_owned(),
 			Token::Comma => ".".to_owned(),
 			Token::Colon => ":".to_owned(),
 			Token::Pipe => "|".to_owned(),
