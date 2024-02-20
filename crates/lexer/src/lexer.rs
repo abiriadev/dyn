@@ -35,16 +35,22 @@ fn token(i: &mut Stream<'_>) -> PResult<Token> {
 	.parse_next(i)
 }
 
+pub struct LexerConfig {
+	pub ignore_whitespace: bool,
+}
+
 pub struct SpannedLexer<'a> {
 	code: Located<&'a str>,
 	last: Option<TokenKind>,
+	config: LexerConfig,
 }
 
 impl<'a> SpannedLexer<'a> {
-	pub fn new(code: &'a str) -> Self {
+	pub fn new(code: &'a str, config: LexerConfig) -> Self {
 		Self {
 			code: Located::new(code),
 			last: None,
+			config,
 		}
 	}
 }
@@ -55,27 +61,33 @@ impl<'a> Iterator for SpannedLexer<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		use winnow::stream::Stream;
 
-		let start = self.code.checkpoint();
+		loop {
+			let start = self.code.checkpoint();
 
-		match alt((eof.value(None), token.map(Some)))
-			.with_span()
-			.parse_next(&mut self.code)
-		{
-			Ok((Some(tok), span)) => {
-				self.last = Some(TokenKind::from(&tok));
+			break match alt((eof.value(None), token.map(Some)))
+				.with_span()
+				.parse_next(&mut self.code)
+			{
+				Ok((Some(tok), span)) => {
+					if tok == Token::Whitespace && self.config.ignore_whitespace
+					{
+						continue;
+					}
+					self.last = Some(TokenKind::from(&tok));
 
-				Some(SpannedToken::new(tok, span.into()))
-			},
-			Ok((None, _)) => None,
-			Err(_) => {
-				// let err = err.into_inner();
-				// println!("{:?}", err);
-				let offset = self.code.offset_from(&start);
-				Some(SpannedToken::new_err(
-					LexError::InvalidToken,
-					(offset..offset + 1).into(),
-				))
-			},
+					Some(SpannedToken::new(tok, span.into()))
+				},
+				Ok((None, _)) => None,
+				Err(_) => {
+					// let err = err.into_inner();
+					// println!("{:?}", err);
+					let offset = self.code.offset_from(&start);
+					Some(SpannedToken::new_err(
+						LexError::InvalidToken,
+						(offset..offset + 1).into(),
+					))
+				},
+			}
 		}
 	}
 }
