@@ -125,7 +125,7 @@ L7 = LevelBinExpr<L6, L7Op>;
 
 L8 = {
 	<l:@L> "let" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Declare(i, Box::new(e)), l..r),
-	<l:@L> "let!" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::DeclareMut(i, Box::new(e)), l..r),
+	<l:@L> "let" "!" <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::DeclareMut(i, Box::new(e)), l..r),
 	<l:@L> <i:Ident> "=" <e:L8> <r:@R> => Expr::new(ExprKind::Assign(i, Box::new(e)), l..r),
 	<l:@L> <i:Ident> "+=" <e:L8> <r:@R> => Expr::new(ExprKind::AddAssign(i, Box::new(e)), l..r),
 	<l:@L> <i:Ident> "-=" <e:L8> <r:@R> => Expr::new(ExprKind::SubAssign(i, Box::new(e)), l..r),
@@ -214,7 +214,6 @@ extern {
 		"true" => Token::True,
 		"false" => Token::False,
 		"let" => Token::Let,
-		"let!" => Token::LetMut,
 		"if" => Token::If,
 		"else" => Token::Else,
 		"iter" => Token::Iter,
