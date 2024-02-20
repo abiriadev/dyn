@@ -41,7 +41,7 @@ pub fn string_double(i: &mut Stream<'_>) -> PResult<Token> {
 	delimited(
 		'"',
 		escaped_transform(
-			take_till(0.., ['\'', '\\', '{', '}']),
+			take_till(0.., ['"', '\\', '{', '}']),
 			'\\',
 			alt((
 				"\\".value("\\"),
@@ -77,6 +77,17 @@ mod tests {
 			Ok(Token::String(QuotedString {
 				content: "John Doe".to_owned(),
 				quote: QuoteKind::Single
+			}))
+		);
+	}
+
+	#[test]
+	fn should_parse_double_quoted_string() {
+		assert_eq!(
+			string(&mut Located::new(r#""John Doe""#)),
+			Ok(Token::String(QuotedString {
+				content: "John Doe".to_owned(),
+				quote: QuoteKind::Double
 			}))
 		);
 	}
