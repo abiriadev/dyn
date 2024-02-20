@@ -27,6 +27,7 @@ pub fn parse(code: &str) -> Result<Expr, ParseError> {
 	dynlang::ExprParser::new().parse(
 		SpannedLexer::new(code, LexerConfig {
 			ignore_whitespace: true,
+			asi: true,
 		})
 		.map(lexer_adapter),
 	)
@@ -36,6 +37,7 @@ pub fn parse_code(code: &str) -> Result<Code, ParseError> {
 	dynlang::CodeParser::new().parse(
 		SpannedLexer::new(code, LexerConfig {
 			ignore_whitespace: true,
+			asi: true,
 		})
 		.map(lexer_adapter),
 	)
