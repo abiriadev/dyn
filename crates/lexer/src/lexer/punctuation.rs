@@ -31,6 +31,7 @@ pub fn punctuation(i: &mut Stream<'_>) -> PResult<Token> {
 		"[".value(Token::LeftBracket),
 		"]".value(Token::RightBracket),
 		"!".value(Token::Bang),
+		"..".value(Token::DotDot),
 		".".value(Token::Dot),
 		",".value(Token::Comma),
 		":".value(Token::Colon),

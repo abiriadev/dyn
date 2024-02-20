@@ -64,6 +64,7 @@ pub enum Token {
 	// etc
 	Bang,
 	Dot,
+	DotDot,
 	Comma,
 	Colon,
 	Pipe,
