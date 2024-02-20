@@ -99,11 +99,10 @@ mod tests {
 
 		assert_eq!(
 			lexer.next(),
-			Some(Ok((
-				0,
-				Token::Identifier("usethis".to_owned()),
-				7
-			)))
+			Some(SpannedToken {
+				token: Ok(Token::Identifier("usethis".to_owned())),
+				span: (0..7).into()
+			})
 		);
 	}
 
@@ -114,7 +113,10 @@ mod tests {
 
 		assert_eq!(
 			lexer.next(),
-			Some(Ok((0, Token::Use, 3)))
+			Some(SpannedToken {
+				token: Ok(Token::Use),
+				span: (0..3).into()
+			})
 		);
 	}
 }
