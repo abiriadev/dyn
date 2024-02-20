@@ -8,7 +8,6 @@ version = "0.1.0"
 box-tt = { version = "0.1.0", path = "../box-tt" }
 lalrpop-util = "0.20.0"
 lexer = { version = "0.1.0", path = "../lexer" }
-logos = "0.13.0"
 span = { version = "0.1.0", path = "../span" }
 strum = { version = "0.25.0", features = ["derive"] }
 tap = "1.0.1"
