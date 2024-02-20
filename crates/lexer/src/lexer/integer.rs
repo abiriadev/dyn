@@ -5,6 +5,6 @@ use crate::Token;
 
 pub fn integer(i: &mut Stream<'_>) -> PResult<Token> {
 	dec_int
-		.map(|i| Token::Integer(i))
+		.map(Token::Integer)
 		.parse_next(i)
 }
