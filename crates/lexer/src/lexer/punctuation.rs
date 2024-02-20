@@ -37,7 +37,7 @@ pub fn punctuation(i: &mut Stream<'_>) -> PResult<Token> {
 		"|".value(Token::Pipe),
 		"@".value(Token::At),
 		"->".value(Token::Arrow),
-		r"\n".value(Token::NewLine),
+		"\n".value(Token::NewLine),
 	])
 	.parse_next(i)
 }
