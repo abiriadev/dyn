@@ -1,5 +1,5 @@
 use lalrpop_util::lalrpop_mod;
-use lexer::{LexError, SpannedLexer, SpannedToken, Token};
+use lexer::{lexer::LexerConfig, LexError, SpannedLexer, SpannedToken, Token};
 use span::Spanned;
 
 use crate::ast::{Code, Expr};
@@ -24,11 +24,21 @@ fn lexer_adapter(
 }
 
 pub fn parse(code: &str) -> Result<Expr, ParseError> {
-	dynlang::ExprParser::new().parse(SpannedLexer::new(code).map(lexer_adapter))
+	dynlang::ExprParser::new().parse(
+		SpannedLexer::new(code, LexerConfig {
+			ignore_whitespace: true,
+		})
+		.map(lexer_adapter),
+	)
 }
 
 pub fn parse_code(code: &str) -> Result<Code, ParseError> {
-	dynlang::CodeParser::new().parse(SpannedLexer::new(code).map(lexer_adapter))
+	dynlang::CodeParser::new().parse(
+		SpannedLexer::new(code, LexerConfig {
+			ignore_whitespace: true,
+		})
+		.map(lexer_adapter),
+	)
 }
 
 #[cfg(test)] mod tests;
