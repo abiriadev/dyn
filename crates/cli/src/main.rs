@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
-use lexer::SpannedLexer;
+use lexer::{SpannedLexer, SpannedToken};
 use maplit::hashmap;
 use miette::Report;
 use parser::ast::Ident;
@@ -70,8 +70,11 @@ fn lexer_cmd(
 	_format: LexerFormat,
 	delimiter: String,
 ) -> anyhow::Result<()> {
-	for t in SpannedLexer::new(&read_to_string(source_path)?) {
-		let (l, tok, r) = t?;
+	for SpannedToken { token, span } in
+		SpannedLexer::new(&read_to_string(source_path)?)
+	{
+		let (l, r) = span.into();
+		let tok = token?;
 
 		match _format {
 			LexerFormat::Ndjson => println!(
