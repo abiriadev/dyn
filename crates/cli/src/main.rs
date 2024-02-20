@@ -32,6 +32,9 @@ enum Commands {
 
 		#[arg(short, long, default_value_t = String::from(","))]
 		delimiter: String,
+
+		#[arg(short, long, default_value_t = false)]
+		ignore_whitespace: bool,
 	},
 }
 
@@ -69,10 +72,12 @@ fn lexer_cmd(
 	source_path: PathBuf,
 	_format: LexerFormat,
 	delimiter: String,
+	ignore_whitespace: bool,
 ) -> anyhow::Result<()> {
-	for SpannedToken { token, span } in
-		SpannedLexer::new(&read_to_string(source_path)?)
-	{
+	for SpannedToken { token, span } in SpannedLexer::new(
+		&read_to_string(source_path)?,
+		lexer::lexer::LexerConfig { ignore_whitespace },
+	) {
 		let (l, r) = span.into();
 		let tok = token?;
 
@@ -97,7 +102,13 @@ fn main() -> anyhow::Result<()> {
 				source_path,
 				format,
 				delimiter,
-			} => lexer_cmd(source_path, format, delimiter)?,
+				ignore_whitespace,
+			} => lexer_cmd(
+				source_path,
+				format,
+				delimiter,
+				ignore_whitespace,
+			)?,
 		}
 
 		return Ok(())
