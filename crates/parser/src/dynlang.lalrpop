@@ -69,7 +69,7 @@ L0: Expr = {
 		parameters,
 		body,
 	}), l..r),
-	<l:@L> "||" "->" <body:Block> <r:@R> => Expr::new(ExprKind::Function(Function {
+	<l:@L> "||"? "->" <body:Block> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body,
 	}), l..r),
@@ -150,7 +150,7 @@ L8 = {
 		parameters,
 		body: Code::new_dummy(vec![e]),
 	}), l..r),
-	<l:@L> "||" "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
+	<l:@L> "||"? "->" <e:L8> <r:@R> => Expr::new(ExprKind::Function(Function {
 		parameters: Parameters(vec![]),
 		body: Code::new_dummy(vec![e]),
 	}), l..r),
