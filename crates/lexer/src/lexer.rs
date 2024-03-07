@@ -37,6 +37,7 @@ fn token(i: &mut Stream<'_>) -> PResult<Token> {
 
 pub struct LexerConfig {
 	pub ignore_whitespace: bool,
+	pub ignore_comments: bool,
 	pub asi: bool,
 }
 
@@ -44,6 +45,7 @@ impl Default for LexerConfig {
 	fn default() -> Self {
 		Self {
 			ignore_whitespace: true,
+			ignore_comments: true,
 			asi: true,
 		}
 	}
@@ -83,6 +85,15 @@ impl<'a> Iterator for SpannedLexer<'a> {
 					{
 						continue;
 					}
+
+					if self.config.ignore_comments
+						&& matches!(
+							tok,
+							Token::LineComment | Token::BlockComment
+						) {
+						continue;
+					}
+
 					if self.config.asi
 						&& tok == Token::NewLine && !matches!(
 						self.last,
