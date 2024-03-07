@@ -1,17 +1,18 @@
 use std::fmt::{self, Display, Formatter};
 
+use serde::Serialize;
 use span::{HasSpan, Span};
 use strum::EnumDiscriminants;
 
 use crate::LexError;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum QuoteKind {
 	Single,
 	Double,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct QuotedString {
 	pub content: String,
 	pub quote: QuoteKind,
@@ -21,7 +22,7 @@ impl From<QuotedString> for String {
 	fn from(value: QuotedString) -> Self { value.content }
 }
 
-#[derive(Debug, Clone, PartialEq, EnumDiscriminants)]
+#[derive(Debug, Clone, PartialEq, EnumDiscriminants, Serialize)]
 #[strum_discriminants(name(TokenKind))]
 pub enum Token {
 	Whitespace,
