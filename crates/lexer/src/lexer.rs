@@ -40,6 +40,15 @@ pub struct LexerConfig {
 	pub asi: bool,
 }
 
+impl Default for LexerConfig {
+	fn default() -> Self {
+		Self {
+			ignore_whitespace: true,
+			asi: true,
+		}
+	}
+}
+
 pub struct SpannedLexer<'a> {
 	code: Located<&'a str>,
 	last: Option<TokenKind>,
@@ -115,7 +124,7 @@ mod tests {
 	#[test]
 	fn count_tokens() {
 		let code = "a + 2";
-		let lexer = SpannedLexer::new(code);
+		let lexer = SpannedLexer::new(code, LexerConfig::default());
 
 		assert_eq!(lexer.count(), 5);
 	}
@@ -123,7 +132,7 @@ mod tests {
 	#[test]
 	fn match_longer_first() {
 		let code = "usethis";
-		let mut lexer = SpannedLexer::new(code);
+		let mut lexer = SpannedLexer::new(code, LexerConfig::default());
 
 		assert_eq!(
 			lexer.next(),
@@ -137,7 +146,7 @@ mod tests {
 	#[test]
 	fn match_shorter_first() {
 		let code = "use";
-		let mut lexer = SpannedLexer::new(code);
+		let mut lexer = SpannedLexer::new(code, LexerConfig::default());
 
 		assert_eq!(
 			lexer.next(),
