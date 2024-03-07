@@ -81,18 +81,11 @@ fn lexer_cmd(
 	source_path: PathBuf,
 	_format: LexerFormat,
 	delimiter: String,
-	ignore_whitespace: bool,
-	ignore_comments: bool,
-	asi: bool,
+	lexer_cfg: LexerConfig,
 ) -> anyhow::Result<()> {
-	for SpannedToken { token, span } in SpannedLexer::new(
-		&read_to_string(source_path)?,
-		LexerConfig {
-			ignore_whitespace,
-			ignore_comments,
-			asi,
-		},
-	) {
+	for SpannedToken { token, span } in
+		SpannedLexer::new(&read_to_string(source_path)?, lexer_cfg)
+	{
 		let (l, r) = span.into();
 		let tok = token?;
 
@@ -124,9 +117,11 @@ fn main() -> anyhow::Result<()> {
 				source_path,
 				format,
 				delimiter,
-				ignore_whitespace,
-				ignore_comments,
-				asi,
+				LexerConfig {
+					ignore_whitespace,
+					ignore_comments,
+					asi,
+				},
 			)?,
 		}
 
