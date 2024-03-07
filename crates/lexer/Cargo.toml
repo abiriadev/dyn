@@ -5,6 +5,7 @@ version = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+serde = { version = "1.0.197", features = ["derive"] }
 span = { version = "0.1.0", path = "../span" }
 strum = { version = "0.25.0", features = ["derive"] }
 thiserror = "1.0.56"
