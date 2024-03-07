@@ -36,8 +36,11 @@ enum Commands {
 		#[arg(short, long, default_value_t = String::from(","))]
 		delimiter: String,
 
-		#[arg(short, long, default_value_t = false)]
+		#[arg(short = 'w', long, default_value_t = false)]
 		ignore_whitespace: bool,
+
+		#[arg(short = 'c', long, default_value_t = false)]
+		ignore_comments: bool,
 
 		#[arg(short, long, default_value_t = false)]
 		asi: bool,
@@ -79,12 +82,14 @@ fn lexer_cmd(
 	_format: LexerFormat,
 	delimiter: String,
 	ignore_whitespace: bool,
+	ignore_comments: bool,
 	asi: bool,
 ) -> anyhow::Result<()> {
 	for SpannedToken { token, span } in SpannedLexer::new(
 		&read_to_string(source_path)?,
 		LexerConfig {
 			ignore_whitespace,
+			ignore_comments,
 			asi,
 		},
 	) {
@@ -113,12 +118,14 @@ fn main() -> anyhow::Result<()> {
 				format,
 				delimiter,
 				ignore_whitespace,
+				ignore_comments,
 				asi,
 			} => lexer_cmd(
 				source_path,
 				format,
 				delimiter,
 				ignore_whitespace,
+				ignore_comments,
 				asi,
 			)?,
 		}
