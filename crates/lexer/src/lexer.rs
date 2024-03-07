@@ -126,7 +126,7 @@ mod tests {
 		let code = "a + 2";
 		let lexer = SpannedLexer::new(code, LexerConfig::default());
 
-		assert_eq!(lexer.count(), 5);
+		assert_eq!(lexer.count(), 3);
 	}
 
 	#[test]

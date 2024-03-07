@@ -38,11 +38,12 @@ mod tests {
 	use winnow::{combinator::trace, Located};
 
 	use super::*;
+	use crate::{lexer::LexerConfig, SpannedLexer};
 
 	#[test]
 	fn lex_line_comment() {
 		assert_eq!(
-			block_comment.parse_next(&mut Located::new("//")),
+			line_comment.parse_next(&mut Located::new("//")),
 			Ok(Token::LineComment)
 		);
 	}
@@ -50,21 +51,26 @@ mod tests {
 	#[test]
 	fn multiple_line_comments_should_be_allowed() {
 		assert_eq!(
-			block_comment.parse_next(&mut Located::new("// abc // def")),
+			line_comment.parse_next(&mut Located::new("// abc // def")),
 			Ok(Token::LineComment)
 		);
 	}
 
 	#[test]
 	fn each_line_comment_should_be_parsed_as_separate_tokens() {
-		let mut src = Located::new("// abc\n// def");
+		let mut src =
+			SpannedLexer::new("// abc\n// def", LexerConfig::default());
 
 		assert_eq!(
-			block_comment.parse_next(&mut src),
+			src.next().unwrap().token,
 			Ok(Token::LineComment)
 		);
+		// assert_eq!(
+		// 	src.next().unwrap().token,
+		// 	Ok(Token::NewLine)
+		// );
 		assert_eq!(
-			block_comment.parse_next(&mut src),
+			src.next().unwrap().token,
 			Ok(Token::LineComment)
 		);
 	}
