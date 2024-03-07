@@ -7,8 +7,9 @@ use std::{
 };
 
 use miette::SourceSpan;
+use serde::Serialize;
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 pub struct Span {
 	start: usize,
 	end: usize,
