@@ -40,7 +40,63 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn lex_line_comment() {
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("//")),
+			Ok(Token::LineComment)
+		);
+	}
+
+	#[test]
+	fn multiple_line_comments_should_be_allowed() {
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("// abc // def")),
+			Ok(Token::LineComment)
+		);
+	}
+
+	#[test]
+	fn each_line_comment_should_be_parsed_as_separate_tokens() {
+		let mut src = Located::new("// abc\n// def");
+
+		assert_eq!(
+			block_comment.parse_next(&mut src),
+			Ok(Token::LineComment)
+		);
+		assert_eq!(
+			block_comment.parse_next(&mut src),
+			Ok(Token::LineComment)
+		);
+	}
+
+	#[test]
+	fn lex_block_comment() {
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("/**/")),
+			Ok(Token::BlockComment)
+		);
+
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("/* */")),
+			Ok(Token::BlockComment)
+		);
+	}
+
+	#[test]
+	fn block_comment_should_be_able_to_contain_newline() {
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("/*\n\n\n*/")),
+			Ok(Token::BlockComment)
+		);
+	}
+
+	#[test]
 	fn should_allow_nested_block_comment() {
+		assert_eq!(
+			block_comment.parse_next(&mut Located::new("/*/**/*/")),
+			Ok(Token::BlockComment)
+		);
+
 		let mut code = Located::new(indoc! {"
 		    /*
 		        Outer comment
