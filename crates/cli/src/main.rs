@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
-use lexer::{lexer::LexerConfig, SpannedLexer, SpannedToken};
+use lexer::{lexer::LexerConfig, SpannedLexer};
 use maplit::hashmap;
 use miette::Report;
 use parser::ast::Ident;
@@ -83,18 +83,20 @@ fn lexer_cmd(
 	delimiter: String,
 	lexer_cfg: LexerConfig,
 ) -> anyhow::Result<()> {
-	for SpannedToken { token, span } in
+	for spanned_token in
 		SpannedLexer::new(&read_to_string(source_path)?, lexer_cfg)
 	{
-		let (l, r) = span.into();
-		let tok = token?;
-
 		match _format {
 			LexerFormat::Ndjson => println!(
-				r#"{{"token":"{}","span":{{"start":{},"end":{}}}}}"#,
-				tok, l, r
+				"{}",
+				serde_json::to_string(&spanned_token)?
 			),
-			LexerFormat::Csv => println!("{l}{delimiter}{r}{delimiter}{tok}"),
+			LexerFormat::Csv => println!(
+				"{}{delimiter}{}{delimiter}{}",
+				spanned_token.span.start(),
+				spanned_token.span.end(),
+				spanned_token.token?
+			),
 		}
 	}
 

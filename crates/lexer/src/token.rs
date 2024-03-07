@@ -180,7 +180,7 @@ impl Display for Token {
 	}
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct SpannedToken {
 	pub token: Result<Token, LexError>,
 	pub span: Span,
