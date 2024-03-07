@@ -9,3 +9,4 @@ pretty_assertions = "1.4.0"
 
 [dependencies]
 miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b" }
+serde = { version = "1.0.197", features = ["derive"] }
