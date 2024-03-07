@@ -58,8 +58,10 @@ mod tests {
 
 	#[test]
 	fn each_line_comment_should_be_parsed_as_separate_tokens() {
-		let mut src =
-			SpannedLexer::new("// abc\n// def", LexerConfig::default());
+		let mut src = SpannedLexer::new("// abc\n// def", LexerConfig {
+			ignore_comments: false,
+			..Default::default()
+		});
 
 		assert_eq!(
 			src.next().unwrap().token,

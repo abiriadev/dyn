@@ -174,7 +174,10 @@ mod tests {
 	fn should_lex_comment() {
 		let code = "// comment";
 
-		let mut lexer = SpannedLexer::new(code, LexerConfig::default());
+		let mut lexer = SpannedLexer::new(code, LexerConfig {
+			ignore_comments: false,
+			..Default::default()
+		});
 
 		assert_eq!(
 			lexer.next(),
