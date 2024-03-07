@@ -119,6 +119,8 @@ impl<'a> Iterator for SpannedLexer<'a> {
 
 #[cfg(test)]
 mod tests {
+	use pretty_assertions::assert_eq;
+
 	use super::*;
 
 	#[test]
@@ -153,6 +155,21 @@ mod tests {
 			Some(SpannedToken {
 				token: Ok(Token::Use),
 				span: (0..3).into()
+			})
+		);
+	}
+
+	#[test]
+	fn should_lex_comment() {
+		let code = "// comment";
+
+		let mut lexer = SpannedLexer::new(code, LexerConfig::default());
+
+		assert_eq!(
+			lexer.next(),
+			Some(SpannedToken {
+				token: Ok(Token::LineComment),
+				span: (0..10).into()
 			})
 		);
 	}
