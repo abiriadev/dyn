@@ -1,0 +1,21 @@
+[package]
+categories = ["parsing", "text-editors"]
+description = "dyn grammar for the tree-sitter parsing library"
+edition = "2018"
+keywords = ["dyn", "incremental", "parsing"]
+license = "MIT"
+name = "tree-sitter-dyn"
+repository = "https://github.com/tree-sitter/tree-sitter-dyn"
+version = "0.0.1"
+
+build = "bindings/rust/build.rs"
+include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*"]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter = "~0.21.0"
+
+[build-dependencies]
+cc = "1.0"
