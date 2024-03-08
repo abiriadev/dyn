@@ -11,7 +11,10 @@ module.exports = grammar({
 			choice($.identifier, $._literal, $.block, $.if),
 
 		binexpr: $ =>
-			choice(prec.left(1, seq($.expr, '+', $.expr))),
+			choice(
+				prec.left(1, seq($.expr, '+', $.expr)),
+				prec.left(2, seq($.expr, '*', $.expr)),
+			),
 
 		block: $ => seq('{', repeat($.expr), '}'),
 

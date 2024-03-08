@@ -8,9 +8,9 @@
 #define LANGUAGE_VERSION 14
 #define STATE_COUNT 13
 #define LARGE_STATE_COUNT 7
-#define SYMBOL_COUNT 14
+#define SYMBOL_COUNT 15
 #define ALIAS_COUNT 0
-#define TOKEN_COUNT 8
+#define TOKEN_COUNT 9
 #define EXTERNAL_TOKEN_COUNT 0
 #define FIELD_COUNT 0
 #define MAX_ALIAS_SEQUENCE_LENGTH 3
@@ -18,23 +18,25 @@
 
 enum ts_symbol_identifiers {
   anon_sym_PLUS = 1,
-  anon_sym_LBRACE = 2,
-  anon_sym_RBRACE = 3,
-  anon_sym_if = 4,
-  sym_identifier = 5,
-  sym_string = 6,
-  sym_number = 7,
-  sym_source_file = 8,
-  sym_expr = 9,
-  sym_block = 10,
-  sym_if = 11,
-  sym__literal = 12,
-  aux_sym_source_file_repeat1 = 13,
+  anon_sym_STAR = 2,
+  anon_sym_LBRACE = 3,
+  anon_sym_RBRACE = 4,
+  anon_sym_if = 5,
+  sym_identifier = 6,
+  sym_string = 7,
+  sym_number = 8,
+  sym_source_file = 9,
+  sym_expr = 10,
+  sym_block = 11,
+  sym_if = 12,
+  sym__literal = 13,
+  aux_sym_source_file_repeat1 = 14,
 };
 
 static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
   [anon_sym_PLUS] = "+",
+  [anon_sym_STAR] = "*",
   [anon_sym_LBRACE] = "{",
   [anon_sym_RBRACE] = "}",
   [anon_sym_if] = "if",
@@ -52,6 +54,7 @@ static const char * const ts_symbol_names[] = {
 static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
   [anon_sym_PLUS] = anon_sym_PLUS,
+  [anon_sym_STAR] = anon_sym_STAR,
   [anon_sym_LBRACE] = anon_sym_LBRACE,
   [anon_sym_RBRACE] = anon_sym_RBRACE,
   [anon_sym_if] = anon_sym_if,
@@ -72,6 +75,10 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .named = true,
   },
   [anon_sym_PLUS] = {
+    .visible = true,
+    .named = false,
+  },
+  [anon_sym_STAR] = {
     .visible = true,
     .named = false,
   },
@@ -156,17 +163,18 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
     case 0:
       if (eof) ADVANCE(2);
       if (lookahead == '"') ADVANCE(1);
+      if (lookahead == '*') ADVANCE(4);
       if (lookahead == '+') ADVANCE(3);
-      if (lookahead == 'i') ADVANCE(7);
-      if (lookahead == '{') ADVANCE(4);
-      if (lookahead == '}') ADVANCE(5);
+      if (lookahead == 'i') ADVANCE(8);
+      if (lookahead == '{') ADVANCE(5);
+      if (lookahead == '}') ADVANCE(6);
       if (('\t' <= lookahead && lookahead <= '\r') ||
           lookahead == ' ') SKIP(0)
-      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(10);
-      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(8);
+      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(11);
+      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
       END_STATE();
     case 1:
-      if (lookahead == '"') ADVANCE(9);
+      if (lookahead == '"') ADVANCE(10);
       if (lookahead != 0) ADVANCE(1);
       END_STATE();
     case 2:
@@ -176,30 +184,33 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
       ACCEPT_TOKEN(anon_sym_PLUS);
       END_STATE();
     case 4:
-      ACCEPT_TOKEN(anon_sym_LBRACE);
+      ACCEPT_TOKEN(anon_sym_STAR);
       END_STATE();
     case 5:
-      ACCEPT_TOKEN(anon_sym_RBRACE);
+      ACCEPT_TOKEN(anon_sym_LBRACE);
       END_STATE();
     case 6:
-      ACCEPT_TOKEN(anon_sym_if);
-      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(8);
+      ACCEPT_TOKEN(anon_sym_RBRACE);
       END_STATE();
     case 7:
-      ACCEPT_TOKEN(sym_identifier);
-      if (lookahead == 'f') ADVANCE(6);
-      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(8);
+      ACCEPT_TOKEN(anon_sym_if);
+      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
       END_STATE();
     case 8:
       ACCEPT_TOKEN(sym_identifier);
-      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(8);
+      if (lookahead == 'f') ADVANCE(7);
+      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
       END_STATE();
     case 9:
-      ACCEPT_TOKEN(sym_string);
+      ACCEPT_TOKEN(sym_identifier);
+      if (('a' <= lookahead && lookahead <= 'z')) ADVANCE(9);
       END_STATE();
     case 10:
+      ACCEPT_TOKEN(sym_string);
+      END_STATE();
+    case 11:
       ACCEPT_TOKEN(sym_number);
-      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(10);
+      if (('0' <= lookahead && lookahead <= '9')) ADVANCE(11);
       END_STATE();
     default:
       return false;
@@ -226,6 +237,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [0] = {
     [ts_builtin_sym_end] = ACTIONS(1),
     [anon_sym_PLUS] = ACTIONS(1),
+    [anon_sym_STAR] = ACTIONS(1),
     [anon_sym_LBRACE] = ACTIONS(1),
     [anon_sym_RBRACE] = ACTIONS(1),
     [anon_sym_if] = ACTIONS(1),
