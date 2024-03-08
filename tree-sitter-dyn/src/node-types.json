@@ -1,5 +1,24 @@
 [
   {
+    "type": "assign",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "binexpr",
     "named": true,
     "fields": {},
@@ -37,6 +56,10 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "assign",
+          "named": true
+        },
         {
           "type": "binexpr",
           "named": true
@@ -211,11 +234,23 @@
     "named": false
   },
   {
+    "type": "*=",
+    "named": false
+  },
+  {
     "type": "+",
     "named": false
   },
   {
+    "type": "+=",
+    "named": false
+  },
+  {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": "-=",
     "named": false
   },
   {
@@ -224,6 +259,10 @@
   },
   {
     "type": "/",
+    "named": false
+  },
+  {
+    "type": "/=",
     "named": false
   },
   {
