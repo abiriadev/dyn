@@ -255,7 +255,7 @@ pub struct Arguments(pub Vec<Expr>);
 #[derive(Debug, Clone, PartialEq)]
 pub struct Function {
 	pub parameters: Parameters,
-	pub body: Code,
+	pub body: Box<Expr>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, AsRefStr)]
@@ -373,6 +373,7 @@ pub enum ExprKind {
 	MulAssign(Ident, Box<Expr>),
 	DivAssign(Ident, Box<Expr>),
 	ModAssign(Ident, Box<Expr>),
+	Block(Code),
 	Declare(Ident, Box<Expr>),
 	DeclareMut(Ident, Box<Expr>),
 	If {

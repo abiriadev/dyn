@@ -51,7 +51,7 @@ pub trait Visit {
 		for i in &i.parameters.0 {
 			self.visit_ident(i);
 		}
-		self.visit_code(&i.body);
+		self.visit_expr(&i.body);
 	}
 
 	fn visit_unaryexpr(&mut self, i: &UnaryExpr) { self.visit_expr(&i.expr); }
@@ -108,6 +108,9 @@ pub trait Visit {
 			ExprKind::ModAssign(i, j) => {
 				self.visit_ident(i);
 				self.visit_expr(j);
+			},
+			ExprKind::Block(i) => {
+				self.visit_code(i);
 			},
 			ExprKind::Declare(i, j) => {
 				self.visit_ident(i);
@@ -198,7 +201,7 @@ pub trait VisitMut {
 		for i in &mut i.parameters.0 {
 			self.visit_mut_ident(i);
 		}
-		self.visit_mut_code(&mut i.body);
+		self.visit_mut_expr(&mut i.body);
 	}
 
 	fn visit_mut_unaryexpr(&mut self, i: &mut UnaryExpr) {
@@ -257,6 +260,9 @@ pub trait VisitMut {
 			ExprKind::ModAssign(i, j) => {
 				self.visit_mut_ident(i);
 				self.visit_mut_expr(j);
+			},
+			ExprKind::Block(i) => {
+				self.visit_mut_code(i);
 			},
 			ExprKind::Declare(i, j) => {
 				self.visit_mut_ident(i);
