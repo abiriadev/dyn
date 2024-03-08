@@ -8,7 +8,13 @@ module.exports = grammar({
 		source_file: $ => repeat($.expr),
 
 		expr: $ =>
-			choice($.identifier, $._literal, $.binexpr, $.block, $.if),
+			choice(
+				$.identifier,
+				$._literal,
+				$.binexpr,
+				$.block,
+				$.if,
+			),
 
 		binexpr: $ =>
 			choice(
@@ -19,6 +25,8 @@ module.exports = grammar({
 		block: $ => seq('{', repeat($.expr), '}'),
 
 		if: $ => seq('if', $.expr, $.block),
+
+		array: $ => seq('[', repeat($.expr), ']'),
 
 		identifier: $ => /[a-z]+/,
 
