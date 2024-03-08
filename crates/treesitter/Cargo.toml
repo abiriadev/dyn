@@ -1,0 +1,13 @@
+[package]
+edition = "2021"
+name = "treesitter"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tree-sitter = "0.21.0"
+tree-sitter-dyn = { version = "0.0.1", path = "../../tree-sitter-dyn" }
+
+[build-dependencies]
+cc = "*"
