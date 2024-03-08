@@ -22,11 +22,17 @@ module.exports = grammar({
 
 		binexpr: $ =>
 			choice(
-				prec.left(1, seq($.expr, '+', $.expr)),
-				prec.left(1, seq($.expr, '-', $.expr)),
-				prec.left(2, seq($.expr, '*', $.expr)),
-				prec.left(2, seq($.expr, '/', $.expr)),
-				prec.left(2, seq($.expr, '%', $.expr)),
+				prec.left(3, seq($.expr, '*', $.expr)),
+				prec.left(3, seq($.expr, '/', $.expr)),
+				prec.left(3, seq($.expr, '%', $.expr)),
+				prec.left(2, seq($.expr, '+', $.expr)),
+				prec.left(2, seq($.expr, '-', $.expr)),
+				prec.left(1, seq($.expr, '==', $.expr)),
+				prec.left(1, seq($.expr, '!=', $.expr)),
+				prec.left(1, seq($.expr, '<', $.expr)),
+				prec.left(1, seq($.expr, '<=', $.expr)),
+				prec.left(1, seq($.expr, '>', $.expr)),
+				prec.left(1, seq($.expr, '>=', $.expr)),
 			),
 
 		unaryexpr: $ =>
