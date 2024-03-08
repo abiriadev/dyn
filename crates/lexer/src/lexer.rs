@@ -20,6 +20,11 @@ use punctuation::punctuation;
 use string::string;
 use whitespace::whitespace;
 
+use self::string::{
+	template_string_central_fragment, template_string_leading_fragment,
+	template_string_trailing_fragment,
+};
+
 type Stream<'a> = Located<&'a str>;
 
 fn token(i: &mut Stream<'_>) -> PResult<Token> {
@@ -31,6 +36,9 @@ fn token(i: &mut Stream<'_>) -> PResult<Token> {
 		punctuation,
 		integer,
 		string,
+		template_string_leading_fragment,
+		template_string_central_fragment,
+		template_string_trailing_fragment,
 	))
 	.parse_next(i)
 }
