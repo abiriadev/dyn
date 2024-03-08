@@ -260,7 +260,7 @@ impl Interpreter {
 							capture,
 						} => {
 							self.mem.call(capture, parameters, j)?;
-							let v = self.eval(Tree::Code(body));
+							let v = self.eval(Tree::Expr(*body));
 							self.mem.drop()?;
 							v
 						},
@@ -362,6 +362,11 @@ impl Interpreter {
 					};
 					let v = Value::Integer(i % j);
 					self.mem.assign(ident, v.clone())?;
+					Ok(v)
+				},
+				ExprKind::Block(b) => {
+					let v = self.eval(Tree::Code(b))?;
+
 					Ok(v)
 				},
 				ExprKind::Declare(ident, value) => {
