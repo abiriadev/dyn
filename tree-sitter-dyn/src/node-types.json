@@ -46,6 +46,10 @@
           "named": true
         },
         {
+          "type": "func",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -63,6 +67,25 @@
         },
         {
           "type": "unaryexpr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "func",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         }
       ]
@@ -130,6 +153,10 @@
     "named": false
   },
   {
+    "type": "->",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -155,6 +182,10 @@
   },
   {
     "type": "{",
+    "named": false
+  },
+  {
+    "type": "|",
     "named": false
   },
   {

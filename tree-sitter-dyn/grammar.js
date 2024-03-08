@@ -11,6 +11,7 @@ module.exports = grammar({
 			choice(
 				$.identifier,
 				$._literal,
+				$.func,
 				$.binexpr,
 				$.unaryexpr,
 				$.block,
@@ -29,6 +30,15 @@ module.exports = grammar({
 		block: $ => seq('{', repeat($.expr), '}'),
 
 		if: $ => seq('if', $.expr, $.block),
+
+		func: $ =>
+			seq(
+				optional(
+					seq('|', repeat($.identifier), '|'),
+				),
+				'->',
+				$.expr,
+			),
 
 		array: $ => seq('[', repeat($.expr), ']'),
 
