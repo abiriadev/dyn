@@ -29,7 +29,13 @@ module.exports = grammar({
 
 		block: $ => seq('{', repeat($.expr), '}'),
 
-		if: $ => seq('if', $.expr, $.block),
+		if: $ =>
+			seq(
+				'if',
+				$.expr,
+				$.block,
+				optional(seq('else', $.block)),
+			),
 
 		func: $ =>
 			seq(

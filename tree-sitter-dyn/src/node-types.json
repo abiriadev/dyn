@@ -165,6 +165,10 @@
     "named": false
   },
   {
+    "type": "else",
+    "named": false
+  },
+  {
     "type": "identifier",
     "named": true
   },
