@@ -15,6 +15,7 @@ module.exports = grammar({
 				$.binexpr,
 				$.unaryexpr,
 				$.block,
+				$.let,
 				$.if,
 				$.iter,
 			),
@@ -29,6 +30,15 @@ module.exports = grammar({
 			choice(seq('-', $.expr), seq('-', $.expr)),
 
 		block: $ => seq('{', repeat($.expr), '}'),
+
+		let: $ =>
+			seq(
+				'let',
+				optional('!'),
+				$.identifier,
+				'=',
+				$.expr,
+			),
 
 		if: $ =>
 			seq(
