@@ -1,5 +1,20 @@
 [
   {
+    "type": "binexpr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "block",
     "named": true,
     "fields": {},
@@ -22,6 +37,10 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "binexpr",
+          "named": true
+        },
         {
           "type": "block",
           "named": true

@@ -21,6 +21,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "binexpr"
+        },
+        {
+          "type": "SYMBOL",
           "name": "block"
         },
         {

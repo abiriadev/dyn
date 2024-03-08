@@ -8,7 +8,7 @@ module.exports = grammar({
 		source_file: $ => repeat($.expr),
 
 		expr: $ =>
-			choice($.identifier, $._literal, $.block, $.if),
+			choice($.identifier, $._literal, $.binexpr, $.block, $.if),
 
 		binexpr: $ =>
 			choice(
