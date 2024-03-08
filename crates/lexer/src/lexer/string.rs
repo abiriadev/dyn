@@ -86,6 +86,28 @@ pub fn template_string_leading_fragment(i: &mut Stream<'_>) -> PResult<Token> {
 	.parse_next(i)
 }
 
+pub fn template_string_central_fragment(i: &mut Stream<'_>) -> PResult<Token> {
+	delimited(
+		'}',
+		escaped_transform(
+			take_till(0.., ['"', '\\', '{', '}', '#']),
+			'\\',
+			alt((
+				"\\".value("\\"),
+				"\"".value("\""),
+				"{".value("{"),
+				"}".value("}"),
+				"n".value("\n"),
+				"r".value("\r"),
+				"t".value("\t"),
+			)),
+		),
+		"#{",
+	)
+	.map(Token::TemplateStringCentralFragment)
+	.parse_next(i)
+}
+
 #[cfg(test)]
 mod tests {
 	use winnow::Located;
