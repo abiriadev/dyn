@@ -33,12 +33,12 @@ fn token(i: &mut Stream<'_>) -> PResult<Token> {
 		line_comment,
 		block_comment,
 		identifier,
-		punctuation,
-		integer,
-		string,
 		template_string_leading_fragment,
 		template_string_central_fragment,
 		template_string_trailing_fragment,
+		punctuation,
+		integer,
+		string,
 	))
 	.parse_next(i)
 }
