@@ -25,6 +25,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "unaryexpr"
+        },
+        {
+          "type": "SYMBOL",
           "name": "block"
         },
         {
@@ -77,6 +81,37 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "unaryexpr": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expr"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "-"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "expr"
+            }
+          ]
         }
       ]
     },

@@ -60,6 +60,10 @@
         {
           "type": "string",
           "named": true
+        },
+        {
+          "type": "unaryexpr",
+          "named": true
         }
       ]
     }
@@ -99,11 +103,30 @@
     }
   },
   {
+    "type": "unaryexpr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "*",
     "named": false
   },
   {
     "type": "+",
+    "named": false
+  },
+  {
+    "type": "-",
     "named": false
   },
   {
