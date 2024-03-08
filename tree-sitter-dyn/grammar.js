@@ -26,6 +26,7 @@ module.exports = grammar({
 				prec.left(1, seq($.expr, '-', $.expr)),
 				prec.left(2, seq($.expr, '*', $.expr)),
 				prec.left(2, seq($.expr, '/', $.expr)),
+				prec.left(2, seq($.expr, '%', $.expr)),
 			),
 
 		unaryexpr: $ =>
