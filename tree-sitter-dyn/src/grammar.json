@@ -38,6 +38,10 @@
         {
           "type": "SYMBOL",
           "name": "if"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "iter"
         }
       ]
     },
@@ -174,6 +178,31 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "iter": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "iter"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expr"
+        },
+        {
+          "type": "STRING",
+          "value": "of"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "block"
         }
       ]
     },

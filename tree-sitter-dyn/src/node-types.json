@@ -58,6 +58,10 @@
           "named": true
         },
         {
+          "type": "iter",
+          "named": true
+        },
+        {
           "type": "number",
           "named": true
         },
@@ -105,6 +109,29 @@
         },
         {
           "type": "expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "iter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "expr",
+          "named": true
+        },
+        {
+          "type": "identifier",
           "named": true
         }
       ]
@@ -177,8 +204,16 @@
     "named": false
   },
   {
+    "type": "iter",
+    "named": false
+  },
+  {
     "type": "number",
     "named": true
+  },
+  {
+    "type": "of",
+    "named": false
   },
   {
     "type": "string",
