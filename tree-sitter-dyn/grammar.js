@@ -9,13 +9,16 @@ module.exports = grammar({
 
 		code: $ => repeat($.expr),
 
-		expr: $ =>
-			choice($.identifier, $.number, $.binexpr),
+		expr: $ => choice($.identifier, $._literal),
 
 		binexpr: $ =>
 			choice(prec.left(1, seq($.expr, '+', $.expr))),
 
 		identifier: $ => /[a-z]+/,
+
+		_literal: $ => choice($.string, $.number),
+
+		string: $ => /"[^"]*"/,
 
 		number: $ => /\d+/,
 	},

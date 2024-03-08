@@ -1,20 +1,5 @@
 [
   {
-    "type": "binexpr",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "expr",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "expr",
     "named": true,
     "fields": {},
@@ -23,15 +8,15 @@
       "required": true,
       "types": [
         {
-          "type": "binexpr",
-          "named": true
-        },
-        {
           "type": "identifier",
           "named": true
         },
         {
           "type": "number",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         }
       ]
@@ -62,6 +47,10 @@
   },
   {
     "type": "number",
+    "named": true
+  },
+  {
+    "type": "string",
     "named": true
   }
 ]

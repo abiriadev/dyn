@@ -24,11 +24,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "number"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "binexpr"
+          "name": "_literal"
         }
       ]
     },
@@ -61,6 +57,23 @@
     "identifier": {
       "type": "PATTERN",
       "value": "[a-z]+"
+    },
+    "_literal": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "number"
+        }
+      ]
+    },
+    "string": {
+      "type": "PATTERN",
+      "value": "\"[^\"]*\""
     },
     "number": {
       "type": "PATTERN",
