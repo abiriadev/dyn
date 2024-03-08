@@ -7,12 +7,15 @@ module.exports = grammar({
 	rules: {
 		source_file: $ => repeat($.expr),
 
-		code: $ => repeat($.expr),
-
-		expr: $ => choice($.identifier, $._literal),
+		expr: $ =>
+			choice($.identifier, $._literal, $.block, $.if),
 
 		binexpr: $ =>
 			choice(prec.left(1, seq($.expr, '+', $.expr))),
+
+		block: $ => seq('{', repeat($.expr), '}'),
+
+		if: $ => seq('if', $.expr, $.block),
 
 		identifier: $ => /[a-z]+/,
 
