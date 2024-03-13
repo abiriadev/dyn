@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
-use lexer::{lexer::LexerConfig, SpannedLexer};
+use dyn_lexer::{lexer::LexerConfig, SpannedLexer};
 use maplit::hashmap;
 use miette::Report;
 use parser::ast::Ident;
@@ -55,10 +55,14 @@ enum LexerFormat {
 
 impl Display for LexerFormat {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-		write!(f, "{}", match self {
-			LexerFormat::Ndjson => "ndjson",
-			LexerFormat::Csv => "csv",
-		})
+		write!(
+			f,
+			"{}",
+			match self {
+				LexerFormat::Ndjson => "ndjson",
+				LexerFormat::Csv => "csv",
+			}
+		)
 	}
 }
 
@@ -66,7 +70,9 @@ impl Display for LexerFormat {
 struct Printer;
 
 impl Printer {
-	fn new() -> Box<Self> { Box::new(Self) }
+	fn new() -> Box<Self> {
+		Box::new(Self)
+	}
 }
 
 impl BuiltinFunction for Printer {
@@ -127,7 +133,7 @@ fn main() -> anyhow::Result<()> {
 			)?,
 		}
 
-		return Ok(())
+		return Ok(());
 	}
 
 	let mut intpr = Interpreter::init_with_builtins(hashmap! {

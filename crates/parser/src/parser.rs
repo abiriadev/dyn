@@ -1,5 +1,7 @@
+use dyn_lexer::{
+	lexer::LexerConfig, LexError, SpannedLexer, SpannedToken, Token,
+};
 use lalrpop_util::lalrpop_mod;
-use lexer::{lexer::LexerConfig, LexError, SpannedLexer, SpannedToken, Token};
 use span::Spanned;
 
 use crate::ast::{Code, Expr};
@@ -35,4 +37,5 @@ pub fn parse_code(code: &str) -> Result<Code, ParseError> {
 	)
 }
 
-#[cfg(test)] mod tests;
+#[cfg(test)]
+mod tests;

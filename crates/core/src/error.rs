@@ -1,6 +1,6 @@
 use std::fmt::{self, Display, Formatter};
 
-use lexer::LexError;
+use dyn_lexer::LexError;
 use miette::{Diagnostic, LabeledSpan};
 use parser::ast::{BinExprKind, Ident, UnaryExprKind};
 use span::{HasSpan, Span};
@@ -34,7 +34,7 @@ impl Diagnostic for ParseError {
 
 		match &self.0 {
 			ParseError::InvalidToken { .. } => unreachable!(),
-			ParseError::UnrecognizedEof { location, expected } =>
+			ParseError::UnrecognizedEof { location, expected } => {
 				Some(Box::new(
 					[LabeledSpan::at(
 						*location..location + 1,
@@ -44,8 +44,9 @@ impl Diagnostic for ParseError {
 						),
 					)]
 					.into_iter(),
-				)),
-			ParseError::UnrecognizedToken { token, expected } =>
+				))
+			},
+			ParseError::UnrecognizedToken { token, expected } => {
 				Some(Box::new(
 					[LabeledSpan::at(
 						token.0..token.2,
@@ -56,7 +57,8 @@ impl Diagnostic for ParseError {
 						),
 					)]
 					.into_iter(),
-				)),
+				))
+			},
 			ParseError::ExtraToken { .. } => unimplemented!(),
 			ParseError::User { error } => {
 				let span = error.span();
@@ -128,8 +130,9 @@ impl Display for TypeError {
 	fn fmt(&self, f: &mut Formatter) -> fmt::Result {
 		let m = match self {
 			TypeError::UnaryOp { op, expr, .. } => match op {
-				UnaryExprKind::Minus =>
-					format!("{} is not a number", expr.to_debug()),
+				UnaryExprKind::Minus => {
+					format!("{} is not a number", expr.to_debug())
+				},
 				_ => format!(
 					"cannot apply unary operator `{}` to type `{}`",
 					op.as_ref(),
@@ -237,7 +240,9 @@ fn value_to_message(span: Span, v: Value) -> LabeledSpan {
 }
 
 fn display_vec<T>(v: &[T]) -> String
-where T: Display {
+where
+	T: Display,
+{
 	v.iter()
 		.map(|e| e.to_string())
 		.collect::<Vec<_>>()
