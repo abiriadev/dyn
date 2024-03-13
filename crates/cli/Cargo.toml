@@ -13,10 +13,10 @@ anyhow = "1.0.75"
 clap = { version = "4.4.7", features = ["derive"] }
 dyn-core = { version = "0.1.0", path = "../core" }
 dyn-lexer = { version = "0.1.0", path = "../lexer" }
+dyn-parser = { version = "0.1.0", path = "../parser" }
 maplit = "1.0.2"
 miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b", features = [
 	"fancy",
 ] }
-parser = { version = "0.1.0", path = "../parser" }
 rustyline = "12.0.0"
 serde_json = "1.0.114"

@@ -7,9 +7,9 @@ version = "0.1.0"
 [dependencies]
 dyn-clone = "1.0.14"
 dyn-lexer = { version = "0.1.0", path = "../lexer" }
+dyn-parser = { version = "0.1.0", path = "../parser" }
 dyn-span = { version = "0.1.0", path = "../span" }
 miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b" }
-parser = { version = "0.1.0", path = "../parser" }
 strum = { version = "0.25.0", features = ["derive"] }
 thiserror = "1.0.50"
 
