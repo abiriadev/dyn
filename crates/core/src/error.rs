@@ -1,9 +1,9 @@
 use std::fmt::{self, Display, Formatter};
 
 use dyn_lexer::LexError;
+use dyn_parser::ast::{BinExprKind, Ident, UnaryExprKind};
 use dyn_span::{HasSpan, Span};
 use miette::{Diagnostic, LabeledSpan};
-use parser::ast::{BinExprKind, Ident, UnaryExprKind};
 use thiserror::Error;
 
 use crate::Value;
@@ -26,11 +26,11 @@ impl Diagnostic for InterpreterError {
 
 #[derive(Debug, PartialEq, Error)]
 #[error("ParseError")]
-pub struct ParseError(#[from] pub parser::ParseError);
+pub struct ParseError(#[from] pub dyn_parser::ParseError);
 
 impl Diagnostic for ParseError {
 	fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
-		use parser::ParseError;
+		use dyn_parser::ParseError;
 
 		match &self.0 {
 			ParseError::InvalidToken { .. } => unreachable!(),

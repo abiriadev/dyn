@@ -3,7 +3,7 @@ use std::{
 	sync::{Arc, RwLock},
 };
 
-use parser::ast::{Ident, Parameters};
+use dyn_parser::ast::{Ident, Parameters};
 
 use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
@@ -81,7 +81,9 @@ impl Environment {
 pub struct Frame(RwLock<FrameInner>);
 
 impl Frame {
-	pub fn root() -> Arc<Self> { Arc::new(Self(FrameInner::root())) }
+	pub fn root() -> Arc<Self> {
+		Arc::new(Self(FrameInner::root()))
+	}
 
 	pub fn new(parent: Arc<Self>) -> Arc<Self> {
 		Arc::new(Self(FrameInner::new(parent)))
@@ -95,7 +97,7 @@ impl Frame {
 	) -> Result<(), RuntimeError> {
 		let mut inner = self.0.write().unwrap();
 		let Entry::Vacant(v) = inner.table.entry(ident) else {
-			return Err(RuntimeError::AlreadyDeclared)
+			return Err(RuntimeError::AlreadyDeclared);
 		};
 
 		v.insert(SymbolInfo { mutable, value });
@@ -128,7 +130,7 @@ impl Frame {
 						ReferenceError::UndefinedIdentifier {
 							ident: ident.clone(),
 						},
-					))
+					));
 				};
 
 				Arc::clone(p).assign(ident, value)

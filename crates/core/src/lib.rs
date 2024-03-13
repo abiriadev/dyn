@@ -1,10 +1,6 @@
 use std::collections::HashMap;
 
-use dyn_span::HasSpan;
-use environment::Environment;
-pub use error::{InterpreterError, ReferenceError, RuntimeError};
-use error::{ParseError, TypeError};
-use parser::{
+use dyn_parser::{
 	ast::{
 		self, Array, BinExpr, BinExprKind, Boolean, Code, Expr, ExprKind,
 		Function, Ident, Integer, Literal, Nil, StringT, TemplateString,
@@ -12,6 +8,10 @@ use parser::{
 	},
 	parse_code,
 };
+use dyn_span::HasSpan;
+use environment::Environment;
+pub use error::{InterpreterError, ReferenceError, RuntimeError};
+use error::{ParseError, TypeError};
 use value::Record;
 pub use value::{ArgumentValues, BuiltinFunction, FunctionValue, Value};
 

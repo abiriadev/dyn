@@ -9,9 +9,9 @@ use dyn_core::{
 	ArgumentValues, BuiltinFunction, FunctionValue, Interpreter, Value,
 };
 use dyn_lexer::{lexer::LexerConfig, SpannedLexer};
+use dyn_parser::ast::Ident;
 use maplit::hashmap;
 use miette::Report;
-use parser::ast::Ident;
 use rustyline::DefaultEditor;
 
 #[derive(Debug, Parser)]

@@ -5,7 +5,7 @@ use std::{
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
-use parser::ast::{Boolean, Function, Ident, Integer, Literal, StringT};
+use dyn_parser::ast::{Boolean, Function, Ident, Integer, Literal, StringT};
 use strum::EnumDiscriminants;
 
 use crate::environment::Frame;
@@ -91,12 +91,13 @@ impl Value {
 	pub fn to_debug(&self) -> String {
 		match self {
 			Value::Nil => "nil".to_owned(),
-			Value::Boolean(v) =>
+			Value::Boolean(v) => {
 				if *v {
 					"true".to_owned()
 				} else {
 					"false".to_owned()
-				},
+				}
+			},
 			Value::Integer(v) => format!("{v}"),
 			Value::String(v) => format!(r#""{}""#, v),
 			Value::Array(v) => format!(
@@ -118,27 +119,33 @@ impl Value {
 		}
 	}
 
-	pub fn get_type(&self) -> ValueType { self.into() }
+	pub fn get_type(&self) -> ValueType {
+		self.into()
+	}
 }
 
 impl Display for Value {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-		write!(f, "{}", match self {
-			Value::Nil => "nil".to_owned(),
-			Value::Boolean(i) => i.to_string(),
-			Value::Integer(i) => i.to_string(),
-			Value::String(i) => i.to_string(),
-			Value::Array(i) => format!("{i:?}"),
-			Value::Record(i) => format!(
-				"({})",
-				i.fields
-					.iter()
-					.map(|(k, v)| format!("{}: {v}", k.symbol()))
-					.collect::<Vec<_>>()
-					.join(", ")
-			),
-			Value::Function(_) => "FUNCTION".to_owned(),
-		})
+		write!(
+			f,
+			"{}",
+			match self {
+				Value::Nil => "nil".to_owned(),
+				Value::Boolean(i) => i.to_string(),
+				Value::Integer(i) => i.to_string(),
+				Value::String(i) => i.to_string(),
+				Value::Array(i) => format!("{i:?}"),
+				Value::Record(i) => format!(
+					"({})",
+					i.fields
+						.iter()
+						.map(|(k, v)| format!("{}: {v}", k.symbol()))
+						.collect::<Vec<_>>()
+						.join(", ")
+				),
+				Value::Function(_) => "FUNCTION".to_owned(),
+			}
+		)
 	}
 }
 
