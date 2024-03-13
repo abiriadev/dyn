@@ -1,9 +1,9 @@
 use std::fmt::{self, Display, Formatter};
 
 use dyn_lexer::LexError;
+use dyn_span::{HasSpan, Span};
 use miette::{Diagnostic, LabeledSpan};
 use parser::ast::{BinExprKind, Ident, UnaryExprKind};
-use span::{HasSpan, Span};
 use thiserror::Error;
 
 use crate::Value;

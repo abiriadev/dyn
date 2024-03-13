@@ -2,7 +2,7 @@
 use std::{collections::HashMap, hash::Hash};
 
 use box_tt::BoxNew;
-use span::{HasSpan, Span};
+use dyn_span::{HasSpan, Span};
 use strum::AsRefStr;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12,7 +12,9 @@ pub struct Nil {
 
 impl Nil {
 	pub fn new<S>(span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self { span: span.into() }
 	}
 
@@ -24,10 +26,14 @@ impl Nil {
 }
 
 impl HasSpan for Nil {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -40,7 +46,9 @@ pub struct Boolean {
 
 impl Boolean {
 	pub fn new<S>(value: bool, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			value,
 			span: span.into(),
@@ -54,14 +62,20 @@ impl Boolean {
 		}
 	}
 
-	pub fn value(&self) -> bool { self.value }
+	pub fn value(&self) -> bool {
+		self.value
+	}
 }
 
 impl HasSpan for Boolean {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -74,7 +88,9 @@ pub struct Integer {
 
 impl Integer {
 	pub fn new<S>(value: i32, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			value,
 			span: span.into(),
@@ -90,10 +106,14 @@ impl Integer {
 }
 
 impl HasSpan for Integer {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -108,7 +128,8 @@ impl StringT {
 	pub fn new<T, S>(value: T, span: S) -> Self
 	where
 		T: Into<String>,
-		S: Into<Span>, {
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			value: value.into(),
@@ -116,21 +137,29 @@ impl StringT {
 	}
 
 	pub fn new_dummy<T>(value: T) -> Self
-	where T: Into<String> {
+	where
+		T: Into<String>,
+	{
 		Self {
 			span: Span::DUMMY_SPAN,
 			value: value.into(),
 		}
 	}
 
-	pub fn into_string(self) -> String { self.value }
+	pub fn into_string(self) -> String {
+		self.value
+	}
 }
 
 impl HasSpan for StringT {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -160,7 +189,8 @@ impl Ident {
 	pub fn new<T, S>(symbol: T, span: S) -> Self
 	where
 		T: Into<String>,
-		S: Into<Span>, {
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			symbol: symbol.into(),
@@ -168,20 +198,28 @@ impl Ident {
 	}
 
 	pub fn new_dummy<T>(symbol: T) -> Self
-	where T: Into<String> {
+	where
+		T: Into<String>,
+	{
 		Self {
 			span: Span::DUMMY_SPAN,
 			symbol: symbol.into(),
 		}
 	}
 
-	pub fn symbol(&self) -> &str { &self.symbol }
+	pub fn symbol(&self) -> &str {
+		&self.symbol
+	}
 
-	pub fn into_symbol(self) -> String { self.symbol }
+	pub fn into_symbol(self) -> String {
+		self.symbol
+	}
 }
 
 impl PartialEq for Ident {
-	fn eq(&self, other: &Self) -> bool { self.symbol == other.symbol }
+	fn eq(&self, other: &Self) -> bool {
+		self.symbol == other.symbol
+	}
 }
 
 impl Hash for Ident {
@@ -191,10 +229,14 @@ impl Hash for Ident {
 }
 
 impl HasSpan for Ident {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -207,7 +249,9 @@ pub struct Array {
 
 impl Array {
 	pub fn new<S>(elements: Vec<Expr>, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			elements,
@@ -223,10 +267,14 @@ impl Array {
 }
 
 impl HasSpan for Array {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -238,10 +286,14 @@ pub struct Record {
 }
 
 impl HasSpan for Record {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -275,10 +327,14 @@ pub struct UnaryExpr {
 }
 
 impl HasSpan for UnaryExpr {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -335,7 +391,9 @@ pub struct BinExpr {
 
 impl BinExpr {
 	pub fn new<S>(op: BinExprKind, lhs: Expr, rhs: Expr, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			op,
@@ -346,10 +404,14 @@ impl BinExpr {
 }
 
 impl HasSpan for BinExpr {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -398,7 +460,9 @@ pub enum ExprKind {
 }
 
 impl From<BinExpr> for ExprKind {
-	fn from(value: BinExpr) -> Self { Self::BinExpr(value) }
+	fn from(value: BinExpr) -> Self {
+		Self::BinExpr(value)
+	}
 }
 
 #[derive(Debug, Clone, PartialEq, BoxNew)]
@@ -409,7 +473,9 @@ pub struct Expr {
 
 impl Expr {
 	pub fn new<S>(kind: ExprKind, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			kind,
@@ -480,10 +546,14 @@ impl Expr {
 }
 
 impl HasSpan for Expr {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }
@@ -505,7 +575,9 @@ pub struct Code {
 
 impl Code {
 	pub fn new<S>(stmts: Vec<Expr>, span: S) -> Self
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		Self {
 			span: span.into(),
 			stmts,
@@ -521,10 +593,14 @@ impl Code {
 }
 
 impl HasSpan for Code {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }

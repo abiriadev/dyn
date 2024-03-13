@@ -1,8 +1,8 @@
 use dyn_lexer::{
 	lexer::LexerConfig, LexError, SpannedLexer, SpannedToken, Token,
 };
+use dyn_span::Spanned;
 use lalrpop_util::lalrpop_mod;
-use span::Spanned;
 
 use crate::ast::{Code, Expr};
 

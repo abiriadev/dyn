@@ -1,7 +1,7 @@
 use std::fmt::{self, Display, Formatter};
 
+use dyn_span::{HasSpan, Span};
 use serde::Serialize;
-use span::{HasSpan, Span};
 use strum::EnumDiscriminants;
 
 use crate::LexError;
@@ -19,7 +19,9 @@ pub struct QuotedString {
 }
 
 impl From<QuotedString> for String {
-	fn from(value: QuotedString) -> Self { value.content }
+	fn from(value: QuotedString) -> Self {
+		value.content
+	}
 }
 
 #[derive(Debug, Clone, PartialEq, EnumDiscriminants, Serialize)]
@@ -203,10 +205,14 @@ impl SpannedToken {
 }
 
 impl HasSpan for SpannedToken {
-	fn span(&self) -> Span { self.span }
+	fn span(&self) -> Span {
+		self.span
+	}
 
 	fn set_span<S>(&mut self, span: S)
-	where S: Into<Span> {
+	where
+		S: Into<Span>,
+	{
 		self.span = span.into();
 	}
 }

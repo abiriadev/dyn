@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use dyn_span::HasSpan;
 use environment::Environment;
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use error::{ParseError, TypeError};
@@ -11,7 +12,6 @@ use parser::{
 	},
 	parse_code,
 };
-use span::HasSpan;
 use value::Record;
 pub use value::{ArgumentValues, BuiltinFunction, FunctionValue, Value};
 
@@ -135,10 +135,12 @@ impl Interpreter {
 				let i = self.eval(Tree::Expr(expr))?;
 
 				Ok(match (op, i.clone()) {
-					(UnaryExprKind::Minus, Value::Integer(i)) =>
-						Value::Integer(-i),
-					(UnaryExprKind::Not, Value::Boolean(i)) =>
-						Value::Boolean(!i),
+					(UnaryExprKind::Minus, Value::Integer(i)) => {
+						Value::Integer(-i)
+					},
+					(UnaryExprKind::Not, Value::Boolean(i)) => {
+						Value::Boolean(!i)
+					},
 					_ => Err(TypeError::UnaryOp {
 						op,
 						expr: i,
@@ -165,12 +167,15 @@ impl Interpreter {
 						BinExprKind::Add,
 						Value::Integer(j),
 					) => Value::Integer(i + j),
-					(Value::Integer(i), BinExprKind::Add, Value::String(s)) =>
-						Value::String(format!("{i}{s}")),
-					(Value::String(s), BinExprKind::Add, Value::Integer(i)) =>
-						Value::String(format!("{s}{i}")),
-					(Value::String(s), BinExprKind::Add, Value::String(s2)) =>
-						Value::String(format!("{s}{s2}")),
+					(Value::Integer(i), BinExprKind::Add, Value::String(s)) => {
+						Value::String(format!("{i}{s}"))
+					},
+					(Value::String(s), BinExprKind::Add, Value::Integer(i)) => {
+						Value::String(format!("{s}{i}"))
+					},
+					(Value::String(s), BinExprKind::Add, Value::String(s2)) => {
+						Value::String(format!("{s}{s2}"))
+					},
 					(
 						Value::Integer(i),
 						BinExprKind::Sub,
@@ -218,8 +223,9 @@ impl Interpreter {
 						BinExprKind::And,
 						Value::Boolean(j),
 					) => Value::Boolean(i && j),
-					(Value::Boolean(i), BinExprKind::Or, Value::Boolean(j)) =>
-						Value::Boolean(i || j),
+					(Value::Boolean(i), BinExprKind::Or, Value::Boolean(j)) => {
+						Value::Boolean(i || j)
+					},
 					(i, op, j) => Err(TypeError::BinOp {
 						op,
 						lhs: i,
@@ -233,8 +239,9 @@ impl Interpreter {
 				ExprKind::Literal(i) => Ok(self.eval(Tree::Literal(i))?),
 				ExprKind::Ident(i) => Ok(self.eval(Tree::Ident(i))?),
 				ExprKind::UnaryExpr(i) => self.eval(Tree::UnaryExpr(i)),
-				ExprKind::TemplateString(i) =>
-					self.eval(Tree::TemplateString(i)),
+				ExprKind::TemplateString(i) => {
+					self.eval(Tree::TemplateString(i))
+				},
 				ExprKind::Array(i) => self.eval(Tree::Array(i)),
 				ExprKind::Record(i) => self.eval(Tree::Record(i)),
 				ExprKind::Function(f) => Ok(Value::Function(
@@ -453,7 +460,9 @@ mod tests {
 	struct Print(Vec<Value>);
 
 	impl Print {
-		fn new() -> Box<Self> { Box::new(Self(vec![])) }
+		fn new() -> Box<Self> {
+			Box::new(Self(vec![]))
+		}
 	}
 
 	impl BuiltinFunction for Print {
