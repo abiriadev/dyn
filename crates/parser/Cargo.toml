@@ -6,8 +6,8 @@ version = "0.1.0"
 
 [dependencies]
 box-tt = { version = "0.1.0", path = "../box-tt" }
+dyn-lexer = { version = "0.1.0", path = "../lexer" }
 lalrpop-util = "0.20.0"
-lexer = { version = "0.1.0", path = "../lexer" }
 span = { version = "0.1.0", path = "../span" }
 strum = { version = "0.25.0", features = ["derive"] }
 tap = "1.0.1"

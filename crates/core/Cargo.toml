@@ -6,7 +6,7 @@ version = "0.1.0"
 
 [dependencies]
 dyn-clone = "1.0.14"
-lexer = { version = "0.1.0", path = "../lexer" }
+dyn-lexer = { version = "0.1.0", path = "../lexer" }
 miette = { git = "https://github.com/zkat/miette", rev = "d37ada876a5831d3f47622274e334c9a24aa5d2b" }
 parser = { version = "0.1.0", path = "../parser" }
 span = { version = "0.1.0", path = "../span" }
