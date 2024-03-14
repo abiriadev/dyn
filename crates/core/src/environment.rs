@@ -77,7 +77,15 @@ impl Memory for Scope {
 	}
 
 	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
-		todo!()
+		let Entry::Occupied(v) = self.0.entry(ident) else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		Ok(v.get().value.clone())
 	}
 }
 
