@@ -28,6 +28,7 @@ pub trait Memory {
 }
 
 // Represents a single scope inside a function
+#[derive(Debug)]
 pub struct Scope(HashMap<Ident, SymbolInfo>);
 
 impl Scope {
