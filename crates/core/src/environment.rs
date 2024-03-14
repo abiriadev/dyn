@@ -8,7 +8,7 @@ use std::{
 
 use dyn_parser::ast::{Arguments, Ident, Parameters};
 
-use crate::{ReferenceError, RuntimeError, SymbolInfo, Value};
+use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
 type BindTable = HashMap<Ident, SymbolInfo>;
 type Arw<T> = Arc<RwLock<T>>;
@@ -142,7 +142,7 @@ impl Environment {
 		&mut self,
 		capture: ArwFrame,
 		parameters: Parameters,
-		arguments: Arguments,
+		arguments: ArgumentValues,
 	) {
 		self.call_stack
 			.push(Arc::new(RwLock::new(Frame {
