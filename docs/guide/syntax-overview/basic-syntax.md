@@ -87,6 +87,22 @@ As always, you can add two integers together.
 > 3
 ```
 
+Try other arithmetic operators like `-`, `*`, `/` and `%`!
+
+```dyn
+5 - 10
+> -5
+
+3 * 4
+> 12
+
+24 / 6
+> 4
+
+36 % 10
+> 3
+```
+
 ## String
 
 Both quotes are allowed.
@@ -107,48 +123,6 @@ let a = 3
 let b = 5
 "#{a} times #{b} is #{a * b}"
 > "3 times 5 is 15"
-```
-
-## Array
-
-```dyn
-[]
-[1, 2, 3]
-[true, false]
-["red", "blue", "green"]
-```
-
-Arrays are heterogeneous.
-
-```dyn
-[false, 1234, "string", ['nested!']]
-```
-
-You can omit `,` if the items are separated by newline.
-
-```dyn
-// comma-separated form
-[
-  item1,
-  item2,
-]
-
-// alternative form:
-[
-  item1
-  item2
-]
-```
-
-#### Index
-
-You can index array with `[index]`.
-
-```dyn
-let arr = [10, 20, 30]
-
-let first = arr[0]
-let second = arr[1]
 ```
 
 ## Binding
@@ -173,18 +147,6 @@ You can make it mutable by explicitly add `!` mark.
 let! a = 1
 a = 2 // now a = 2
 a += 10 // now a = 12
-```
-
-## Operations
-
-### Integer arithmetics
-
-```dyn
-1 + 2
-5 - 10
-3 * 4
-24 / 6
-36 % 10
 ```
 
 ## Function
