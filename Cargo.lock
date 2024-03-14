@@ -242,21 +242,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "702fc72eb24e5a1e48ce58027a675bc24edd52096d5397d4aea7c6dd9eca0bd1"
 
 [[package]]
-name = "cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dyn-core",
- "lexer",
- "maplit",
- "miette",
- "parser",
- "rustyline",
- "serde_json",
-]
-
-[[package]]
 name = "clipboard-win"
 version = "4.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -329,6 +314,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "dyn-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dyn-core",
+ "dyn-lexer",
+ "dyn-parser",
+ "maplit",
+ "miette",
+ "rustyline",
+ "serde_json",
+]
+
+[[package]]
 name = "dyn-clone"
 version = "1.0.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -339,15 +339,69 @@ name = "dyn-core"
 version = "0.1.0"
 dependencies = [
  "dyn-clone",
+ "dyn-lexer",
+ "dyn-parser",
+ "dyn-span",
  "indoc",
- "lexer",
  "maplit",
  "miette",
- "parser",
  "pretty_assertions",
- "span",
  "strum",
  "thiserror",
+]
+
+[[package]]
+name = "dyn-lexer"
+version = "0.1.0"
+dependencies = [
+ "dyn-span",
+ "indoc",
+ "pretty_assertions",
+ "serde",
+ "strum",
+ "thiserror",
+ "winnow",
+]
+
+[[package]]
+name = "dyn-lsp"
+version = "0.1.0"
+dependencies = [
+ "tokio",
+ "tower-lsp",
+]
+
+[[package]]
+name = "dyn-parser"
+version = "0.1.0"
+dependencies = [
+ "box-tt",
+ "dyn-lexer",
+ "dyn-span",
+ "indoc",
+ "lalrpop",
+ "lalrpop-util",
+ "pretty_assertions",
+ "strum",
+ "tap",
+]
+
+[[package]]
+name = "dyn-span"
+version = "0.1.0"
+dependencies = [
+ "miette",
+ "pretty_assertions",
+ "serde",
+]
+
+[[package]]
+name = "dyn-treesitter"
+version = "0.1.0"
+dependencies = [
+ "cc",
+ "tree-sitter",
+ "tree-sitter-dyn",
 ]
 
 [[package]]
@@ -641,19 +695,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lexer"
-version = "0.1.0"
-dependencies = [
- "indoc",
- "pretty_assertions",
- "serde",
- "span",
- "strum",
- "thiserror",
- "winnow",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -680,14 +721,6 @@ name = "log"
 version = "0.4.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5e6163cb8c49088c2c36f57875e58ccd8c87c7427f7fbd50ea6710b2f3f2e8f"
-
-[[package]]
-name = "lsp"
-version = "0.1.0"
-dependencies = [
- "tokio",
- "tower-lsp",
-]
 
 [[package]]
 name = "lsp-types"
@@ -842,21 +875,6 @@ dependencies = [
  "redox_syscall 0.3.5",
  "smallvec",
  "windows-targets",
-]
-
-[[package]]
-name = "parser"
-version = "0.1.0"
-dependencies = [
- "box-tt",
- "indoc",
- "lalrpop",
- "lalrpop-util",
- "lexer",
- "pretty_assertions",
- "span",
- "strum",
- "tap",
 ]
 
 [[package]]
@@ -1203,15 +1221,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "span"
-version = "0.1.0"
-dependencies = [
- "miette",
- "pretty_assertions",
- "serde",
-]
-
-[[package]]
 name = "str-buf"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1541,15 +1550,6 @@ version = "0.0.1"
 dependencies = [
  "cc",
  "tree-sitter",
-]
-
-[[package]]
-name = "treesitter"
-version = "0.1.0"
-dependencies = [
- "cc",
- "tree-sitter",
- "tree-sitter-dyn",
 ]
 
 [[package]]
