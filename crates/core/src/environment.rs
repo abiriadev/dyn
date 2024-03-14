@@ -11,7 +11,7 @@ type BindTable = HashMap<Ident, SymbolInfo>;
 type Arw<T> = Arc<RwLock<T>>;
 type ArwFrame = Arw<Frame>;
 type RuntimeResult<T> = Result<T, RuntimeError>;
-type IndexedStack = Vec<T>;
+type IndexedStack<T> = Vec<T>;
 
 struct Scope(BindTable);
 
