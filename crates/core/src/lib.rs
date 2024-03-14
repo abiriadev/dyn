@@ -9,7 +9,7 @@ use dyn_parser::{
 	parse_code,
 };
 use dyn_span::HasSpan;
-use environment::Environment;
+use environment::{Environment, Memory};
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use error::{ParseError, TypeError};
 use value::Record;
@@ -60,7 +60,7 @@ impl Interpreter {
 		let mut mem = Environment::new();
 
 		for (ident, value) in builtin {
-			mem.declare(ident, value, false)?;
+			mem.declare(&ident, value, false)?;
 		}
 
 		Ok(Self { mem })
@@ -93,7 +93,7 @@ impl Interpreter {
 				Literal::Integer(i) => self.eval(Tree::Integer(i)),
 				Literal::String(i) => self.eval(Tree::StringT(i)),
 			},
-			Tree::Ident(ident) => Ok(self.mem.read_value(ident)?),
+			Tree::Ident(ident) => Ok(self.mem.load(&ident)?),
 			Tree::TemplateString(TemplateString {
 				fragments, values, ..
 			}) => {
@@ -304,72 +304,62 @@ impl Interpreter {
 						panic!()
 					};
 					let v = Value::Integer(j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::AddAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
-					else {
+					let Value::Integer(i) = self.mem.load(&ident)? else {
 						panic!()
 					};
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
 					let v = Value::Integer(i + j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::SubAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
-					else {
+					let Value::Integer(i) = self.mem.load(&ident)? else {
 						panic!()
 					};
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
 					let v = Value::Integer(i - j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::MulAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
-					else {
+					let Value::Integer(i) = self.mem.load(&ident)? else {
 						panic!()
 					};
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
 					let v = Value::Integer(i * j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::DivAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
-					else {
+					let Value::Integer(i) = self.mem.load(&ident)? else {
 						panic!()
 					};
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
 					let v = Value::Integer(i / j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::ModAssign(ident, j) => {
-					let Value::Integer(i) =
-						self.mem.read_value(ident.clone())?
-					else {
+					let Value::Integer(i) = self.mem.load(&ident)? else {
 						panic!()
 					};
 					let Value::Integer(j) = self.eval(Tree::Expr(*j))? else {
 						panic!()
 					};
 					let v = Value::Integer(i % j);
-					self.mem.assign(ident, v.clone())?;
+					self.mem.assign(&ident, v.clone())?;
 					Ok(v)
 				},
 				ExprKind::Block(b) => {
@@ -380,13 +370,13 @@ impl Interpreter {
 				ExprKind::Declare(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident, value.clone(), false)?;
+						.declare(&ident, value.clone(), false)?;
 					Ok(value)
 				},
 				ExprKind::DeclareMut(ident, value) => {
 					let value = self.eval(Tree::Expr(*value))?;
 					self.mem
-						.declare(ident, value.clone(), true)?;
+						.declare(&ident, value.clone(), true)?;
 					Ok(value)
 				},
 				ExprKind::If { condition, yes } => {
@@ -424,9 +414,9 @@ impl Interpreter {
 						panic!()
 					};
 					self.mem
-						.declare(item.clone(), Value::Nil, true)?;
+						.declare(&item, Value::Nil, true)?;
 					for i in collection {
-						self.mem.assign(item.clone(), i)?;
+						self.mem.assign(&item, i)?;
 						self.eval(Tree::Code(body.clone()))?;
 					}
 					Ok(Value::Nil)
