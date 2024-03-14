@@ -158,11 +158,25 @@ a += 10
 
 ## Block
 
+You can group multiple expressions into a block using `{}`.
+
 ```dyn
 {
-  do_something()
-  do_something_else()
+	let a = 1
+	let b = 2
+	let c = a + b
 }
+```
+
+The block is also an expression, and it evaluates to the last expression in the block.
+
+```dyn
+let c = {
+	let a = 1
+	let b = 2
+	a + b
+}
+> 3
 ```
 
 ## Control flows
@@ -172,13 +186,5 @@ a += 10
 ```dyn
 if x > 10 {
   print("x is greater than 10!")
-}
-```
-
-### Iter
-
-```dyn
-iter arr of x {
-  print("element: " + x)
 }
 ```
