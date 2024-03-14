@@ -115,6 +115,14 @@ impl Frame {
 			.scope_stack
 			.push(Scope::new_with(init))
 	}
+
+	pub fn pop_scope(&mut self) {
+		self.0
+			.write()
+			.unwrap()
+			.scope_stack
+			.pop();
+	}
 }
 
 impl Memory for Frame {
