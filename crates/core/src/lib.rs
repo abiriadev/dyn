@@ -9,7 +9,7 @@ use dyn_parser::{
 	parse_code,
 };
 use dyn_span::HasSpan;
-use environment::{Environment, Memory};
+use environment::Environment;
 pub use error::{InterpreterError, ReferenceError, RuntimeError};
 use error::{ParseError, TypeError};
 use value::Record;

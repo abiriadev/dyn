@@ -32,7 +32,7 @@ impl Scope {
 }
 
 #[derive(Debug)]
-struct Frame {
+pub struct Frame {
 	scope_stack: IndexedStack<Scope>,
 	parent: Option<ArwFrame>,
 }
