@@ -78,6 +78,7 @@ impl Environment {
 	}
 }
 
+#[derive(Debug)]
 pub struct Frame(RwLock<FrameInner>);
 
 impl Frame {
@@ -162,6 +163,7 @@ impl Frame {
 	}
 }
 
+#[derive(Debug)]
 pub struct FrameInner {
 	table: HashMap<Ident, SymbolInfo>,
 	parent: Option<Arc<Frame>>,

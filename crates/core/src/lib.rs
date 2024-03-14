@@ -19,6 +19,7 @@ mod environment;
 pub mod error;
 mod value;
 
+#[derive(Debug)]
 struct SymbolInfo {
 	mutable: bool,
 	value: Value,
