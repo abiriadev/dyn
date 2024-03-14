@@ -59,6 +59,18 @@ export default defineConfig({
 								text: 'Basic Syntax',
 								link: '/guide/syntax-overview/basic-syntax',
 							},
+							{
+								text: 'Array',
+								link: '/guide/syntax-overview/array',
+							},
+							{
+								text: 'Record',
+								link: '/guide/syntax-overview/record',
+							},
+							{
+								text: 'Function',
+								link: '/guide/syntax-overview/function',
+							},
 						],
 					},
 				],
