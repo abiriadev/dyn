@@ -78,6 +78,10 @@ impl Environment {
 		}
 	}
 
+	pub fn top_frame(&self) -> ArwFrame {
+		self.call_stack.last().unwrap().clone()
+	}
+
 	pub fn declare(
 		&mut self,
 		ident: &Ident,
