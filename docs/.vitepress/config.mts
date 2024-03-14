@@ -13,6 +13,10 @@ export default defineConfig({
 				text: 'Examples',
 				link: '/markdown-examples',
 			},
+			{
+				text: 'Playground',
+				link: '/playground',
+			},
 		],
 
 		sidebar: [
