@@ -38,6 +38,7 @@ impl Environment {
 	}
 
 	pub fn declare(
+		&mut self,
 		ident: &Ident,
 		value: Value,
 		is_mut: bool,
@@ -45,15 +46,16 @@ impl Environment {
 		todo!()
 	}
 
-	pub fn assign(ident: &Ident, value: Value) -> RuntimeResult<()> {
+	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
 		todo!()
 	}
 
-	pub fn load(ident: &Ident) -> RuntimeResult<Value> {
+	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
 		todo!()
 	}
 
 	pub fn call(
+		&mut self,
 		capture: ArwFrame,
 		parameters: Parameters,
 		arguments: Arguments,
@@ -61,15 +63,15 @@ impl Environment {
 		todo!()
 	}
 
-	pub fn ret() {
+	pub fn ret(&mut self) {
 		todo!()
 	}
 
-	pub fn push_scope() {
+	pub fn push_scope(&mut self) {
 		todo!()
 	}
 
-	pub fn pop_scope() {
+	pub fn pop_scope(&mut self) {
 		todo!()
 	}
 }
