@@ -52,6 +52,15 @@ export default defineConfig({
 							},
 						],
 					},
+					{
+						text: 'Syntax Overview',
+						items: [
+							{
+								text: 'Basic Syntax',
+								link: '/guide/syntax-overview/basic-syntax',
+							},
+						],
+					},
 				],
 			},
 		],

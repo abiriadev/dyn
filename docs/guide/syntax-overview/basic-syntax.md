@@ -1,4 +1,4 @@
-# Syntax
+# Basic Syntax
 
 ## Comments
 
