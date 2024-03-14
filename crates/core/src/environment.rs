@@ -6,7 +6,7 @@ use std::{
 	sync::{Arc, RwLock},
 };
 
-use dyn_parser::ast::{Arguments, Ident, Parameters};
+use dyn_parser::ast::{Ident, Parameters};
 
 use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
@@ -89,9 +89,7 @@ impl Environment {
 		mutable: bool,
 	) -> RuntimeResult<()> {
 		let Entry::Vacant(v) = self
-			.call_stack
-			.last()
-			.unwrap()
+			.top_frame()
 			.read()
 			.unwrap()
 			.scope_stack
@@ -110,9 +108,7 @@ impl Environment {
 
 	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
 		let e = self
-			.call_stack
-			.last()
-			.unwrap()
+			.top_frame()
 			.write()
 			.unwrap()
 			.rec_lookup(ident)?
@@ -127,9 +123,7 @@ impl Environment {
 
 	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
 		Ok(self
-			.call_stack
-			.last()
-			.unwrap()
+			.top_frame()
 			.read()
 			.unwrap()
 			.rec_lookup(ident)?
@@ -169,9 +163,7 @@ impl Environment {
 	}
 
 	pub fn push_scope(&mut self) {
-		self.call_stack
-			.last()
-			.unwrap()
+		self.top_frame()
 			.write()
 			.unwrap()
 			.scope_stack
@@ -179,9 +171,7 @@ impl Environment {
 	}
 
 	pub fn pop_scope(&mut self) {
-		self.call_stack
-			.last()
-			.unwrap()
+		self.top_frame()
 			.write()
 			.unwrap()
 			.scope_stack
