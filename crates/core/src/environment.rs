@@ -95,6 +95,38 @@ impl Memory for Scope {
 	}
 }
 
+#[derive(Debug)]
+pub struct FrameInner {
+	scope_stack: Vec<Scope>,
+	parent: Option<Arc<Frame>>,
+}
+
+impl FrameInner {
+	fn root() -> RwLock<Self> {
+		RwLock::new(Self {
+			scope_stack: vec![Scope::new()],
+			parent: None,
+		})
+	}
+
+	fn new(parent: Arc<Frame>) -> RwLock<Self> {
+		RwLock::new(Self {
+			scope_stack: vec![Scope::new()],
+			parent: Some(parent),
+		})
+	}
+
+	fn new_with(
+		parent: Arc<Frame>,
+		init: HashMap<Ident, SymbolInfo>,
+	) -> RwLock<Self> {
+		RwLock::new(Self {
+			scope_stack: vec![Scope::new_with(init)],
+			parent: Some(parent),
+		})
+	}
+}
+
 pub struct Environment {
 	call_stack: Vec<Arc<Frame>>,
 }
@@ -248,37 +280,5 @@ impl Frame {
 				))?
 				.read_value(ident),
 		}
-	}
-}
-
-#[derive(Debug)]
-pub struct FrameInner {
-	scope_stack: Vec<Scope>,
-	parent: Option<Arc<Frame>>,
-}
-
-impl FrameInner {
-	fn root() -> RwLock<Self> {
-		RwLock::new(Self {
-			scope_stack: vec![Scope::new()],
-			parent: None,
-		})
-	}
-
-	fn new(parent: Arc<Frame>) -> RwLock<Self> {
-		RwLock::new(Self {
-			scope_stack: vec![Scope::new()],
-			parent: Some(parent),
-		})
-	}
-
-	fn new_with(
-		parent: Arc<Frame>,
-		init: HashMap<Ident, SymbolInfo>,
-	) -> RwLock<Self> {
-		RwLock::new(Self {
-			scope_stack: vec![Scope::new_with(init)],
-			parent: Some(parent),
-		})
 	}
 }
