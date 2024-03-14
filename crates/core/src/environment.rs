@@ -144,11 +144,29 @@ impl Environment {
 		parameters: Parameters,
 		arguments: Arguments,
 	) {
-		todo!()
+		self.call_stack
+			.push(Arc::new(RwLock::new(Frame {
+				scope_stack: vec![Scope(
+					parameters
+						.0
+						.into_iter()
+						.zip(
+							arguments
+								.0
+								.into_iter()
+								.map(|value| SymbolInfo {
+									mutable: false,
+									value,
+								}),
+						)
+						.collect::<HashMap<_, _>>(),
+				)],
+				parent: Some(capture),
+			})));
 	}
 
 	pub fn ret(&mut self) {
-		todo!()
+		self.call_stack.pop();
 	}
 
 	pub fn push_scope(&mut self) {
