@@ -24,6 +24,42 @@ pub trait Memory {
 	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError>;
 }
 
+// Represents a single scope inside a function
+pub struct Scope(HashMap<Ident, SymbolInfo>);
+
+impl Scope {
+	fn new() -> Self {
+		Self(HashMap::new())
+	}
+
+	fn new_with(init: HashMap<Ident, SymbolInfo>) -> Self {
+		Self(init)
+	}
+}
+
+impl Memory for Scope {
+	fn declare(
+		&mut self,
+		ident: Ident,
+		value: Value,
+		mutable: bool,
+	) -> Result<(), RuntimeError> {
+		todo!()
+	}
+
+	fn assign(
+		&mut self,
+		ident: Ident,
+		value: Value,
+	) -> Result<(), RuntimeError> {
+		todo!()
+	}
+
+	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
+		todo!()
+	}
+}
+
 pub struct Environment {
 	call_stack: Vec<Arc<Frame>>,
 }
@@ -209,17 +245,5 @@ impl FrameInner {
 			scope_stack: vec![Scope::new_with(init)],
 			parent: Some(parent),
 		})
-	}
-}
-
-pub struct Scope(HashMap<Ident, SymbolInfo>);
-
-impl Scope {
-	fn new() -> Self {
-		Self(HashMap::new())
-	}
-
-	fn new_with(init: HashMap<Ident, SymbolInfo>) -> Self {
-		Self(init)
 	}
 }
