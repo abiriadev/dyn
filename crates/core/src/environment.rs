@@ -41,12 +41,12 @@ impl Scope {
 
 	fn occupied(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 	) -> Result<OccupiedEntry<'_, Ident, SymbolInfo>, RuntimeError> {
 		let Entry::Occupied(v) = self.0.entry(ident) else {
 			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
-					ident: ident.clone(),
+					ident: ident.to_owned(),
 				},
 			));
 		};
@@ -58,7 +58,7 @@ impl Scope {
 impl Memory for Scope {
 	fn declare(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
@@ -73,7 +73,7 @@ impl Memory for Scope {
 
 	fn assign(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
 		let Entry::Occupied(mut v) = self.0.entry(ident) else {
@@ -94,7 +94,7 @@ impl Memory for Scope {
 		Ok(())
 	}
 
-	fn load(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
+	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
 		let Entry::Occupied(v) = self.0.entry(ident) else {
 			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
