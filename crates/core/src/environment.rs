@@ -5,7 +5,7 @@ use std::{
 
 use dyn_parser::ast::{Arguments, Ident, Parameters};
 
-use crate::{RuntimeError, SymbolInfo};
+use crate::{RuntimeError, SymbolInfo, Value};
 
 type BindTable = HashMap<Ident, SymbolInfo>;
 type Arw<T> = Arc<RwLock<T>>;
