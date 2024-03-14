@@ -30,9 +30,9 @@
 <template>
 	<div
 		:style="{
-			width + 'px',
-			height + 'px',
+			width: width + 'px',
+			height: height + 'px',
 		}"
-		:ref="editorEl"
+		ref="editorEl"
 	></div>
 </template>
