@@ -267,9 +267,9 @@ impl Interpreter {
 							body: Function { parameters, body },
 							capture,
 						} => {
-							self.mem.call(capture, parameters, j)?;
+							self.mem.call(capture, parameters, j);
 							let v = self.eval(Tree::Expr(*body));
-							self.mem.drop()?;
+							self.mem.ret();
 							v
 						},
 					}
