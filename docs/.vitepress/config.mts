@@ -11,15 +11,15 @@ export default defineConfig({
 			{ text: 'Home', link: '/' },
 			{
 				text: 'Guide',
-				link: '/markdown-examples',
+				link: '/guide/intro',
 			},
 			{
 				text: 'Reference',
-				link: '/markdown-examples',
+				link: '/reference',
 			},
 			{
 				text: 'Examples',
-				link: '/markdown-examples',
+				link: '/examples',
 			},
 			{
 				text: 'Playground',
