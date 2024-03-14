@@ -115,8 +115,8 @@ impl Environment {
 			.rec_lookup(ident)?
 			.get_mut();
 
-		if !e.is_mut {
-			return Err(RuntimeError::AssignmentToImmutable);
+		if !e.mutable {
+			return Err(RuntimeError::AssignmentToImmutableVariable);
 		}
 
 		Ok(())
