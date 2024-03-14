@@ -82,7 +82,7 @@ impl Environment {
 		&mut self,
 		ident: &Ident,
 		value: Value,
-		is_mut: bool,
+		mutable: bool,
 	) -> RuntimeResult<()> {
 		// WARN: unwrap
 		let Entry::Vacant(v) = self
@@ -100,7 +100,7 @@ impl Environment {
 			return Err(RuntimeError::AlreadyDeclared);
 		};
 
-		v.insert(value);
+		v.insert(SymbolInfo { mutable, value });
 
 		Ok(())
 	}
