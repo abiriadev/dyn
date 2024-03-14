@@ -1,8 +1,5 @@
 use std::{
-	collections::{
-		hash_map::{Entry, VacantEntry},
-		HashMap,
-	},
+	collections::{btree_map::OccupiedEntry, hash_map::Entry, HashMap},
 	sync::{Arc, RwLock},
 };
 
@@ -18,6 +15,23 @@ type IndexedStack<T> = Vec<T>;
 
 #[derive(Debug)]
 struct Scope(BindTable);
+
+impl Scope {
+	fn occupied(
+		&mut self,
+		ident: &Ident,
+	) -> RuntimeResult<OccupiedEntry<'_, Ident, SymbolInfo>> {
+		let Entry::Occupied(v) = self.0.entry(ident.to_owned()) else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		Ok(v)
+	}
+}
 
 #[derive(Debug)]
 struct Frame {
@@ -59,11 +73,7 @@ impl Environment {
 			.0
 			.entry(ident.to_owned())
 		else {
-			return Err(RuntimeError::ReferenceError(
-				ReferenceError::UndefinedIdentifier {
-					ident: ident.clone(),
-				},
-			));
+			return Err(RuntimeError::AlreadyDeclared);
 		};
 
 		v.insert(value);
