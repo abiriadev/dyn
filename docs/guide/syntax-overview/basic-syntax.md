@@ -33,6 +33,7 @@ Interestingly, block comments can be nested!
 
 ```dyn
 nil
+> nil
 ```
 
 ## Booleans
@@ -41,24 +42,29 @@ You can represent true value with `true` and false value with `false`.
 
 ```dyn
 true
+> true
 ```
 
 ```dyn
 false
+> false
 ```
 
 You can use `!` to negate a boolean value.
 
 ```dyn
-!true // false
+!true
+> false
 ```
 
 There are also `&&` and `||` operators for boolean logic, representing `and` and `or` respectively.
 
 ```dyn
-true && false // false
+true && false
+> false
 
-false || true // true
+false || true
+> true
 ```
 
 ## Integers
@@ -71,12 +77,14 @@ Currently, Dyn only supports integers. Floating point support will be coming soo
 
 ```dyn
 123
+> 123
 ```
 
 As always, you can add two integers together.
 
 ```dyn
-1 + 2 // 3
+1 + 2
+> 3
 ```
 
 ## String
