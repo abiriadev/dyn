@@ -43,7 +43,7 @@ impl Scope {
 		&mut self,
 		ident: &Ident,
 	) -> Result<OccupiedEntry<'_, Ident, SymbolInfo>, RuntimeError> {
-		let Entry::Occupied(v) = self.0.entry(ident) else {
+		let Entry::Occupied(v) = self.0.entry(ident.to_owned()) else {
 			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
 					ident: ident.to_owned(),
@@ -62,7 +62,7 @@ impl Memory for Scope {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		let Entry::Vacant(v) = self.0.entry(ident) else {
+		let Entry::Vacant(v) = self.0.entry(ident.to_owned()) else {
 			return Err(RuntimeError::AlreadyDeclared);
 		};
 
@@ -76,13 +76,7 @@ impl Memory for Scope {
 		ident: &Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		let Entry::Occupied(mut v) = self.0.entry(ident) else {
-			return Err(RuntimeError::ReferenceError(
-				ReferenceError::UndefinedIdentifier {
-					ident: ident.clone(),
-				},
-			));
-		};
+		let mut v = self.occupied(ident)?;
 
 		let ptr = v.get_mut();
 		if !ptr.mutable {
@@ -95,13 +89,7 @@ impl Memory for Scope {
 	}
 
 	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
-		let Entry::Occupied(v) = self.0.entry(ident) else {
-			return Err(RuntimeError::ReferenceError(
-				ReferenceError::UndefinedIdentifier {
-					ident: ident.clone(),
-				},
-			));
-		};
+		let v = self.occupied(ident)?;
 
 		Ok(v.get().value.clone())
 	}
