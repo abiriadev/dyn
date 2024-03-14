@@ -2,13 +2,23 @@
 
 ## Comments
 
+Dyn has two types of comments: line comment and block comment.
+
+Line comment starts with `//`.
+
 ```dyn
 // this is line comment
 ```
 
+Block comment starts with `/*` and ends with `*/`.
+
 ```dyn
 /* this is block comment */
+```
 
+Interestingly, block comments can be nested!
+
+```dyn
 /*
   outer comment
   /*
