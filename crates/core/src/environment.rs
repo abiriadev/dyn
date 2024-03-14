@@ -24,7 +24,7 @@ pub trait Memory {
 		value: Value,
 	) -> Result<(), RuntimeError>;
 
-	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError>;
+	fn load(&self, ident: &Ident) -> Result<Value, RuntimeError>;
 }
 
 // Represents a single scope inside a function
@@ -152,12 +152,6 @@ impl Frame {
 	fn top_scope(&mut self) -> &mut Scope {
 		// TODO: remove unwraps
 		self.scope_stack().last_mut().unwrap()
-	}
-
-	pub fn read_value(
-		self: Arc<Self>,
-		ident: Ident,
-	) -> Result<Value, RuntimeError> {
 	}
 }
 
