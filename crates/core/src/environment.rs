@@ -7,6 +7,23 @@ use dyn_parser::ast::{Ident, Parameters};
 
 use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
+pub trait Memory {
+	fn declare(
+		&mut self,
+		ident: Ident,
+		value: Value,
+		mutable: bool,
+	) -> Result<(), RuntimeError>;
+
+	fn assign(
+		&mut self,
+		ident: Ident,
+		value: Value,
+	) -> Result<(), RuntimeError>;
+
+	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError>;
+}
+
 pub struct Environment {
 	call_stack: Vec<Arc<Frame>>,
 }
