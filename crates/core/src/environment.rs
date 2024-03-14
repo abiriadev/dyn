@@ -1,5 +1,8 @@
 use std::{
-	collections::{hash_map::Entry, HashMap},
+	collections::{
+		hash_map::{Entry, OccupiedEntry},
+		HashMap,
+	},
 	sync::{Arc, RwLock},
 };
 
@@ -34,6 +37,21 @@ impl Scope {
 
 	fn new_with(init: HashMap<Ident, SymbolInfo>) -> Self {
 		Self(init)
+	}
+
+	fn occupied(
+		&mut self,
+		ident: Ident,
+	) -> Result<OccupiedEntry<'_, Ident, SymbolInfo>, RuntimeError> {
+		let Entry::Occupied(v) = self.0.entry(ident) else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		return Ok(v);
 	}
 }
 
