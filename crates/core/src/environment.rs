@@ -139,10 +139,8 @@ impl Memory for Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		let Entry::Vacant(v) = self
-			.0
-			.write()
-			.unwrap()
+		let mut binding = self.0.write().unwrap();
+		let Entry::Vacant(v) = binding
 			.scope_stack
 			.last_mut()
 			.unwrap()
