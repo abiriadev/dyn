@@ -170,10 +170,22 @@ impl Environment {
 	}
 
 	pub fn push_scope(&mut self) {
-		todo!()
+		self.call_stack
+			.last()
+			.unwrap()
+			.write()
+			.unwrap()
+			.scope_stack
+			.push(Scope(HashMap::new()));
 	}
 
 	pub fn pop_scope(&mut self) {
-		todo!()
+		self.call_stack
+			.last()
+			.unwrap()
+			.write()
+			.unwrap()
+			.scope_stack
+			.pop();
 	}
 }
