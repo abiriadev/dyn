@@ -132,73 +132,6 @@ pub struct Environment {
 	call_stack: Vec<Arc<Frame>>,
 }
 
-impl Environment {
-	pub fn new() -> Self {
-		Self {
-			call_stack: vec![Frame::root()],
-		}
-	}
-
-	pub fn top_frame(&self) -> Arc<Frame> {
-		Arc::clone(
-			self.call_stack
-				.last()
-				.expect("there must be at least one stack frame"),
-		)
-	}
-
-	pub fn call(
-		&mut self,
-		capture: Arc<Frame>,
-		parameters: Parameters,
-		args: ArgumentValues,
-	) -> Result<(), RuntimeError> {
-		let frame = Frame::new(capture);
-
-		for (k, v) in parameters
-			.0
-			.into_iter()
-			.zip(args.0.into_iter())
-		{
-			self.declare(k, v, false)?;
-		}
-
-		self.call_stack.push(frame);
-
-		Ok(())
-	}
-
-	pub fn drop(&mut self) -> Result<(), RuntimeError> {
-		if self.call_stack.pop().is_none() {
-			Err(RuntimeError::AlreadyDeclared)
-		} else {
-			Ok(())
-		}
-	}
-
-	pub fn declare(
-		&mut self,
-		ident: Ident,
-		value: Value,
-		mutable: bool,
-	) -> Result<(), RuntimeError> {
-		self.top_frame()
-			.declare(ident, value, mutable)
-	}
-
-	pub fn assign(
-		&mut self,
-		ident: Ident,
-		value: Value,
-	) -> Result<(), RuntimeError> {
-		self.top_frame().assign(ident, value)
-	}
-
-	pub fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
-		self.top_frame().read_value(ident)
-	}
-}
-
 #[derive(Debug)]
 pub struct Frame(RwLock<FrameInner>);
 
@@ -281,5 +214,72 @@ impl Frame {
 				))?
 				.read_value(ident),
 		}
+	}
+}
+
+impl Environment {
+	pub fn new() -> Self {
+		Self {
+			call_stack: vec![Frame::root()],
+		}
+	}
+
+	pub fn top_frame(&self) -> Arc<Frame> {
+		Arc::clone(
+			self.call_stack
+				.last()
+				.expect("there must be at least one stack frame"),
+		)
+	}
+
+	pub fn call(
+		&mut self,
+		capture: Arc<Frame>,
+		parameters: Parameters,
+		args: ArgumentValues,
+	) -> Result<(), RuntimeError> {
+		let frame = Frame::new(capture);
+
+		for (k, v) in parameters
+			.0
+			.into_iter()
+			.zip(args.0.into_iter())
+		{
+			self.declare(k, v, false)?;
+		}
+
+		self.call_stack.push(frame);
+
+		Ok(())
+	}
+
+	pub fn drop(&mut self) -> Result<(), RuntimeError> {
+		if self.call_stack.pop().is_none() {
+			Err(RuntimeError::AlreadyDeclared)
+		} else {
+			Ok(())
+		}
+	}
+
+	pub fn declare(
+		&mut self,
+		ident: Ident,
+		value: Value,
+		mutable: bool,
+	) -> Result<(), RuntimeError> {
+		self.top_frame()
+			.declare(ident, value, mutable)
+	}
+
+	pub fn assign(
+		&mut self,
+		ident: Ident,
+		value: Value,
+	) -> Result<(), RuntimeError> {
+		self.top_frame().assign(ident, value)
+	}
+
+	pub fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
+		self.top_frame().read_value(ident)
 	}
 }
