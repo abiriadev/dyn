@@ -49,11 +49,11 @@ impl Frame {
 		}
 
 		let Some(parent) = &self.parent else {
-			Err(RuntimeError::ReferenceError(
+			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
 					ident: ident.clone(),
 				},
-			))
+			));
 		};
 
 		parent
