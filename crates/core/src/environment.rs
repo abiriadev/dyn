@@ -261,6 +261,18 @@ impl Environment {
 			Ok(())
 		}
 	}
+
+	pub fn push_scope(&mut self) {
+		self.top_frame().push_scope();
+	}
+
+	pub fn push_scope_with(&mut self, init: HashMap<Ident, SymbolInfo>) {
+		self.top_frame().push_scope_with(init);
+	}
+
+	pub fn pop_scope(&mut self) {
+		self.top_frame().pop_scope();
+	}
 }
 
 impl Memory for Environment {
