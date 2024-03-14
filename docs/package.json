@@ -12,5 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "vitepress": "1.0.0-rc.24"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.47.0"
   }
 }
