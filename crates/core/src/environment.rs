@@ -217,6 +217,29 @@ impl Frame {
 	}
 }
 
+impl Memory for Frame {
+	fn declare(
+		&mut self,
+		ident: &Ident,
+		value: Value,
+		mutable: bool,
+	) -> Result<(), RuntimeError> {
+		todo!()
+	}
+
+	fn assign(
+		&mut self,
+		ident: &Ident,
+		value: Value,
+	) -> Result<(), RuntimeError> {
+		todo!()
+	}
+
+	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
+		todo!()
+	}
+}
+
 impl Environment {
 	pub fn new() -> Self {
 		Self {
