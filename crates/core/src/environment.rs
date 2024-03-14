@@ -13,18 +13,18 @@ use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 pub trait Memory {
 	fn declare(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError>;
 
 	fn assign(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 	) -> Result<(), RuntimeError>;
 
-	fn load(&mut self, ident: Ident) -> Result<Value, RuntimeError>;
+	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError>;
 }
 
 // Represents a single scope inside a function
@@ -51,7 +51,7 @@ impl Scope {
 			));
 		};
 
-		return Ok(v);
+		Ok(v)
 	}
 }
 
