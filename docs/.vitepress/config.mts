@@ -10,6 +10,14 @@ export default defineConfig({
 		nav: [
 			{ text: 'Home', link: '/' },
 			{
+				text: 'Guide',
+				link: '/markdown-examples',
+			},
+			{
+				text: 'Reference',
+				link: '/markdown-examples',
+			},
+			{
 				text: 'Examples',
 				link: '/markdown-examples',
 			},
