@@ -1,7 +1,7 @@
 use std::{
 	collections::HashMap,
 	fmt::{self, Debug, Display, Formatter},
-	sync::Arc,
+	sync::{Arc, RwLock},
 };
 
 use dyn_clone::{clone_trait_object, DynClone};
@@ -25,7 +25,10 @@ clone_trait_object!(BuiltinFunction);
 
 pub enum FunctionValue {
 	Builtin(Box<dyn BuiltinFunction + Send + Sync>),
-	Closure { body: Function, capture: Arc<Frame> },
+	Closure {
+		body: Function,
+		capture: Arc<RwLock<Frame>>,
+	},
 }
 
 impl Debug for FunctionValue {

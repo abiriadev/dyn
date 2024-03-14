@@ -88,7 +88,6 @@ impl Environment {
 		value: Value,
 		mutable: bool,
 	) -> RuntimeResult<()> {
-		// WARN: unwrap
 		let Entry::Vacant(v) = self
 			.call_stack
 			.last()
