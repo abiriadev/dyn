@@ -158,23 +158,6 @@ impl Frame {
 		self: Arc<Self>,
 		ident: Ident,
 	) -> Result<Value, RuntimeError> {
-		let inner = self.0.read().unwrap();
-		match inner
-			.table
-			.get(&ident)
-			.map(|i| i.value.clone())
-		{
-			Some(v) => Ok(v),
-			None => inner
-				.parent
-				.clone()
-				.ok_or(RuntimeError::ReferenceError(
-					ReferenceError::UndefinedIdentifier {
-						ident: ident.clone(),
-					},
-				))?
-				.read_value(ident),
-		}
 	}
 }
 
@@ -222,7 +205,23 @@ impl Memory for Frame {
 	}
 
 	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
-		todo!()
+		let mut inner = self.0.read().unwrap();
+
+		for scope in inner.scope_stack.iter_mut().rev() {
+			if let Ok(v) = scope.occupied(ident) {
+				return Ok(v.get().value);
+			}
+		}
+
+		let Some(ref p) = inner.parent else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		Arc::clone(p).load(ident)
 	}
 }
 
