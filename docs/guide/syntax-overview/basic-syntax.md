@@ -156,12 +156,6 @@ a += 10
 > 12
 ```
 
-## Function
-
-```
-let f = |x, y| -> x + y
-```
-
 ## Block
 
 ```dyn
