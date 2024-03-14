@@ -192,7 +192,7 @@ impl Memory for Frame {
 
 		for scope in inner.scope_stack.iter_mut().rev() {
 			if let Ok(v) = scope.occupied(ident) {
-				return Ok(v.get().value);
+				return Ok(v.get().value.clone());
 			}
 		}
 
