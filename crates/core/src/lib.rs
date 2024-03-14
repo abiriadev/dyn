@@ -363,9 +363,9 @@ impl Interpreter {
 					Ok(v)
 				},
 				ExprKind::Block(b) => {
-					self.mem.push_scope()?;
+					self.mem.push_scope();
 					let v = self.eval(Tree::Code(b))?;
-					self.mem.pop_scope()?;
+					self.mem.pop_scope();
 
 					Ok(v)
 				},
