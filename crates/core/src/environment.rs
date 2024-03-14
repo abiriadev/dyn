@@ -12,15 +12,13 @@ type Arw<T> = Arc<RwLock<T>>;
 type ArwFrame = Arw<Frame>;
 type RuntimeResult<T> = Result<T, RuntimeError>;
 type IndexedStack<T> = Vec<T>;
+type Entry = OccupiedEntry<'_, Ident, SymbolInfo>;
 
 #[derive(Debug)]
 struct Scope(BindTable);
 
 impl Scope {
-	fn occupied(
-		&mut self,
-		ident: &Ident,
-	) -> RuntimeResult<OccupiedEntry<'_, Ident, SymbolInfo>> {
+	fn occupied(&mut self, ident: &Ident) -> RuntimeResult<Entry> {
 		let Entry::Occupied(v) = self.0.entry(ident.to_owned()) else {
 			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
@@ -37,6 +35,29 @@ impl Scope {
 struct Frame {
 	scope_stack: IndexedStack<Scope>,
 	parent: Option<ArwFrame>,
+}
+
+impl Frame {
+	fn rec_lookup(&mut self, ident: &Ident) -> RuntimeResult<Entry> {
+		for scope in self.scope_stack.iter_mut().rev() {
+			if let Ok(v) = scope.occupied(ident) {
+				return Ok(v);
+			}
+		}
+
+		let Some(parent) = &self.parent else {
+			Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			))
+		};
+
+		parent
+			.write()
+			.unwrap()
+			.rec_lookup(ident)
+	}
 }
 
 #[derive(Debug)]
