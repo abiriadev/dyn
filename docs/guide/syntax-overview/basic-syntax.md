@@ -99,9 +99,14 @@ Both quotes are allowed.
 You can insert an expression in `#{}` inside a double-quoted string to make template string.
 
 ```dyn
+let age = 18
 "I am #{age} years old!"
+> "I am 18 years old!"
 
+let a = 3
+let b = 5
 "#{a} times #{b} is #{a * b}"
+> "3 times 5 is 15"
 ```
 
 ## Array
