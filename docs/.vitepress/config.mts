@@ -35,6 +35,19 @@ export default defineConfig({
 						text: 'What is Dyn',
 						link: '/guide/intro',
 					},
+					{
+						text: 'Getting Started',
+						items: [
+							{
+								text: 'Installation',
+								link: '/guide/getting-started/installation',
+							},
+							{
+								text: 'Build from source',
+								link: '/guide/getting-started/build-from-source',
+							},
+						],
+					},
 				],
 			},
 		],
