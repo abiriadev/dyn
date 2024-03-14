@@ -1,5 +1,8 @@
 use std::{
-	collections::{btree_map::OccupiedEntry, hash_map::Entry, HashMap},
+	collections::{
+		hash_map::{Entry, OccupiedEntry},
+		HashMap,
+	},
 	sync::{Arc, RwLock},
 };
 
