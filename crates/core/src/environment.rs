@@ -1,11 +1,14 @@
 use std::{
-	collections::HashMap,
+	collections::{
+		hash_map::{Entry, VacantEntry},
+		HashMap,
+	},
 	sync::{Arc, RwLock},
 };
 
 use dyn_parser::ast::{Arguments, Ident, Parameters};
 
-use crate::{RuntimeError, SymbolInfo, Value};
+use crate::{ReferenceError, RuntimeError, SymbolInfo, Value};
 
 type BindTable = HashMap<Ident, SymbolInfo>;
 type Arw<T> = Arc<RwLock<T>>;
@@ -43,7 +46,29 @@ impl Environment {
 		value: Value,
 		is_mut: bool,
 	) -> RuntimeResult<()> {
-		todo!()
+		// WARN: unwrap
+		let Entry::Vacant(v) = self
+			.call_stack
+			.last()
+			.unwrap()
+			.write()
+			.unwrap()
+			.scope_stack
+			.last()
+			.unwrap()
+			.0
+			.entry(ident.to_owned())
+		else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		v.insert(value);
+
+		Ok(())
 	}
 
 	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
