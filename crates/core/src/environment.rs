@@ -56,45 +56,14 @@ impl Scope {
 	}
 }
 
-impl Memory for Scope {
-	fn declare(
-		&mut self,
-		ident: &Ident,
-		value: Value,
-		mutable: bool,
-	) -> Result<(), RuntimeError> {
-		let Entry::Vacant(v) = self.0.entry(ident.to_owned()) else {
-			return Err(RuntimeError::AlreadyDeclared);
-		};
+// fn declare(
+// 	&mut self,
+// 	ident: &Ident,
+// 	value: Value,
+// 	mutable: bool,
+// ) -> Result<(), RuntimeError> {
 
-		v.insert(SymbolInfo { mutable, value });
-
-		Ok(())
-	}
-
-	fn assign(
-		&mut self,
-		ident: &Ident,
-		value: Value,
-	) -> Result<(), RuntimeError> {
-		let mut v = self.occupied(ident)?;
-
-		let ptr = v.get_mut();
-		if !ptr.mutable {
-			return Err(RuntimeError::AssignmentToImmutableVariable);
-		}
-
-		ptr.value = value;
-
-		Ok(())
-	}
-
-	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
-		let v = self.occupied(ident)?;
-
-		Ok(v.get().value.clone())
-	}
-}
+// Ok(())
 
 #[derive(Debug)]
 pub struct FrameInner {
@@ -128,10 +97,6 @@ impl FrameInner {
 	}
 }
 
-pub struct Environment {
-	call_stack: Vec<Arc<Frame>>,
-}
-
 #[derive(Debug)]
 pub struct Frame(RwLock<FrameInner>);
 
@@ -143,16 +108,6 @@ impl Frame {
 	pub fn new(parent: Arc<Self>) -> Arc<Self> {
 		Arc::new(Self(FrameInner::new(parent)))
 	}
-
-	fn scope_stack(&mut self) -> &mut Vec<Scope> {
-		// TODO: remove unwraps
-		&mut self.0.write().unwrap().scope_stack
-	}
-
-	fn top_scope(&mut self) -> &mut Scope {
-		// TODO: remove unwraps
-		self.scope_stack().last_mut().unwrap()
-	}
 }
 
 impl Memory for Frame {
@@ -162,8 +117,22 @@ impl Memory for Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		self.top_scope()
-			.declare(ident, value, mutable)
+		let Entry::Vacant(v) = self
+			.0
+			.write()
+			.unwrap()
+			.scope_stack
+			.last_mut()
+			.unwrap()
+			.0
+			.entry(ident.to_owned())
+		else {
+			return Err(RuntimeError::AlreadyDeclared);
+		};
+
+		v.insert(SymbolInfo { mutable, value });
+
+		Ok(())
 	}
 
 	fn assign(
@@ -198,7 +167,7 @@ impl Memory for Frame {
 		Arc::clone(p).assign(ident, value)
 	}
 
-	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
+	fn load(&self, ident: &Ident) -> Result<Value, RuntimeError> {
 		let mut inner = self.0.read().unwrap();
 
 		for scope in inner.scope_stack.iter_mut().rev() {
@@ -217,6 +186,10 @@ impl Memory for Frame {
 
 		Arc::clone(p).load(ident)
 	}
+}
+
+pub struct Environment {
+	call_stack: Vec<Arc<Frame>>,
 }
 
 impl Environment {
