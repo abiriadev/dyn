@@ -144,63 +144,14 @@ impl Frame {
 		Arc::new(Self(FrameInner::new(parent)))
 	}
 
-	pub fn top_scope(&mut self) -> &mut Scope {
+	fn scope_stack(&mut self) -> &mut Vec<Scope> {
 		// TODO: remove unwraps
-		self.0
-			.write()
-			.unwrap()
-			.scope_stack
-			.last_mut()
-			.unwrap()
+		&mut self.0.write().unwrap().scope_stack
 	}
 
-	pub fn declare(
-		self: Arc<Self>,
-		ident: Ident,
-		value: Value,
-		mutable: bool,
-	) -> Result<(), RuntimeError> {
-		let mut inner = self.0.write().unwrap();
-		let Entry::Vacant(v) = inner.table.entry(ident) else {
-			return Err(RuntimeError::AlreadyDeclared);
-		};
-
-		v.insert(SymbolInfo { mutable, value });
-
-		Ok(())
-	}
-
-	pub fn assign(
-		self: Arc<Self>,
-		ident: Ident,
-		value: Value,
-	) -> Result<(), RuntimeError> {
-		let mut inner = self.0.write().unwrap();
-
-		match inner.table.entry(ident.clone()) {
-			Entry::Occupied(mut o) => {
-				let ptr = o.get_mut();
-
-				if !ptr.mutable {
-					return Err(RuntimeError::AssignmentToImmutableVariable);
-				}
-
-				ptr.value = value;
-
-				Ok(())
-			},
-			Entry::Vacant(_) => {
-				let Some(ref p) = inner.parent else {
-					return Err(RuntimeError::ReferenceError(
-						ReferenceError::UndefinedIdentifier {
-							ident: ident.clone(),
-						},
-					));
-				};
-
-				Arc::clone(p).assign(ident, value)
-			},
-		}
+	fn top_scope(&mut self) -> &mut Scope {
+		// TODO: remove unwraps
+		self.scope_stack().last_mut().unwrap()
 	}
 
 	pub fn read_value(
@@ -243,7 +194,31 @@ impl Memory for Frame {
 		ident: &Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		todo!()
+		let mut inner = self.0.write().unwrap();
+
+		for scope in inner.scope_stack.iter_mut().rev() {
+			if let Ok(mut v) = scope.occupied(ident) {
+				let ptr = v.get_mut();
+
+				if !ptr.mutable {
+					return Err(RuntimeError::AssignmentToImmutableVariable);
+				}
+
+				ptr.value = value;
+
+				return Ok(());
+			}
+		}
+
+		let Some(ref p) = inner.parent else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		Arc::clone(p).assign(ident, value)
 	}
 
 	fn load(&mut self, ident: &Ident) -> Result<Value, RuntimeError> {
