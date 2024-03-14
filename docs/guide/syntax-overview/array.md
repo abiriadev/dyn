@@ -1,5 +1,7 @@
 ## Array
 
+In Dyn, arrays are ordered collections of items.
+
 ```dyn
 []
 [1, 2, 3]
@@ -22,20 +24,25 @@ You can omit `,` if the items are separated by newline.
   item2,
 ]
 
-// alternative form:
+// terse form:
 [
   item1
   item2
 ]
 ```
 
-#### Index
+### Indexing
 
-You can index array with `[index]`.
+You can index array with `array[index]`.
 
 ```dyn
-let arr = [10, 20, 30]
+let arr = ["first", "second", "third"]
 
-let first = arr[0]
-let second = arr[1]
+arr[0]
+> "first"
+
+arr[1]
+> "second"
 ```
+
+Remember that array index starts at `0`.
