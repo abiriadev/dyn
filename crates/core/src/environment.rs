@@ -100,6 +100,13 @@ impl Frame {
 		Arc::new(Self(FrameInner::new(parent)))
 	}
 
+	pub fn new_with(
+		parent: Arc<Self>,
+		init: HashMap<Ident, SymbolInfo>,
+	) -> Arc<Self> {
+		Arc::new(Self(FrameInner::new_with(parent, init)))
+	}
+
 	pub fn push_scope(&mut self) {
 		self.0
 			.write()
@@ -228,17 +235,21 @@ impl Environment {
 		parameters: Parameters,
 		args: ArgumentValues,
 	) -> Result<(), RuntimeError> {
-		let frame = Frame::new(capture);
-
-		for (k, v) in parameters
-			.0
-			.into_iter()
-			.zip(args.0.into_iter())
-		{
-			self.declare(k, v, false)?;
-		}
-
-		self.call_stack.push(frame);
+		self.call_stack.push(Frame::new_with(
+			capture,
+			parameters
+				.0
+				.into_iter()
+				.zip(
+					args.0
+						.into_iter()
+						.map(|value| SymbolInfo {
+							mutable: true,
+							value,
+						}),
+				)
+				.collect::<HashMap<_, _>>(),
+		));
 
 		Ok(())
 	}
