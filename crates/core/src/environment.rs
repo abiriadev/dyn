@@ -44,7 +44,13 @@ impl Memory for Scope {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		todo!()
+		let Entry::Vacant(v) = self.0.entry(ident) else {
+			return Err(RuntimeError::AlreadyDeclared);
+		};
+
+		v.insert(SymbolInfo { mutable, value });
+
+		Ok(())
 	}
 
 	fn assign(
