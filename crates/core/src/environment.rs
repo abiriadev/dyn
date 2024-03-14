@@ -58,7 +58,22 @@ impl Memory for Scope {
 		ident: Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
-		todo!()
+		let Entry::Occupied(mut v) = self.0.entry(ident) else {
+			return Err(RuntimeError::ReferenceError(
+				ReferenceError::UndefinedIdentifier {
+					ident: ident.clone(),
+				},
+			));
+		};
+
+		let ptr = v.get_mut();
+		if !ptr.mutable {
+			return Err(RuntimeError::AssignmentToImmutableVariable);
+		}
+
+		ptr.value = value;
+
+		Ok(())
 	}
 
 	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
