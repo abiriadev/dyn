@@ -21,7 +21,7 @@ struct Frame {
 }
 
 pub struct Environment {
-	call_stack: ArwFrame,
+	call_stack: IndexedStack<ArwFrame>,
 }
 
 impl Environment {
