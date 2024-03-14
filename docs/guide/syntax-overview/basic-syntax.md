@@ -183,8 +183,20 @@ let c = {
 
 ### If
 
+If expression is used to branch the program based on a condition.
+
 ```dyn
 if x > 10 {
-  print("x is greater than 10!")
+	print("x is greater than 10!")
+}
+```
+
+### If-else
+
+```dyn
+if x > 10 {
+	print("x is greater than 10!")
+} else {
+	print("x is less than or equal to 10!")
 }
 ```
