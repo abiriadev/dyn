@@ -21,7 +21,7 @@ pub trait Memory {
 		value: Value,
 	) -> Result<(), RuntimeError>;
 
-	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError>;
+	fn load(&mut self, ident: Ident) -> Result<Value, RuntimeError>;
 }
 
 // Represents a single scope inside a function
@@ -76,7 +76,7 @@ impl Memory for Scope {
 		Ok(())
 	}
 
-	fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
+	fn load(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
 		let Entry::Occupied(v) = self.0.entry(ident) else {
 			return Err(RuntimeError::ReferenceError(
 				ReferenceError::UndefinedIdentifier {
