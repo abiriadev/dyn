@@ -131,13 +131,16 @@ You can declare variables with `let` keyword.
 
 ```dyn
 let a = 1
+> 1
 ```
 
 `let` is immutable by default.
 
 ```dyn
 let a = 1
+
 a = 2 // error
+
 a += 10 // error
 ```
 
@@ -145,8 +148,12 @@ You can make it mutable by explicitly add `!` mark.
 
 ```dyn
 let! a = 1
-a = 2 // now a = 2
-a += 10 // now a = 12
+
+a = 2
+> 2
+
+a += 10
+> 12
 ```
 
 ## Function
