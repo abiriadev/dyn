@@ -13,13 +13,16 @@ type ArwFrame = Arw<Frame>;
 type RuntimeResult<T> = Result<T, RuntimeError>;
 type IndexedStack<T> = Vec<T>;
 
+#[derive(Debug)]
 struct Scope(BindTable);
 
+#[derive(Debug)]
 struct Frame {
 	scope_stack: IndexedStack<Scope>,
 	parent: Option<ArwFrame>,
 }
 
+#[derive(Debug)]
 pub struct Environment {
 	call_stack: IndexedStack<ArwFrame>,
 }
