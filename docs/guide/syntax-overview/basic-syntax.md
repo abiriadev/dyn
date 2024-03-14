@@ -27,17 +27,17 @@ Interestingly, block comments can be nested!
 */
 ```
 
-## Literals
+## Nil
 
-### Nil
-
-`nil` is like `null` or `None` in other languages, representing an empty value.
+`nil` means nothing. `nil` is like `null` or `None` in other languages, representing an empty value.
 
 ```dyn
 nil
 ```
 
-### Booleans
+## Booleans
+
+You can represent true value with `true` and false value with `false`.
 
 ```dyn
 true
@@ -47,13 +47,39 @@ true
 false
 ```
 
-### Integer Literal
+You can use `!` to negate a boolean value.
 
 ```dyn
-1
+!true // false
 ```
 
-### String Literal
+There are also `&&` and `||` operators for boolean logic, representing `and` and `or` respectively.
+
+```dyn
+true && false // false
+
+false || true // true
+```
+
+## Integers
+
+::: info
+
+Currently, Dyn only supports integers. Floating point support will be coming soon.
+
+:::
+
+```dyn
+123
+```
+
+As always, you can add two integers together.
+
+```dyn
+1 + 2 // 3
+```
+
+## String
 
 Both quotes are allowed.
 
@@ -70,7 +96,7 @@ You can insert an expression in `#{}` inside a double-quoted string to make temp
 "#{a} times #{b} is #{a * b}"
 ```
 
-### Array Literal
+## Array
 
 ```dyn
 []
