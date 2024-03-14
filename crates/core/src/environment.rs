@@ -56,15 +56,6 @@ impl Scope {
 	}
 }
 
-// fn declare(
-// 	&mut self,
-// 	ident: &Ident,
-// 	value: Value,
-// 	mutable: bool,
-// ) -> Result<(), RuntimeError> {
-
-// Ok(())
-
 #[derive(Debug)]
 pub struct FrameInner {
 	scope_stack: Vec<Scope>,
@@ -107,6 +98,22 @@ impl Frame {
 
 	pub fn new(parent: Arc<Self>) -> Arc<Self> {
 		Arc::new(Self(FrameInner::new(parent)))
+	}
+
+	pub fn push_scope(&mut self) {
+		self.0
+			.write()
+			.unwrap()
+			.scope_stack
+			.push(Scope::new())
+	}
+
+	pub fn push_scope_with(&mut self, init: HashMap<Ident, SymbolInfo>) {
+		self.0
+			.write()
+			.unwrap()
+			.scope_stack
+			.push(Scope::new_with(init))
 	}
 }
 
