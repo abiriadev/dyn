@@ -86,7 +86,7 @@ impl Environment {
 			.call_stack
 			.last()
 			.unwrap()
-			.write()
+			.read()
 			.unwrap()
 			.scope_stack
 			.last()
@@ -103,11 +103,32 @@ impl Environment {
 	}
 
 	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
-		todo!()
+		let e = self
+			.call_stack
+			.last()
+			.unwrap()
+			.write()
+			.unwrap()
+			.rec_lookup(ident)?
+			.get_mut();
+
+		if !e.is_mut {
+			return Err(RuntimeError::AssignmentToImmutable);
+		}
+
+		Ok(())
 	}
 
 	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
-		todo!()
+		Ok(self
+			.call_stack
+			.last()
+			.unwrap()
+			.read()
+			.unwrap()
+			.rec_lookup(ident)?
+			.get()
+			.value)
 	}
 
 	pub fn call(
