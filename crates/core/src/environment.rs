@@ -144,6 +144,16 @@ impl Frame {
 		Arc::new(Self(FrameInner::new(parent)))
 	}
 
+	pub fn top_scope(&mut self) -> &mut Scope {
+		// TODO: remove unwraps
+		self.0
+			.write()
+			.unwrap()
+			.scope_stack
+			.last_mut()
+			.unwrap()
+	}
+
 	pub fn declare(
 		self: Arc<Self>,
 		ident: Ident,
@@ -224,7 +234,8 @@ impl Memory for Frame {
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
-		todo!()
+		self.top_scope()
+			.declare(ident, value, mutable)
 	}
 
 	fn assign(
