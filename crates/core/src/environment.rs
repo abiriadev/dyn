@@ -250,10 +250,12 @@ impl Environment {
 			Ok(())
 		}
 	}
+}
 
-	pub fn declare(
+impl Memory for Environment {
+	fn declare(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 		mutable: bool,
 	) -> Result<(), RuntimeError> {
@@ -261,15 +263,15 @@ impl Environment {
 			.declare(ident, value, mutable)
 	}
 
-	pub fn assign(
+	fn assign(
 		&mut self,
-		ident: Ident,
+		ident: &Ident,
 		value: Value,
 	) -> Result<(), RuntimeError> {
 		self.top_frame().assign(ident, value)
 	}
 
-	pub fn read_value(&mut self, ident: Ident) -> Result<Value, RuntimeError> {
-		self.top_frame().read_value(ident)
+	fn load(&self, ident: &Ident) -> Result<Value, RuntimeError> {
+		self.top_frame().load(ident)
 	}
 }
