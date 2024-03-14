@@ -29,7 +29,12 @@ pub struct Environment {
 
 impl Environment {
 	pub fn new() -> Self {
-		todo!()
+		Self {
+			call_stack: vec![Arc::new(RwLock::new(Frame {
+				scope_stack: vec![Scope(HashMap::new())],
+				parent: None,
+			}))],
+		}
 	}
 
 	pub fn declare(
