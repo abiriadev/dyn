@@ -146,14 +146,22 @@ impl Environment {
 	}
 
 	pub fn ret(&mut self) {
-		todo!()
+		self.call_stack.pop();
 	}
 
 	pub fn push_scope(&mut self) {
-		todo!()
+		self.top_frame()
+			.write()
+			.unwrap()
+			.scope_stack
+			.push(Scope(HashMap::new()));
 	}
 
 	pub fn pop_scope(&mut self) {
-		todo!()
+		self.top_frame()
+			.write()
+			.unwrap()
+			.scope_stack
+			.pop();
 	}
 }
