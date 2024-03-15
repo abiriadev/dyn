@@ -16,8 +16,6 @@ type IndexedStack<T> = Vec<T>;
 #[derive(Debug)]
 struct Scope(BindTable);
 
-impl Scope {}
-
 #[derive(Debug)]
 pub struct Frame {
 	scope_stack: IndexedStack<Scope>,
@@ -112,7 +110,7 @@ impl Environment {
 		let top = self.top_frame();
 		let mut top = top.write().unwrap();
 
-		Ok(top.rec_lookup(ident, |e| Ok(e.value.clone()))?)
+		top.rec_lookup(ident, |e| Ok(e.value.clone()))
 	}
 
 	pub fn call(
