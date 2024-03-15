@@ -88,12 +88,12 @@ impl Environment {
 		value: Value,
 		mutable: bool,
 	) -> RuntimeResult<()> {
-		let Entry::Vacant(v) = self
-			.top_frame()
-			.read()
-			.unwrap()
+		// WARN: unwrap
+		let top = self.top_frame();
+		let mut top = top.write().unwrap();
+		let Entry::Vacant(v) = top
 			.scope_stack
-			.last()
+			.last_mut()
 			.unwrap()
 			.0
 			.entry(ident.to_owned())
@@ -107,23 +107,25 @@ impl Environment {
 	}
 
 	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
-		let e = self
-			.top_frame()
-			.write()
-			.unwrap()
-			.rec_lookup(ident)?
-			.get_mut();
+		let top = self.top_frame();
+		let mut top = top.write().unwrap();
+		let mut e = top.rec_lookup(ident)?;
+		let e = e.get_mut();
 
 		if !e.mutable {
 			return Err(RuntimeError::AssignmentToImmutableVariable);
 		}
+
+		e.value = value;
 
 		Ok(())
 	}
 
 	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
 		Ok(self
-			.top_frame()
+			.call_stack
+			.last()
+			.unwrap()
 			.read()
 			.unwrap()
 			.rec_lookup(ident)?
@@ -159,22 +161,14 @@ impl Environment {
 	}
 
 	pub fn ret(&mut self) {
-		self.call_stack.pop();
+		todo!()
 	}
 
 	pub fn push_scope(&mut self) {
-		self.top_frame()
-			.write()
-			.unwrap()
-			.scope_stack
-			.push(Scope(HashMap::new()));
+		todo!()
 	}
 
 	pub fn pop_scope(&mut self) {
-		self.top_frame()
-			.write()
-			.unwrap()
-			.scope_stack
-			.pop();
+		todo!()
 	}
 }
