@@ -7,12 +7,10 @@ use dyn_parser::ast::{Ident, Parameters};
 
 use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
-type BindTable = HashMap<Ident, SymbolInfo>;
-type RuntimeResult<T> = Result<T, RuntimeError>;
 type IndexedStack<T> = Vec<T>;
 
 #[derive(Debug)]
-struct Scope(BindTable);
+struct Scope(HashMap<Ident, SymbolInfo>);
 
 #[derive(Debug)]
 pub struct Frame {
@@ -21,9 +19,13 @@ pub struct Frame {
 }
 
 impl Frame {
-	fn rec_lookup<F, T>(&mut self, ident: &Ident, cb: F) -> RuntimeResult<T>
+	fn rec_lookup<F, T>(
+		&mut self,
+		ident: &Ident,
+		cb: F,
+	) -> Result<T, RuntimeError>
 	where
-		F: Fn(&mut SymbolInfo) -> RuntimeResult<T>,
+		F: Fn(&mut SymbolInfo) -> Result<T, RuntimeError>,
 	{
 		for scope in self.scope_stack.iter_mut().rev() {
 			if let Entry::Occupied(mut v) = scope.0.entry(ident.to_owned()) {
@@ -70,7 +72,7 @@ impl Environment {
 		ident: &Ident,
 		value: Value,
 		mutable: bool,
-	) -> RuntimeResult<()> {
+	) -> Result<(), RuntimeError> {
 		// WARN: unwrap
 		let top = self.top_frame();
 		let mut top = top.write().unwrap();
@@ -89,7 +91,11 @@ impl Environment {
 		Ok(())
 	}
 
-	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
+	pub fn assign(
+		&mut self,
+		ident: &Ident,
+		value: Value,
+	) -> Result<(), RuntimeError> {
 		let top = self.top_frame();
 		let mut top = top.write().unwrap();
 		top.rec_lookup(ident, move |e| {
@@ -105,7 +111,7 @@ impl Environment {
 		Ok(())
 	}
 
-	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
+	pub fn load(&self, ident: &Ident) -> Result<Value, RuntimeError> {
 		let top = self.top_frame();
 		let mut top = top.write().unwrap();
 
