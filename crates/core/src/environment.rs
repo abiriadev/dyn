@@ -1,8 +1,5 @@
 use std::{
-	collections::{
-		hash_map::{Entry, OccupiedEntry},
-		HashMap,
-	},
+	collections::{hash_map::Entry, HashMap},
 	sync::{Arc, RwLock},
 };
 
@@ -15,24 +12,11 @@ type Arw<T> = Arc<RwLock<T>>;
 type ArwFrame = Arw<Frame>;
 type RuntimeResult<T> = Result<T, RuntimeError>;
 type IndexedStack<T> = Vec<T>;
-type OEntry<'a> = OccupiedEntry<'a, Ident, SymbolInfo>;
 
 #[derive(Debug)]
 struct Scope(BindTable);
 
-impl Scope {
-	fn occupied(&mut self, ident: &Ident) -> RuntimeResult<OEntry<'_>> {
-		let Entry::Occupied(v) = self.0.entry(ident.to_owned()) else {
-			return Err(RuntimeError::ReferenceError(
-				ReferenceError::UndefinedIdentifier {
-					ident: ident.clone(),
-				},
-			));
-		};
-
-		Ok(v)
-	}
-}
+impl Scope {}
 
 #[derive(Debug)]
 pub struct Frame {
@@ -41,11 +25,14 @@ pub struct Frame {
 }
 
 impl Frame {
-	fn rec_lookup(&mut self, ident: &Ident) -> RuntimeResult<OEntry<'_>> {
+	fn rec_lookup<F, T>(&mut self, ident: &Ident, cb: F) -> RuntimeResult<T>
+	where
+		F: Fn(&mut SymbolInfo) -> RuntimeResult<T>,
+	{
 		for scope in self.scope_stack.iter_mut().rev() {
-			if let Ok(v) = scope.occupied(ident) {
-				return Ok(v);
-			}
+			if let Entry::Occupied(mut v) = scope.0.entry(ident.to_owned()) {
+				return cb(v.get_mut());
+			};
 		}
 
 		let Some(parent) = &self.parent else {
@@ -56,10 +43,9 @@ impl Frame {
 			));
 		};
 
-		parent
-			.write()
-			.unwrap()
-			.rec_lookup(ident)
+		let parent = parent.clone();
+		let mut parent = parent.write().unwrap();
+		parent.rec_lookup(ident, cb)
 	}
 }
 
@@ -109,28 +95,24 @@ impl Environment {
 	pub fn assign(&mut self, ident: &Ident, value: Value) -> RuntimeResult<()> {
 		let top = self.top_frame();
 		let mut top = top.write().unwrap();
-		let mut e = top.rec_lookup(ident)?;
-		let e = e.get_mut();
+		top.rec_lookup(ident, move |e| {
+			if !e.mutable {
+				return Err(RuntimeError::AssignmentToImmutableVariable);
+			}
 
-		if !e.mutable {
-			return Err(RuntimeError::AssignmentToImmutableVariable);
-		}
+			e.value = value.clone();
 
-		e.value = value;
+			Ok(())
+		})?;
 
 		Ok(())
 	}
 
 	pub fn load(&self, ident: &Ident) -> RuntimeResult<Value> {
-		Ok(self
-			.call_stack
-			.last()
-			.unwrap()
-			.read()
-			.unwrap()
-			.rec_lookup(ident)?
-			.get()
-			.value)
+		let top = self.top_frame();
+		let mut top = top.write().unwrap();
+
+		Ok(top.rec_lookup(ident, |e| Ok(e.value.clone()))?)
 	}
 
 	pub fn call(
