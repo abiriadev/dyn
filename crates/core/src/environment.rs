@@ -8,8 +8,6 @@ use dyn_parser::ast::{Ident, Parameters};
 use crate::{ArgumentValues, ReferenceError, RuntimeError, SymbolInfo, Value};
 
 type BindTable = HashMap<Ident, SymbolInfo>;
-type Arw<T> = Arc<RwLock<T>>;
-type ArwFrame = Arw<Frame>;
 type RuntimeResult<T> = Result<T, RuntimeError>;
 type IndexedStack<T> = Vec<T>;
 
@@ -19,7 +17,7 @@ struct Scope(BindTable);
 #[derive(Debug)]
 pub struct Frame {
 	scope_stack: IndexedStack<Scope>,
-	parent: Option<ArwFrame>,
+	parent: Option<Arc<RwLock<Frame>>>,
 }
 
 impl Frame {
@@ -49,7 +47,7 @@ impl Frame {
 
 #[derive(Debug)]
 pub struct Environment {
-	call_stack: IndexedStack<ArwFrame>,
+	call_stack: IndexedStack<Arc<RwLock<Frame>>>,
 }
 
 impl Environment {
@@ -62,7 +60,8 @@ impl Environment {
 		}
 	}
 
-	pub fn top_frame(&self) -> ArwFrame {
+	pub fn top_frame(&self) -> Arc<RwLock<Frame>> {
+		// WARN: unwrap
 		self.call_stack.last().unwrap().clone()
 	}
 
@@ -115,7 +114,7 @@ impl Environment {
 
 	pub fn call(
 		&mut self,
-		capture: ArwFrame,
+		capture: Arc<RwLock<Frame>>,
 		parameters: Parameters,
 		arguments: ArgumentValues,
 	) {
