@@ -1,0 +1,15 @@
+let a = 123
+
+{
+	let a = 456
+
+	print(a)
+
+	let b = "abc"
+
+	print(b)
+}
+
+print(a)
+
+// print(b)
