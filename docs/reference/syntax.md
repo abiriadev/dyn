@@ -43,6 +43,23 @@ $$
 \end{array}
 $$
 
+### Number
+
+There is no distinction between unsigned and signed integers.
+
+$$
+\begin{array}{lcl}
+\texttt{INTEGER} & ::= & \texttt{DEC\_INTEGER} \\
+& \mid & \texttt{BIN\_INTEGER} \\
+& \mid & \texttt{OCT\_INTEGER} \\
+& \mid & \texttt{HEX\_INTEGER} \\
+\texttt{DEC\_INTEGER} & ::= & (\text{0} \mid \ldots \mid \text{9})^+ \\
+\texttt{BIN\_INTEGER} & ::= & \text{0b} ~~ (\text{0} \mid \ldots \mid \text{1})^+ \\
+\texttt{OCT\_INTEGER} & ::= & \text{0o} ~~ (\text{0} \mid \ldots \mid \text{7})^+ \\
+\texttt{HEX\_INTEGER} & ::= & \text{0x} ~~ (\text{0} \mid \ldots \mid \text{9} \mid \text{a} \mid \ldots \mid \text{f} \mid \text{A} \ldots \mid \text{F})^+ \\
+\end{array}
+$$
+
 ## Syntectic Structure
 
 ### Literals
