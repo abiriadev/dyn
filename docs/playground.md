@@ -4,7 +4,10 @@ sidebar: false
 ---
 
 <script setup>
-	import Editor from './components/Editor.vue'
+	import { defineAsyncComponent } from 'vue';
+	import { inBrowser } from 'vitepress';
+
+	const MonacoEditor = inBrowser ? defineAsyncComponent(() => import('./components/Editor.vue')) : () => null;
 </script>
 
 <Editor width="600" height="800" />

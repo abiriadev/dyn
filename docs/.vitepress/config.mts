@@ -116,4 +116,9 @@ export default defineConfig({
 		],
 		math: true,
 	},
+	vite: {
+		ssr: {
+			noExternal: ['monaco-editor'],
+		},
+	},
 })
