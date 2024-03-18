@@ -8,16 +8,17 @@
 4. Every non-terminal syntactic symbol names follow $PascaleCase$ naming rule.
 5. Non-terminal lexemes are written in $\texttt{typewritter}$ font.
 6. Every non-terminal lexeme names follow $\texttt{SCREAMING\_SNAKE\_CASE}$ naming rule.
-7. $\epsilon$ denotes the empty string.
-8. $A ~~ B$ means $A$ followed by $B$.
-9. $A \mid B$ means either $A$ or $B$.
-10. $A^n$ is a sequence of $n$ iterations of $A$.
-11. $A^\ast$ is a sequence of zero or more iterations of $A$, which is equivalent to $P ::= \epsilon \mid A ~~ P$.
-12. $A^+$ is a sequence of one or more iterations of $A$, which is equivalent to $AA^\ast$.
-13. $A^?$ is an zero or one occurrence of $A$, which is equivalent to $\epsilon \mid A$.
-14. ${\sim}A$ denotes any $Char$ except $A$. ($Char$ is defined [here](#characters))
-15. $\langle A,\, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
-16. Production rules are written in the form of $A ::= B$.
+7. $\texttt{EOF}$ is a special lexeme denoting the end of input.
+8. $\epsilon$ denotes the empty string.
+9. $A ~~ B$ means $A$ followed by $B$.
+10. $A \mid B$ means either $A$ or $B$.
+11. $A^n$ is a sequence of $n$ iterations of $A$.
+12. $A^\ast$ is a sequence of zero or more iterations of $A$, which is equivalent to $P ::= \epsilon \mid A ~~ P$.
+13. $A^+$ is a sequence of one or more iterations of $A$, which is equivalent to $AA^\ast$.
+14. $A^?$ is an zero or one occurrence of $A$, which is equivalent to $\epsilon \mid A$.
+15. ${\sim}A$ denotes any $Char$ except $A$. ($Char$ is defined [here](#characters))
+16. $\langle A,\, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
+17. Production rules are written in the form of $A ::= B$.
 
 ## Lexical Structure
 
@@ -32,6 +33,12 @@ Char & ::= & \text{U+0000} \mid \ldots \mid \text{U+D7FF} \mid \text{U+E000} \mi
 $$
 
 ### Comments
+
+$$
+\begin{array}{}
+\texttt{LINE\_COMMENT} & ::= & \text{//} ~~ {\sim}(\text{U+000A} \mid \texttt{EOF})^\ast \\
+\end{array}
+$$
 
 ## Syntectic Structure
 
