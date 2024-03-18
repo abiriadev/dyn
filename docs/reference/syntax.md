@@ -85,3 +85,9 @@ ArrayLiteral & ::= & \text{[} ~~ Punctuated \langle Expr \rangle ~~ \text{]} \\
 $$
 
 #### RecordLiteral
+
+$$
+\begin{array}{lcl}
+ArrayLiteral & ::= & \text{'('} ~~ Punctuated \langle Ident ~~ \text{':'} ~~ Expr \rangle ~~ \text{')'} \\
+\end{array}
+$$
