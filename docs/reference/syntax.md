@@ -23,10 +23,23 @@ Note that Dyn's lexical structure has context-free grammar.
 
 $$
 \begin{array}{}
-char & ::= & \text{U+0000} \mid \ldots \mid \text{U+D7FF} \mid \text{U+E000} \mid \ldots \mid \text{U+10FFFF} \\
+Char & ::= & \text{U+0000} \mid \ldots \mid \text{U+D7FF} \mid \text{U+E000} \mid \ldots \mid \text{U+10FFFF} \\
 \end{array}
 $$
 
 ### Comments
 
 ## Syntectic Structure
+
+### Literals
+
+$$
+\begin{array}{lcl}
+Literals & ::= & NilLiteral \\
+& \mid & BooleanLiteral \\
+& \mid & NumberLiteral \\
+& \mid & StringLiteral \\
+& \mid & ArrayLiteral \\
+& \mid & RecordLiteral \\
+\end{array}
+$$
