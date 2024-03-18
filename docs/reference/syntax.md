@@ -89,7 +89,7 @@ $$
 
 $$
 \begin{array}{lcl}
-ArrayLiteral & ::= & \text{'('} ~~ Punctuated \langle Ident ~~ \text{':'} ~~ Expr \rangle ~~ \text{')'} \\
+RecordLiteral ::= & \text{'('} ~~ Punctuated \langle Ident ~~ \text{':'} ~~ Expr \rangle ~~ \text{')'} \\
 \end{array}
 $$
 
