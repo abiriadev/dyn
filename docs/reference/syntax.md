@@ -57,6 +57,9 @@ $$
 \texttt{BIN\_INTEGER} & ::= & \text{0b} ~~ (\text{0} \mid \ldots \mid \text{1})^+ \\
 \texttt{OCT\_INTEGER} & ::= & \text{0o} ~~ (\text{0} \mid \ldots \mid \text{7})^+ \\
 \texttt{HEX\_INTEGER} & ::= & \text{0x} ~~ (\text{0} \mid \ldots \mid \text{9} \mid \text{a} \mid \ldots \mid \text{f} \mid \text{A} \ldots \mid \text{F})^+ \\
+\texttt{FLOAT} & ::= & \texttt{DEC\_INTEGER} ~~ \text{'.'} ~~ {\sim}[\text{'.'}] \\
+& \mid & \texttt{DEC\_INTEGER} ~~ \text{'.'} ~~ \texttt{DEC\_INTEGER} \\
+& \mid & \text{'.'} ~~ \texttt{DEC\_INTEGER} \\
 \end{array}
 $$
 
