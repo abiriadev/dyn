@@ -16,7 +16,7 @@
 12. $A^+$ is a sequence of one or more iterations of $A$, which is equivalent to $AA^\ast$.
 13. $A^?$ is an zero or one occurrence of $A$, which is equivalent to $\epsilon \mid A$.
 14. ${\sim}A$ denotes any $Char$ except $A$. ($Char$ is defined [here](#characters))
-15. $\langle A, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
+15. $\langle A,\, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
 16. Production rules are written in the form of $A ::= B$.
 
 ## Lexical Structure
@@ -85,7 +85,7 @@ $$
 
 $$
 \begin{array}{lcl}
-ArrayLiteral & ::= & \text{[} ~~ Punctuated \langle Expr \rangle ~~ \text{]} \\
+ArrayLiteral & ::= & \text{[} ~~ \langle Expr,\, \text{','} \rangle ~~ \text{]} \\
 \end{array}
 $$
 
@@ -93,7 +93,7 @@ $$
 
 $$
 \begin{array}{lcl}
-RecordLiteral ::= & \text{'('} ~~ Punctuated \langle Ident ~~ \text{':'} ~~ Expr \rangle ~~ \text{')'} \\
+RecordLiteral ::= & \text{'('} ~~ \langle Ident ~~ \text{':'} ~~ Expr,\, \text{','} \rangle ~~ \text{')'} \\
 \end{array}
 $$
 
@@ -101,7 +101,7 @@ $$
 
 $$
 \begin{array}{lcl}
-FunctionParameters & ::= & Punctuated \langle Ident \rangle \\
+FunctionParameters & ::= & \langle Ident,\, \text{','} \rangle \\
 FunctionLiteral & ::= & ( ~~ \text{'('} ~~ FunctionParameters ~~ \text{')'} ~~ )^? ~~ \text{->} ~~ Expr \\
 \end{array}
 $$
