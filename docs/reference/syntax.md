@@ -43,3 +43,39 @@ Literals & ::= & NilLiteral \\
 & \mid & RecordLiteral \\
 \end{array}
 $$
+
+#### NilLiteral
+
+$$
+\begin{array}{lcl}
+NilLiteral & ::= & NilToken \\
+\end{array}
+$$
+
+#### BooleanLiteral
+
+$$
+\begin{array}{lcl}
+NilLiteral & ::= & BooleanToken\text{nil} \\
+\end{array}
+$$
+
+#### NumberLiteral
+
+$$
+\begin{array}{lcl}
+NilLiteral & ::= & NumberToken\text{nil} \\
+\end{array}
+$$
+
+#### StringLiteral
+
+$$
+\begin{array}{lcl}
+NilLiteral & ::= & StringToken\text{nil} \\
+\end{array}
+$$
+
+#### ArrayLiteral
+
+#### RecordLiteral
