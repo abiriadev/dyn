@@ -56,7 +56,7 @@ $$
 
 $$
 \begin{array}{lcl}
-NilLiteral & ::= & BooleanToken\text{nil} \\
+NilLiteral & ::= & BooleanToken \\
 \end{array}
 $$
 
@@ -64,7 +64,7 @@ $$
 
 $$
 \begin{array}{lcl}
-NilLiteral & ::= & NumberToken\text{nil} \\
+NilLiteral & ::= & NumberToken \\
 \end{array}
 $$
 
@@ -72,7 +72,7 @@ $$
 
 $$
 \begin{array}{lcl}
-NilLiteral & ::= & StringToken\text{nil} \\
+NilLiteral & ::= & StringToken \\
 \end{array}
 $$
 
