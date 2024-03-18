@@ -87,14 +87,16 @@ $$
 \begin{array}{lcl}
 Literals & ::= & NilLiteral \\
 & \mid & BooleanLiteral \\
-& \mid & NumberLiteral \\
+& \mid & IntegerLiteral \\
+& \mid & FloatLiteral \\
 & \mid & StringLiteral \\
 & \mid & ArrayLiteral \\
 & \mid & RecordLiteral \\
 & \mid & FunctionLiteral \\
 NilLiteral & ::= & \texttt{NIL} \\
 BooleanLiteral & ::= & \texttt{BOOLEAN} \\
-NumberLiteral & ::= & \texttt{INTEGER} \\
+IntegerLiteral & ::= & \texttt{INTEGER} \\
+FloatLiteral & ::= & \texttt{FLOAT} \\
 StringLiteral & ::= & \texttt{STRING} \\
 ArrayLiteral & ::= & \text{[} ~~ \langle Expr,\, \text{','} \rangle ~~ \text{]} \\
 RecordLiteral & ::= & \text{'('} ~~ \langle Ident ~~ \text{':'} ~~ Expr,\, \text{','} \rangle ~~ \text{')'} \\
