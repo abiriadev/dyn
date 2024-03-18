@@ -92,10 +92,10 @@ Literals & ::= & NilLiteral \\
 & \mid & ArrayLiteral \\
 & \mid & RecordLiteral \\
 & \mid & FunctionLiteral \\
-NilLiteral & ::= & NilToken \\
-BooleanLiteral & ::= & BooleanToken \\
-NumberLiteral & ::= & NumberToken \\
-StringLiteral & ::= & StringToken \\
+NilLiteral & ::= & \texttt{NIL} \\
+BooleanLiteral & ::= & \texttt{BOOLEAN} \\
+NumberLiteral & ::= & \texttt{INTEGER} \\
+StringLiteral & ::= & \texttt{STRING} \\
 ArrayLiteral & ::= & \text{[} ~~ \langle Expr,\, \text{','} \rangle ~~ \text{]} \\
 RecordLiteral & ::= & \text{'('} ~~ \langle Ident ~~ \text{':'} ~~ Expr,\, \text{','} \rangle ~~ \text{')'} \\
 \end{array}
