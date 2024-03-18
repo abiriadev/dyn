@@ -43,6 +43,14 @@ $$
 \end{array}
 $$
 
+### Nil
+
+$$
+\begin{array}{lcl}
+\texttt{NIL} & ::= & \text{nil} \\
+\end{array}
+$$
+
 ### Number
 
 There is no distinction between unsigned and signed integers.
