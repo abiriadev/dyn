@@ -15,7 +15,7 @@ export default defineConfig({
 			},
 			{
 				text: 'Reference',
-				link: '/reference',
+				link: '/reference/syntax',
 			},
 			{
 				text: 'Examples',
@@ -27,56 +27,74 @@ export default defineConfig({
 			},
 		],
 
-		sidebar: [
-			{
-				text: 'Guide',
+		sidebar: {
+			'/guide/': {
+				base: '/guide/',
 				items: [
 					{
-						text: 'What is Dyn',
-						link: '/guide/intro',
-					},
-					{
-						text: 'Getting Started',
+						text: 'Guide',
 						items: [
 							{
-								text: 'Quickstart',
-								link: '/guide/getting-started/quickstart',
+								text: 'What is Dyn',
+								link: 'intro',
 							},
 							{
-								text: 'Installation',
-								link: '/guide/getting-started/installation',
+								text: 'Getting Started',
+								items: [
+									{
+										text: 'Quickstart',
+										link: 'getting-started/quickstart',
+									},
+									{
+										text: 'Installation',
+										link: 'getting-started/installation',
+									},
+									{
+										text: 'Build from source',
+										link: 'getting-started/build-from-source',
+									},
+								],
 							},
 							{
-								text: 'Build from source',
-								link: '/guide/getting-started/build-from-source',
-							},
-						],
-					},
-					{
-						text: 'Syntax Overview',
-						items: [
-							{
-								text: 'Basic Syntax',
-								link: '/guide/syntax-overview/basic-syntax',
-							},
-							{
-								text: 'Array',
-								link: '/guide/syntax-overview/array',
-							},
-							{
-								text: 'Record',
-								link: '/guide/syntax-overview/record',
-							},
-							{
-								text: 'Function',
-								link: '/guide/syntax-overview/function',
+								text: 'Syntax Overview',
+								items: [
+									{
+										text: 'Basic Syntax',
+										link: 'syntax-overview/basic-syntax',
+									},
+									{
+										text: 'Array',
+										link: 'syntax-overview/array',
+									},
+									{
+										text: 'Record',
+										link: 'syntax-overview/record',
+									},
+									{
+										text: 'Function',
+										link: 'syntax-overview/function',
+									},
+								],
 							},
 						],
 					},
 				],
 			},
-		],
-
+			'/reference/': {
+				base: '/reference/',
+				items: [
+					{
+						text: 'Reference',
+						items: [
+							{
+								text: 'Syntax',
+								link: 'syntax',
+							},
+						],
+					},
+				],
+			},
+		},
 		socialLinks: [
 			{
 				icon: 'github',
