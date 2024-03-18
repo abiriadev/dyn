@@ -2,7 +2,7 @@
 
 ## Get the Dyn interpreter
 
-Refer to the [installation guide](/guide/installation) to get and run the Dyn interpreter.
+Refer to the [installation guide](./installation) to get and run the Dyn interpreter.
 
 ## REPL
 
