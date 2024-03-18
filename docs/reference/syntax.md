@@ -13,7 +13,8 @@
 9. $A^\ast$ is a sequence of zero or more iterations of $A$, which is equivalent to $P ::= \epsilon \mid A ~~ P$.
 10. $A^+$ is a sequence of one or more iterations of $A$, which is equivalent to $AA^\ast$.
 11. $A^?$ is an zero or one occurrence of $A$, which is equivalent to $\epsilon \mid A$.
-12. Production rules are written in the form of $A ::= B$.
+12. ${\sim}A$ denotes any $Char$ except $A$. ($Char$ is defined [here](#characters))
+13. Production rules are written in the form of $A ::= B$.
 
 ## Lexical Structure
 
