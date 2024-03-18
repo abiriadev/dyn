@@ -78,4 +78,10 @@ $$
 
 #### ArrayLiteral
 
+$$
+\begin{array}{lcl}
+ArrayLiteral & ::= & Punctuated \langle Expr, NewLineToken \rangle \\
+\end{array}
+$$
+
 #### RecordLiteral
