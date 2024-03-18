@@ -17,4 +17,16 @@
 
 ## Lexical Structure
 
+Note that Dyn's lexical structure has context-free grammar.
+
+### Characters
+
+$$
+\begin{array}{}
+char & ::= & \text{U+0000} \mid \ldots \mid \text{U+D7FF} \mid \text{U+E000} \mid \ldots \mid \text{U+10FFFF} \\
+\end{array}
+$$
+
+### Comments
+
 ## Syntectic Structure
