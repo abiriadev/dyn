@@ -80,7 +80,7 @@ $$
 
 $$
 \begin{array}{lcl}
-ArrayLiteral & ::= & Punctuated \langle Expr, NewLineToken \rangle \\
+ArrayLiteral & ::= & \text{[} ~~ Punctuated \langle Expr \rangle ~~ \text{]} \\
 \end{array}
 $$
 
