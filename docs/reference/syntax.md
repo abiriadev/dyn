@@ -41,6 +41,7 @@ Literals & ::= & NilLiteral \\
 & \mid & StringLiteral \\
 & \mid & ArrayLiteral \\
 & \mid & RecordLiteral \\
+& \mid & FunctionLiteral \\
 \end{array}
 $$
 
@@ -89,5 +90,14 @@ $$
 $$
 \begin{array}{lcl}
 ArrayLiteral & ::= & \text{'('} ~~ Punctuated \langle Ident ~~ \text{':'} ~~ Expr \rangle ~~ \text{')'} \\
+\end{array}
+$$
+
+#### FunctionLiteral
+
+$$
+\begin{array}{lcl}
+FunctionParameters & ::= & Punctuated \langle Ident \rangle \\
+FunctionLiteral & ::= & ( ~~ \text{'('} ~~ FunctionParameters ~~ \text{')'} ~~ )^? ~~ \text{->} ~~ Expr \\
 \end{array}
 $$
