@@ -51,6 +51,14 @@ $$
 \end{array}
 $$
 
+### Boolean
+
+$$
+\begin{array}{lcl}
+\texttt{BOOLEAN} & ::= & \text{true} \mid \text{false} \\
+\end{array}
+$$
+
 ### Number
 
 There is no distinction between unsigned and signed integers.
