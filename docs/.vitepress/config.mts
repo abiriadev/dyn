@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 export default defineConfig({
 	title: 'Dyn',
 	description: 'Highly dynamic programming language',
+	base: '/dyn/',
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
 		nav: [
