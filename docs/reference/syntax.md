@@ -92,54 +92,12 @@ Literals & ::= & NilLiteral \\
 & \mid & ArrayLiteral \\
 & \mid & RecordLiteral \\
 & \mid & FunctionLiteral \\
-\end{array}
-$$
-
-#### NilLiteral
-
-$$
-\begin{array}{lcl}
 NilLiteral & ::= & NilToken \\
-\end{array}
-$$
-
-#### BooleanLiteral
-
-$$
-\begin{array}{lcl}
-NilLiteral & ::= & BooleanToken \\
-\end{array}
-$$
-
-#### NumberLiteral
-
-$$
-\begin{array}{lcl}
-NilLiteral & ::= & NumberToken \\
-\end{array}
-$$
-
-#### StringLiteral
-
-$$
-\begin{array}{lcl}
-NilLiteral & ::= & StringToken \\
-\end{array}
-$$
-
-#### ArrayLiteral
-
-$$
-\begin{array}{lcl}
+BooleanLiteral & ::= & BooleanToken \\
+NumberLiteral & ::= & NumberToken \\
+StringLiteral & ::= & StringToken \\
 ArrayLiteral & ::= & \text{[} ~~ \langle Expr,\, \text{','} \rangle ~~ \text{]} \\
-\end{array}
-$$
-
-#### RecordLiteral
-
-$$
-\begin{array}{lcl}
-RecordLiteral ::= & \text{'('} ~~ \langle Ident ~~ \text{':'} ~~ Expr,\, \text{','} \rangle ~~ \text{')'} \\
+RecordLiteral & ::= & \text{'('} ~~ \langle Ident ~~ \text{':'} ~~ Expr,\, \text{','} \rangle ~~ \text{')'} \\
 \end{array}
 $$
 
