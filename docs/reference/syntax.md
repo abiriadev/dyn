@@ -17,8 +17,10 @@
 13. $A^+$ is a sequence of one or more iterations of $A$, which is equivalent to $AA^\ast$.
 14. $A^?$ is an zero or one occurrence of $A$, which is equivalent to $\epsilon \mid A$.
 15. ${\sim}A$ denotes any $Char$ except $A$. ($Char$ is defined [here](#characters))
-16. $\langle A,\, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
-17. Production rules are written in the form of $A ::= B$.
+16. $A ~~ [B]$ denotes positive lookahead of $B$, meaning $A$ followed by $B$.
+17. $A ~~ {\sim}[B]$ denotes negative lookahead of $B$, meaning $A$ not followed by $B$.
+18. $\langle A,\, B \rangle$ is a sequence of zero or more iterations of $A$ separated by $B$, ending with optional $B$, which is equivalent to $(A ~~ B)^\ast ~~ A^?$.
+19. Production rules are written in the form of $A ::= B$.
 
 ## Lexical Structure
 
@@ -35,8 +37,9 @@ $$
 ### Comments
 
 $$
-\begin{array}{}
+\begin{array}{lcl}
 \texttt{LINE\_COMMENT} & ::= & \text{//} ~~ {\sim}(\text{U+000A} \mid \texttt{EOF})^\ast \\
+\texttt{BLOCK\_COMMENT} & ::= & \text{'/*'} ~~ ({\sim}\text{'*'} \mid \text{'*'} ~~ {\sim}[\text{'/'}] \mid {\sim}\text{'/'} \mid \text{'/'} ~~ {\sim}[\text{'*'}] \mid \texttt{BLOCK\_COMMENT})^\ast ~~ \text{'*/'} \\
 \end{array}
 $$
 
