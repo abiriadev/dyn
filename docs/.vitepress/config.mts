@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress'
 import { readFileSync } from 'node:fs'
+import footnote from 'markdown-it-footnote'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -116,6 +117,9 @@ export default defineConfig({
 			},
 		],
 		math: true,
+		config: md => {
+			md.use(footnote)
+		},
 	},
 	vite: {
 		ssr: {
