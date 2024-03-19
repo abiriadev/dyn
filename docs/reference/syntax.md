@@ -104,6 +104,17 @@ $$
 \end{array}
 $$
 
+#### Template String
+
+$$
+\begin{array}{lcl}
+\texttt{TEMPLATE\_STRING} & ::= & \texttt{TEMPLATE\_STRING\_HEAD} ~~ Expr ~~ (\texttt{TEMPLATE\_STRING\_BODY} ~~ Expr)^\ast ~~ \texttt{TEMPLATE\_STRING\_TAIL} \\
+\texttt{TEMPLATE\_STRING\_HEAD} & ::= & \text{"} ~~ \texttt{STRING\_DOUBLE\_CHAR}^\ast ~~ \text{'\#\{'} \\
+\texttt{TEMPLATE\_STRING\_BODY} & ::= & \text{'\}'} ~~ \texttt{STRING\_DOUBLE\_CHAR}^\ast ~~ \text{'\#\{'} \\
+\texttt{TEMPLATE\_STRING\_TAIL} & ::= & \text{'\}'} ~~ \texttt{STRING\_DOUBLE\_CHAR}^\ast ~~ \text{"} \\
+\end{array}
+$$
+
 ## Syntectic Structure
 
 ### Literals
