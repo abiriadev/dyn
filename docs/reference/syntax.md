@@ -115,6 +115,16 @@ $$
 \end{array}
 $$
 
+### Identifiers
+
+$\texttt{XID\_START}$ and $\texttt{XID\_CONTINUE}$ are defined in Unicode Standard Annex #31.[^1]
+
+$$
+\begin{array}{lcl}
+\texttt{IDENT} & ::= $\texttt{XID\_START}$ ~~ \texttt{XID\_CONTINUE}^\ast \\
+\end{array}
+$$
+
 ## Syntectic Structure
 
 ### Literals
@@ -147,3 +157,7 @@ FunctionParameters & ::= & \langle Ident,\, \text{','} \rangle \\
 FunctionLiteral & ::= & ( ~~ \text{'('} ~~ FunctionParameters ~~ \text{')'} ~~ )^? ~~ \text{->} ~~ Expr \\
 \end{array}
 $$
+
+---
+
+[^1]: https://www.unicode.org/reports/tr31/
