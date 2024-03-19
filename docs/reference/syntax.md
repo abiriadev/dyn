@@ -121,9 +121,27 @@ $\texttt{XID\_START}$ and $\texttt{XID\_CONTINUE}$ are defined in Unicode Standa
 
 $$
 \begin{array}{lcl}
-\texttt{IDENT} & ::= $\texttt{XID\_START}$ ~~ \texttt{XID\_CONTINUE}^\ast \\
+\texttt{IDENT\_OR\_KEYWORD} & ::= \texttt{XID\_START} ~~ \texttt{XID\_CONTINUE}^\ast \\
 \end{array}
 $$
+
+The below are every keyword in Dyn. Reserved keywrods are NOT used yet, but they are reserved for future use and treated as just normal keywords.
+
+| Lexeme                  | Symbol            | Reserved |
+| :---------------------- | :---------------- | -------- |
+| $\texttt{KW\_BREAK}$    | $\text{break}$    | X        |
+| $\texttt{KW\_CONTINUE}$ | $\text{continue}$ | X        |
+| $\texttt{KW\_ELSE}$     | $\text{else}$     | X        |
+| $\texttt{KW\_EXPORT}$   | $\text{export}$   | O        |
+| $\texttt{KW\_FALSE}$    | $\text{false}$    | X        |
+| $\texttt{KW\_IF}$       | $\text{if}$       | X        |
+| $\texttt{KW\_ITER}$     | $\text{iter}$     | X        |
+| $\texttt{KW\_LET}$      | $\text{let}$      | X        |
+| $\texttt{KW\_NIL}$      | $\text{nil}$      | X        |
+| $\texttt{KW\_OF}$       | $\text{of}$       | X        |
+| $\texttt{KW\_RETURN}$   | $\text{return}$   | X        |
+| $\texttt{KW\_TRUE}$     | $\text{true}$     | X        |
+| $\texttt{KW\_USE}$      | $\text{use}$      | O        |
 
 ## Syntectic Structure
 
