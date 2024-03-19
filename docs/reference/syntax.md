@@ -79,6 +79,19 @@ $$
 \end{array}
 $$
 
+### String
+
+$$
+\begin{array}{lcl}
+\texttt{STRING} & ::= & \texttt{STRING\_SINGLE} \\
+& \mid & \texttt{STRING\_DOUBLE} \\
+\texttt{STRING\_SINGLE} & ::= & \text{'} ~~ \texttt{STRING\_SINGLE\_CHAR}^\ast ~~ \text{'} \\
+\texttt{STRING\_DOUBLE} & ::= & \text{"} ~~ \texttt{STRING\_DOUBLE\_CHAR}^\ast ~~ \text{"} \\
+\texttt{STRING\_SINGLE\_CHAR} & ::= & {\sim}(\text{\\} \mid \text{'}) \mid \text{\\} ~~ (\text{n} \mid \text{r} \mid \text{t} \mid \text{'} \mid \text{\\}) \\
+\texttt{STRING\_DOUBLE\_CHAR} & ::= & {\sim}(\text{\\} \mid \text{"}) \mid \text{\\} ~~ (\text{n} \mid \text{r} \mid \text{t} \mid \text{"} \mid \text{\\}) \\
+\end{array}
+$$
+
 ## Syntectic Structure
 
 ### Literals
