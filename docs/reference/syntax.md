@@ -43,6 +43,17 @@ $$
 \end{array}
 $$
 
+### White Spaces
+
+$$
+\begin{array}{lcl}
+\texttt{WHITESPACE} & ::= & \text{U+0009} \\
+& \mid & \text{U+000B} \\
+& \mid & \text{U+000D} \\
+& \mid & \text{U+0020} \\
+\end{array}
+$$
+
 ### Nil
 
 $$
