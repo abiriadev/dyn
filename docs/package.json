@@ -11,6 +11,7 @@
   "author": "Abiria",
   "license": "ISC",
   "devDependencies": {
+    "markdown-it-footnote": "^4.0.0",
     "markdown-it-mathjax3": "^4.3.2",
     "vitepress": "1.0.0-rc.24"
   },
