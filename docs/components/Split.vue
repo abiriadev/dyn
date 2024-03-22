@@ -32,13 +32,17 @@
 		@mouseup="up"
 		@mousemove="move"
 	>
-		<slot name="left" class="left" ref="left"></slot>
-		<div class="split" @mousedown="down">⣿</div>
-		<slot name="right" class="right"></slot>
+		<div :class="$style.left">
+			<slot name="left" ref="left"></slot>
+		</div>
+		<div :class="$style.split" @mousedown="down">⣿</div>
+		<div :class="$style.right">
+			<slot name="right"></slot>
+		</div>
 	</div>
 </template>
 
-<style scoped>
+<style module>
 	.container {
 		display: flex;
 	}
@@ -46,6 +50,7 @@
 	.left,
 	.right {
 		flex: 1;
+		background-color: black;
 	}
 
 	.split {
