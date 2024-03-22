@@ -34,7 +34,7 @@
 	>
 		<slot name="left" class="left" ref="left"></slot>
 		<div class="split" @mousedown="down">⣿</div>
-		<slot name="rigth" class="right"></slot>
+		<slot name="right" class="right"></slot>
 	</div>
 </template>
 
