@@ -1,6 +1,7 @@
 <script setup lang="ts">
 	import Split from './Split.vue'
 	import Output from './Output.vue'
+	import Buttons from './Buttons.vue'
 
 	import { defineAsyncComponent } from 'vue'
 	import { inBrowser } from 'vitepress'
@@ -12,7 +13,7 @@
 
 <template>
 	<div :class="$style.main">
-		<header>Header</header>
+		<Buttons />
 		<Split :class="$style.sp">
 			<template #left>
 				<Editor :class="$style.editor" />
