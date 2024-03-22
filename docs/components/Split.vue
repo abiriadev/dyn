@@ -27,7 +27,7 @@
 
 <template>
 	<div
-		class="container"
+		:class="$style.container"
 		ref="container"
 		@mouseup="up"
 		@mousemove="move"
