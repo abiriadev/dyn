@@ -3,11 +3,6 @@
 	import * as monaco from 'monaco-editor'
 	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 
-	const { width, height } = defineProps<{
-		width: number
-		height: number
-	}>()
-
 	self.MonacoEnvironment = {
 		getWorker: () => new editorWorker(),
 	}
@@ -23,16 +18,11 @@
 
 		monaco.editor.create(editorEl.value, {
 			language: 'dyn',
+			automaticLayout: true,
 		})
 	})
 </script>
 
 <template>
-	<div
-		:style="{
-			width: width + 'px',
-			height: height + 'px',
-		}"
-		ref="editorEl"
-	></div>
+	<div ref="editorEl"></div>
 </template>
