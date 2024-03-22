@@ -50,7 +50,7 @@
 	.left,
 	.right {
 		flex: 1;
-		background-color: black;
+		min-width: 0;
 	}
 
 	.split {
