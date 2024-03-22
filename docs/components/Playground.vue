@@ -2,13 +2,7 @@
 	import Split from './Split.vue'
 	import Output from './Output.vue'
 	import Buttons from './Buttons.vue'
-
-	import { defineAsyncComponent } from 'vue'
-	import { inBrowser } from 'vitepress'
-
-	const Editor = inBrowser
-		? defineAsyncComponent(() => import('./Editor.vue'))
-		: () => null
+	import Editor from './Editor.vue'
 </script>
 
 <template>

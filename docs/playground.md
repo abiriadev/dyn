@@ -4,10 +4,7 @@ sidebar: false
 ---
 
 <script setup>
-	import { defineAsyncComponent } from 'vue';
-	import { inBrowser } from 'vitepress';
-
-	const Editor = inBrowser ? defineAsyncComponent(() => import('./components/Editor.vue')) : () => null;
+	import Playground from './components/Playground.vue';
 </script>
 
-<Editor width="600" height="800" />
+<Playground />

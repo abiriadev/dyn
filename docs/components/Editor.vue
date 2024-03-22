@@ -1,28 +1,14 @@
-<script setup lang="ts">
-	import { ref, onMounted } from 'vue'
-	import * as monaco from 'monaco-editor'
-	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+<script setup>
+	import { defineAsyncComponent } from 'vue'
+	import { inBrowser } from 'vitepress'
 
-	self.MonacoEnvironment = {
-		getWorker: () => new editorWorker(),
-	}
-
-	const editorEl = ref(null)
-
-	onMounted(() => {
-		monaco.languages.register({ id: 'dyn' })
-
-		monaco.languages.setMonarchTokensProvider('dyn', {
-			tokenizer: { root: [] },
-		})
-
-		monaco.editor.create(editorEl.value, {
-			language: 'dyn',
-			automaticLayout: true,
-		})
-	})
+	const EditorInner = inBrowser
+		? defineAsyncComponent(
+				() => import('./EditorInner.vue'),
+			)
+		: () => null
 </script>
 
 <template>
-	<div ref="editorEl"></div>
+	<EditorInner />
 </template>
