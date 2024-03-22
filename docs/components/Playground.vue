@@ -32,6 +32,7 @@
 		padding: 16px;
 		display: flex;
 		flex-direction: column;
+		gap: 16px;
 	}
 
 	.sp {
