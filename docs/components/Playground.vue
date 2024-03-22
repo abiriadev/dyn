@@ -1,5 +1,12 @@
 <script setup lang="ts">
 	import Split from './Split.vue'
+
+	import { defineAsyncComponent } from 'vue'
+	import { inBrowser } from 'vitepress'
+
+	const Editor = inBrowser
+		? defineAsyncComponent(() => import('./Editor.vue'))
+		: () => null
 </script>
 
 <template>
@@ -7,7 +14,7 @@
 		<header>Header</header>
 		<Split :class="$style.sp">
 			<template #left>
-				<div :class="$style.a">A</div>
+				<Editor :class="$style.editor" />
 			</template>
 			<template #right>
 				<div :class="$style.b">B</div>
@@ -29,8 +36,7 @@
 		flex: 1;
 	}
 
-	.a,
-	.b {
+	.editor {
 		height: 100%;
 	}
 </style>
