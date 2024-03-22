@@ -41,3 +41,17 @@ where
 }
 
 pub struct Session {}
+
+impl Session {
+	pub fn lex(&self) {
+		todo!()
+	}
+
+	pub fn parse(&self) {
+		todo!()
+	}
+
+	pub fn exec(&self) {
+		todo!()
+	}
+}
