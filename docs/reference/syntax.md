@@ -143,6 +143,45 @@ The below are every keyword in Dyn. Reserved keywrods are NOT used yet, but they
 | $\texttt{KW\_TRUE}$     | $\text{true}$     | X        |
 | $\texttt{KW\_USE}$      | $\text{use}$      | O        |
 
+### Punctuations
+
+| Lexeme                             | Symbol        | Reserved |
+| :--------------------------------- | :------------ | -------- |
+| $\texttt{RightBrace}$              | $\text{\}}$   | X        |
+| $\texttt{PipePipe}$                | $\text{\|\|}$ | X        |
+| $\texttt{Pipe}$                    | $\text{\|}$   | X        |
+| $\texttt{LeftBrace}$               | $\text{\{}$   | X        |
+| $\texttt{RightBracket}$            | $\text{]}$    | X        |
+| $\texttt{NewLine}$                 | $\text{\\n}$  | X        |
+| $\texttt{LeftBracket}$             | $\text{[}$    | X        |
+| $\texttt{At}$                      | $\text{@}$    | O        |
+| $\texttt{RightAngledBracketEqual}$ | $\text{>=}$   | X        |
+| $\texttt{RightAngledBracket}$      | $\text{>}$    | X        |
+| $\texttt{EqualEqual}$              | $\text{==}$   | X        |
+| $\texttt{Equal}$                   | $\text{=}$    | X        |
+| $\texttt{LeftAngledBracketEqual}$  | $\text{<=}$   | X        |
+| $\texttt{LeftAngledBracket}$       | $\text{<}$    | X        |
+| $\texttt{Colon}$                   | $\text{:}$    | X        |
+| $\texttt{SlashEqual}$              | $\text{/=}$   | X        |
+| $\texttt{Slash}$                   | $\text{/}$    | X        |
+| $\texttt{DotDot}$                  | $\text{..}$   | X        |
+| $\texttt{Dot}$                     | $\text{.}$    | X        |
+| $\texttt{Arrow}$                   | $\text{->}$   | X        |
+| $\texttt{MinusEqual}$              | $\text{-=}$   | X        |
+| $\texttt{Minus}$                   | $\text{-}$    | X        |
+| $\texttt{Comma}$                   | $\text{,}$    | X        |
+| $\texttt{PlusEqual}$               | $\text{+=}$   | X        |
+| $\texttt{Plus}$                    | $\text{+}$    | X        |
+| $\texttt{AsteriskEqual}$           | $\text{*=}$   | X        |
+| $\texttt{Asterisk}$                | $\text{*}$    | X        |
+| $\texttt{RightParenthesis}$        | $\text{)}$    | X        |
+| $\texttt{LeftParenthesis}$         | $\text{(}$    | X        |
+| $\texttt{AndAnd}$                  | $\text{\&\&}$ | X        |
+| $\texttt{PercentEqual}$            | $\text{\%=}$  | X        |
+| $\texttt{Percent}$                 | $\text{\%}$   | X        |
+| $\texttt{BangEqual}$               | $\text{!=}$   | X        |
+| $\texttt{Bang}$                    | $\text{!}$    | X        |
+
 ## Syntectic Structure
 
 ### Literals
