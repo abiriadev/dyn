@@ -32,8 +32,8 @@
 		@mouseup="up"
 		@mousemove="move"
 	>
-		<div :class="$style.left">
-			<slot name="left" ref="left"></slot>
+		<div :class="$style.left" ref="left">
+			<slot name="left"></slot>
 		</div>
 		<div :class="$style.split" @mousedown="down">⣿</div>
 		<div :class="$style.right">
